@@ -1,17 +1,21 @@
-# Welcome to MkDocs
+# Welcome to Amazon EMR Train-The-Trainer Workshop
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+This workshop contains exercises for the 3-day Amazon EMR Workshop Training.
 
-## Commands
+## Agenda
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+#### Day 1
+- Launch EMR cluster with Managed Scaling and Fleets
+- Run Spark ETL on Amazon EMR and EMR Studio/Notebooks
+- Build Incremental Workloads on Amazon EMR using Apache Hudi and Apache Iceberg
+- Run Streaming Workloads on Amazon EMR
 
-## Project layout
+#### Day 2
+- Orchestrate analytical workloads using EMR Notebooks API and Amazon MWAA
+- Run Spark workload using Amazon EMR on EKS
+- Run Spark/Hive jobs on EMR Serverless
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+#### Day 3
+- Run Hive and Presto workloads on Amazon EMR
+- Run HBase workloads on Amazon EMR
+- Integrate with AWS LakeFormation and Apache Ranger

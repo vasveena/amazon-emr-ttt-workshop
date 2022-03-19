@@ -10,10 +10,11 @@ nav:
   - Introduction: 'index.md'
   - Setup: 'setup.md'
   - Day 1 Exercises:
-    - 1 - Apache Spark on Amazon EMR: 'day1/spark/exercise.md'
-    - 2 - Amazon EMR Studio: 'day1/studio/exercise.md'
-    - 3 - Apache Hudi on Amazon EMR: 'day1/hudi/exercise.md'
-    - 4 - Apache Iceberg on Amazon EMR: 'day1/icebrg/exercise.md'
+    - 1 - Launching EMR cluster with Instance Fleets: 'day1/fleet/exercise.md'
+    - 2 - Apache Spark on Amazon EMR: 'day1/spark/exercise.md'
+    - 3 - Amazon EMR Studio: 'day1/studio/exercise.md'
+    - 4 - Apache Hudi on Amazon EMR: 'day1/hudi/exercise.md'
+    - 5 - Apache Iceberg on Amazon EMR: 'day1/icebrg/exercise.md'
 markdown_extensions:
     - toc:
         permalink: true
