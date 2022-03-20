@@ -46,7 +46,7 @@ It will take about 2 minutes for the Status to change to "Attached".
 
 ![Studio - 9](images/studio-9.png)
 
-Click on the workspace and it will open a managed JupyterLab session. You can create a Jupyter notebook with any kernel.
+Click on the workspace and it will open a managed JupyterLab session. You may need to allow pop-up from this address in your browser to open the JupyterLab. Once opened, you can create a Jupyter notebook with any kernel.
 
 ### Explore EMR Studio Workspace Features
 
@@ -74,6 +74,8 @@ Once its linked, you can go back to the workspace folder. You will find a folder
 ![Studio - 14](images/studio-14.png)
 
 Go to workshop-repo -> files -> notebook to see the notebooks.
+
+![Studio - 29](images/studio-29.png)
 
 If you are not able to link repository successfully, download [amazon_reviews.ipynb](https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/amazon_reviews.ipynb) and [find_best_sellers.ipynb](https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/find_best_sellers.ipynb) files to your local desktop (Right click -> Save Link As). Upload these two files from your local desktop to the JupyterLab. Upload icon looks like ![Studio - 10](images/studio-10.png).
 
@@ -212,7 +214,7 @@ We will see in tomorrow's exercise how to orchestrate a pipeline with this param
 
 #### SQL Explorer
 
-Lets check the new SQL explorer feature which helps you run ad-hoc and interactive queries against your tables. 
+Lets check the new SQL explorer feature which helps you run ad-hoc and interactive queries against your tables.
 
 Go to the SQL explorer and select "default" database. You will be able to see the four tables created in Glue catalog for the 4 categories apparel, baby, furniture and PC from our previous job runs.
 
