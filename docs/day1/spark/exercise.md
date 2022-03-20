@@ -108,6 +108,77 @@ Now enter http://localhost:8157 on your browser to see the Resource Manager UI. 
 
 ![Spark - 9](images/spark-9.png)
 
+#### Optimization exercise (Optional)
+
+**Converting inefficient join types**
+
+Run the below code block in spark-shell. Set driver memory to 4G while starting the shell.
+
+spark-shell --driver-memory=4G
+
+```
+import org.apache.spark.sql.types._
+
+val liSchema = StructType(Array(
+  StructField("l_orderkey", StringType, true),
+  StructField("l_partkey", IntegerType, true),
+  StructField("l_suppkey", IntegerType, true),
+  StructField("l_linenumber", IntegerType, true),
+  StructField("l_quantity", IntegerType, true),
+  StructField("l_extendedprice", IntegerType, true),
+  StructField("l_discount", DoubleType, true),
+  StructField("l_tax", DoubleType, true),
+  StructField("l_returnflag", StringType, true),
+  StructField("l_linestatus", StringType, true),
+  StructField("l_shipdate", StringType, true),
+  StructField("l_commitdate", StringType, true),
+  StructField("l_receiptdate", StringType, true),
+  StructField("l_shipinstruct", StringType, true),
+  StructField("l_shipmode", StringType, true),
+  StructField("l_comment", StringType, true)
+  )
+)
+
+val orSchema = StructType(Array(
+  StructField("o_orderkey", StringType, true),
+  StructField("o_custkey", IntegerType, true),
+  StructField("o_orderstatus", StringType, true),
+  StructField("o_totalprice", DoubleType, true),
+  StructField("o_orderdate", StringType, true),
+  StructField("o_orderpriority", StringType, true),
+  StructField("o_clerk", StringType, true),
+  StructField("o_shippriority", IntegerType, true),
+  StructField("o_comment", StringType, true)
+  )
+)
+
+val df1 = spark.read.schema(liSchema)csv("s3://redshift-downloads/TPC-H/2.18/3TB/lineitem/")
+val df2 = spark.read.schema(orSchema)csv("s3://redshift-downloads/TPC-H/2.18/3TB/orders/")
+val lineitem = df1.limit(1000)
+val orders = df2.limit(1000)
+
+val nestedLoopDF = lineitem.join(orders, lineitem("l_orderkey") === orders("o_orderkey") || lineitem("l_receiptdate") === orders("o_orderdate"))
+nestedLoopDF.show(5,truncate=false)
+
+```
+
+Check the Spark UI -> SQL tab -> show (Spark action). You will be able to see that the above code uses BroadcastNestedLoopJoin as the join type.
+
+![Spark - 18](images/spark-18.png)
+
+BroadcastNestedLoopJoin is an inefficient join that results from bad coding practice. Convert it into SortMergeJoin or BroadcastJoin by changing the code.
+
+```
+val result1 = lineitem.join(orders, lineitem("l_orderkey") === orders("o_orderkey"))
+val result2 = lineitem.join(orders, lineitem("l_receiptdate") === orders("o_orderdate"))
+val broadcastDF = result1.union(result2)
+broadcastDF.show(5,truncate=false)
+```
+
+Check the Spark UI now. You will be able to see that BroadcastHashJoin is being used instead which is the best join type if at least one of the two tables you are going to join is relatively small (<50MB). Default *spark.sql.autoBroadcastJoinThreshold* is 10 MB.
+
+![Spark - 19](images/spark-19.png)
+
 ### Submit Spark Work to EMR using AddSteps API
 
 Let us submit Spark work to the cluster using EMR’s [AddSteps](https://docs.aws.amazon.com/cli/latest/reference/emr/add-steps.html) API.
