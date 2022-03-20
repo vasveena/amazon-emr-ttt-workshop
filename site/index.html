@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#welcome-to-amazon-emr-train-the-trainer-workshop" class="md-skip">
           Skip to content
         </a>
       
@@ -235,16 +235,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#agenda" class="md-nav__link">
+    Agenda
+  </a>
+  
+    <nav class="md-nav" aria-label="Agenda">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#day-1" class="md-nav__link">
+    Day 1
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+        
+          <li class="md-nav__item">
+  <a href="#day-2" class="md-nav__link">
+    Day 2
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-3" class="md-nav__link">
+    Day 3
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -305,8 +325,22 @@
   
   
     <li class="md-nav__item">
+      <a href="day1/fleet/exercise/" class="md-nav__link">
+        1 - Launching EMR cluster with Instance Fleets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="day1/spark/exercise/" class="md-nav__link">
-        1 - Apache Spark on Amazon EMR
+        2 - Apache Spark on Amazon EMR
       </a>
     </li>
   
@@ -320,7 +354,7 @@
   
     <li class="md-nav__item">
       <a href="day1/studio/exercise/" class="md-nav__link">
-        2 - Amazon EMR Studio
+        3 - Amazon EMR Studio
       </a>
     </li>
   
@@ -334,7 +368,7 @@
   
     <li class="md-nav__item">
       <a href="day1/hudi/exercise/" class="md-nav__link">
-        3 - Apache Hudi on Amazon EMR
+        4 - Apache Hudi on Amazon EMR
       </a>
     </li>
   
@@ -348,7 +382,7 @@
   
     <li class="md-nav__item">
       <a href="day1/icebrg/exercise/" class="md-nav__link">
-        4 - Apache Iceberg on Amazon EMR
+        5 - Apache Iceberg on Amazon EMR
       </a>
     </li>
   
@@ -388,16 +422,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#agenda" class="md-nav__link">
+    Agenda
+  </a>
+  
+    <nav class="md-nav" aria-label="Agenda">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#day-1" class="md-nav__link">
+    Day 1
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+        
+          <li class="md-nav__item">
+  <a href="#day-2" class="md-nav__link">
+    Day 2
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-3" class="md-nav__link">
+    Day 3
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -418,21 +472,28 @@
 </a>
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs<a class="headerlink" href="#welcome-to-mkdocs" title="Permanent link">&para;</a></h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
+<h1 id="welcome-to-amazon-emr-train-the-trainer-workshop">Welcome to Amazon EMR Train-The-Trainer Workshop<a class="headerlink" href="#welcome-to-amazon-emr-train-the-trainer-workshop" title="Permanent link">&para;</a></h1>
+<p>This workshop contains exercises for the 3-day Amazon EMR Workshop Training.</p>
+<h2 id="agenda">Agenda<a class="headerlink" href="#agenda" title="Permanent link">&para;</a></h2>
+<h4 id="day-1">Day 1<a class="headerlink" href="#day-1" title="Permanent link">&para;</a></h4>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li>Launch EMR cluster with Managed Scaling and Fleets</li>
+<li>Run Spark ETL on Amazon EMR and EMR Studio/Notebooks</li>
+<li>Build Incremental Workloads on Amazon EMR using Apache Hudi and Apache Iceberg</li>
+<li>Run Streaming Workloads on Amazon EMR</li>
 </ul>
-<h2 id="project-layout">Project layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre></div>
+<h4 id="day-2">Day 2<a class="headerlink" href="#day-2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Orchestrate analytical workloads using EMR Notebooks API and Amazon MWAA</li>
+<li>Run Spark workload using Amazon EMR on EKS</li>
+<li>Run Spark/Hive jobs on EMR Serverless</li>
+</ul>
+<h4 id="day-3">Day 3<a class="headerlink" href="#day-3" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Run Hive and Presto workloads on Amazon EMR</li>
+<li>Run HBase workloads on Amazon EMR</li>
+<li>Integrate with AWS LakeFormation and Apache Ranger</li>
+</ul>
 
               
             </article>
