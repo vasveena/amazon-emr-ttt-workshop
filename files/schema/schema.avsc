@@ -1,0 +1,26 @@
+{        
+  "type": "record",
+  "name": "trip",
+  "fields": [
+    {
+      "name": "route_id",
+      "type": "string",
+      "default": "NONE"
+    },
+    {
+      "name": "destination",
+      "type": "string",
+      "default": "NONE"
+    },
+    {
+      "name": "trip_id",
+      "type": "long",
+      "default": -1
+    },
+    {
+      "name": "tstamp",
+      "type": "string",
+      "default": "NONE"
+    }
+  ]
+}
