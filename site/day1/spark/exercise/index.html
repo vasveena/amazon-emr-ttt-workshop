@@ -335,6 +335,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#optimization-exercise-optional" class="md-nav__link">
+    Optimization exercise (Optional)
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -459,6 +466,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#optimization-exercise-optional" class="md-nav__link">
+    Optimization exercise (Optional)
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -557,6 +571,65 @@ cd ~
 
 <p>Now enter http://localhost:8157 on your browser to see the Resource Manager UI. You can use this method as well to access Spark UI (replace port 8088 in the above command with port 18080).</p>
 <p><img alt="Spark - 9" src="../images/spark-9.png" /></p>
+<h4 id="optimization-exercise-optional">Optimization exercise (Optional)<a class="headerlink" href="#optimization-exercise-optional" title="Permanent link">&para;</a></h4>
+<p><strong>Converting inefficient join types</strong></p>
+<p>Run the below code block in spark-shell. Set driver memory to 4G while starting the shell.</p>
+<p>spark-shell --driver-memory=4G</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">org.apache.spark.sql.types._</span>
+
+<span class="n">val</span> <span class="n">liSchema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">(</span><span class="n">Array</span><span class="p">(</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_orderkey&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_partkey&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_suppkey&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_linenumber&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_quantity&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_extendedprice&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_discount&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_tax&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_returnflag&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_linestatus&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_shipdate&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_commitdate&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_receiptdate&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_shipinstruct&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_shipmode&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;l_comment&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">val</span> <span class="n">orSchema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">(</span><span class="n">Array</span><span class="p">(</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_orderkey&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_custkey&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_orderstatus&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_totalprice&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_orderdate&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_orderpriority&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_clerk&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_shippriority&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">true</span><span class="p">),</span>
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;o_comment&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">val</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">liSchema</span><span class="p">)</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;s3://redshift-downloads/TPC-H/2.18/3TB/lineitem/&quot;</span><span class="p">)</span>
+<span class="n">val</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">orSchema</span><span class="p">)</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;s3://redshift-downloads/TPC-H/2.18/3TB/orders/&quot;</span><span class="p">)</span>
+<span class="n">val</span> <span class="n">lineitem</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">val</span> <span class="n">orders</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">val</span> <span class="n">nestedLoopDF</span> <span class="o">=</span> <span class="n">lineitem</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">orders</span><span class="p">,</span> <span class="n">lineitem</span><span class="p">(</span><span class="s2">&quot;l_orderkey&quot;</span><span class="p">)</span> <span class="o">===</span> <span class="n">orders</span><span class="p">(</span><span class="s2">&quot;o_orderkey&quot;</span><span class="p">)</span> <span class="o">||</span> <span class="n">lineitem</span><span class="p">(</span><span class="s2">&quot;l_receiptdate&quot;</span><span class="p">)</span> <span class="o">===</span> <span class="n">orders</span><span class="p">(</span><span class="s2">&quot;o_orderdate&quot;</span><span class="p">))</span>
+<span class="n">nestedLoopDF</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">truncate</span><span class="o">=</span><span class="n">false</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Check the Spark UI -&gt; SQL tab -&gt; show (Spark action). You will be able to see that the above code uses BroadcastNestedLoopJoin as the join type.</p>
+<p><img alt="Spark - 18" src="../images/spark-18.png" /></p>
+<p>BroadcastNestedLoopJoin is an inefficient join that results from bad coding practice. Convert it into SortMergeJoin or BroadcastJoin by changing the code.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">val</span> <span class="nv">result1</span> <span class="o">=</span> <span class="nv">lineitem</span>.<span class="nv">join</span><span class="ss">(</span><span class="nv">orders</span>, <span class="nv">lineitem</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">l_orderkey</span><span class="s2">&quot;</span><span class="ss">)</span> <span class="o">===</span> <span class="nv">orders</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">o_orderkey</span><span class="s2">&quot;</span><span class="ss">))</span>
+<span class="nv">val</span> <span class="nv">result2</span> <span class="o">=</span> <span class="nv">lineitem</span>.<span class="nv">join</span><span class="ss">(</span><span class="nv">orders</span>, <span class="nv">lineitem</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">l_receiptdate</span><span class="s2">&quot;</span><span class="ss">)</span> <span class="o">===</span> <span class="nv">orders</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">o_orderdate</span><span class="s2">&quot;</span><span class="ss">))</span>
+<span class="nv">val</span> <span class="nv">broadcastDF</span> <span class="o">=</span> <span class="nv">result1</span>.<span class="nv">union</span><span class="ss">(</span><span class="nv">result2</span><span class="ss">)</span>
+<span class="nv">broadcastDF</span>.<span class="k">show</span><span class="ss">(</span><span class="mi">5</span>,<span class="nv">truncate</span><span class="o">=</span><span class="nv">false</span><span class="ss">)</span>
+</code></pre></div>
+
+<p>Check the Spark UI now. You will be able to see that BroadcastHashJoin is being used instead which is the best join type if at least one of the two tables you are going to join is relatively small (&lt;50MB). Default <em>spark.sql.autoBroadcastJoinThreshold</em> is 10 MB.</p>
+<p><img alt="Spark - 19" src="../images/spark-19.png" /></p>
 <h3 id="submit-spark-work-to-emr-using-addsteps-api">Submit Spark Work to EMR using AddSteps API<a class="headerlink" href="#submit-spark-work-to-emr-using-addsteps-api" title="Permanent link">&para;</a></h3>
 <p>Let us submit Spark work to the cluster using EMR’s <a href="https://docs.aws.amazon.com/cli/latest/reference/emr/add-steps.html">AddSteps</a> API.</p>
 <p>Copy the EMR Cluster ID in the Summary Tab of your EMR cluster "EMR-Spark-Hive-Presto" from EMR Web Console. It looks like ‘j-XXXXXXXXXX’.</p>
