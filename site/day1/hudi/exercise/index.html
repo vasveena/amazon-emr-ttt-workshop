@@ -463,7 +463,7 @@
 
 
 <h1 id="exercise-4-apache-hudi-on-amazon-emr"><strong> Exercise 4 - Apache Hudi on Amazon EMR </strong><a class="headerlink" href="#exercise-4-apache-hudi-on-amazon-emr" title="Permanent link">&para;</a></h1>
-<p>In this exercise you will build incremental data lakes on EMR using Apache Hudi. You can build data lakes using Apache Hudi using Spark Datasource APIs, Hudi Deltastreamer utility and SparkSQL.  </p>
+<p>In this exercise you will build incremental data lakes on EMR using Apache Hudi. You can build data lakes using Apache Hudi using Spark Datasource APIs, Hudi Deltastreamer utility and SparkSQL. You will also build a real-time live incremental data lake with Spark Structured Streaming + Amazon Managed Streaming for Apache Kafka (MSK) + Apache Hudi.</p>
 <p>In the previous EMR Studio exercise, we linked the Git repository in the Jupyter interface. We will continue to use the same repository to run these exercises.</p>
 <p>SSH into the EMR leader node of the cluster "EMR-Spark-Hive-Presto" or open a session using AWS Session Manager for the EMR leader node since we will be running a few commands directly on the leader node.</p>
 <h3 id="apache-hudi-with-spark-datasource-apis">Apache Hudi with Spark Datasource APIs<a class="headerlink" href="#apache-hudi-with-spark-datasource-apis" title="Permanent link">&para;</a></h3>
@@ -482,7 +482,7 @@ aws s3 cp schema.avsc s3://mrworkshop-youraccountID-dayone/schema/schema.avsc
 <p>Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb". Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
 <h3 id="apache-hudi-with-sparksql-dmls">Apache Hudi with SparkSQL DMLs<a class="headerlink" href="#apache-hudi-with-sparksql-dmls" title="Permanent link">&para;</a></h3>
 <p>From EMR 6.5.0, you can write Hudi datasets using simple SQL statements. Let's look at an example.</p>
-<p>Go to workshop-repo -&gt; files -&gt; notebook -&gt; apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
+<p>From the EMR Studio workspace Jupyterlab session, go to workshop-repo -&gt; files -&gt; notebook -&gt; apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
 <p>Detailed instructions are within the notebook.</p>
 <h3 id="apache-hudi-with-spark-deltastreamer">Apache Hudi with Spark Deltastreamer<a class="headerlink" href="#apache-hudi-with-spark-deltastreamer" title="Permanent link">&para;</a></h3>
 <p>Hudi provides a utility called Deltastreamer for creating and manipulating Hudi datasets without the need to write any Spark code. For this activity, let us copy a few files to the S3 location. Run the following commands in your EMR leader node session created using Session Manager or SSH.</p>
