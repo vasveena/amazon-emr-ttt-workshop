@@ -348,6 +348,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#apache-hudi-with-spark-structured-streaming" class="md-nav__link">
+    Apache Hudi with Spark Structured Streaming
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -413,6 +420,13 @@
         <li class="md-nav__item">
   <a href="#apache-hudi-with-spark-deltastreamer" class="md-nav__link">
     Apache Hudi with Spark Deltastreamer
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apache-hudi-with-spark-structured-streaming" class="md-nav__link">
+    Apache Hudi with Spark Structured Streaming
   </a>
   
 </li>
@@ -550,12 +564,104 @@ aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
 <p><img alt="Hudi - 9" src="../images/hudi-9.png" /></p>
 <p>You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Steps). Wait for the step to complete (~1 minute).</p>
 <p><img alt="Hudi - 8" src="../images/hudi-8.png" /></p>
-<p>Let us check the street_address for the same _hoodie_record_key. Run the following query in hive CLI on the EMR leader node. Replace value of "_hoodie_record_key" in the where clause with the one you obtained from previous select query. </p>
+<p>Let us check the street_address for the same _hoodie_record_key. Run the following query in hive CLI on the EMR leader node. Replace value of "_hoodie_record_key" in the where clause with the one you obtained from previous select query.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_commit_time`</span><span class="p">,</span><span class="w"> </span><span class="n">street_address</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">profile_cow</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_record_key`</span><span class="o">=</span><span class="s1">&#39;00000b94-1500-4f10-bd10-d6393ba24643&#39;</span><span class="p">;</span><span class="w"></span>
 </code></pre></div>
 
 <p>Notice the change in commit time and street_address.</p>
 <p><img alt="Hudi - 10" src="../images/hudi-10.png" /></p>
+<h3 id="apache-hudi-with-spark-structured-streaming">Apache Hudi with Spark Structured Streaming<a class="headerlink" href="#apache-hudi-with-spark-structured-streaming" title="Permanent link">&para;</a></h3>
+<p>This exercise will show how you can write real time Hudi data sets using Spark Structured Streaming. For this exercise, we will use real-time NYC Metro Subway data using <a href="https://api.mta.info/#/landing">MTA API</a>.</p>
+<p>Keep the EMR Session Manager or SSH session active. In a new browser tab, create a new SSM session for EC2 instance "JumpHost" (or SSH into EC2 instance "JumpHost"). i.e., under the <a href="https://console.aws.amazon.com/ec2/home?region=us-east-1#Instances:">EC2 console</a> select the EC2 instance with name "JumpHost". Click on "Connect" -&gt; Session Manager -&gt; Connect.</p>
+<p>Switch to EC2 user and go to home directory</p>
+<div class="codehilite"><pre><span></span><code>sudo su ec2-user
+cd ~
+</code></pre></div>
+
+<p>Run the following commands in EC2 instance to get the values of ZookeeperConnectString and BootstrapBrokerString.</p>
+<div class="codehilite"><pre><span></span><code>clusterArn=`aws kafka list-clusters --region us-east-1 | jq &#39;.ClusterInfoList[0].ClusterArn&#39;`
+echo <span class="nv">$clusterArn</span>
+bs=$(echo &quot;aws kafka get-bootstrap-brokers --cluster-arn <span class="cp">${</span><span class="n">clusterArn</span><span class="cp">}</span> --region us-east-1&quot;  | bash | jq &#39;.BootstrapBrokerString&#39;)
+bs_update=$(echo <span class="nv">$bs</span> | sed &quot;s|,|\&#39;,\&#39;|g&quot; | sed &quot;s|\&quot;|&#39;|g&quot;)
+zs=$(echo &quot;aws kafka describe-cluster --cluster-arn <span class="nv">$clusterArn</span>&quot; --region us-east-1 | bash | jq &#39;.ClusterInfo.ZookeeperConnectString&#39;)
+</code></pre></div>
+
+<p>Create two Kafka topics.</p>
+<div class="codehilite"><pre><span></span><code>echo &quot;/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-topics.sh --create --zookeeper $zs --replication-factor 3 --partitions 1 --topic trip_update_topic&quot; | bash
+
+echo &quot;/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-topics.sh --create --zookeeper $zs --replication-factor 3 --partitions 1 --topic trip_status_topic&quot; | bash
+</code></pre></div>
+
+<p>Install packages required by Kafka client on the JumpHost instance session (via SSH or AWS SSM).</p>
+<div class="codehilite"><pre><span></span><code>pip3 install protobuf
+pip3 install kafka-python
+pip3 install --upgrade gtfs-realtime-bindings
+pip3 install underground
+pip3 install pathlib
+pip3 install requests
+</code></pre></div>
+
+<p>Run the below command to modify the bootstrap servers in the file train_arrival_producer.py on the JumpHost's /home/ec2-user/ directory. Change</p>
+<div class="codehilite"><pre><span></span><code>sudo sed -i &quot;s|&#39;bootstrapserverstring&#39;|$bs_update|g&quot; /home/ec2-user/train_arrival_producer.py
+</code></pre></div>
+
+<p>Export API key on the same session.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">MTA_API_KEY</span><span class="o">=</span><span class="n">UskS0iAsK06DtSffbgqNi8hlDvApPR833wydQAHG</span><span class="w"></span>
+</code></pre></div>
+
+<p>Run the Kafka producer client and terminate the process using Ctrl + C after 10 seconds.</p>
+<div class="codehilite"><pre><span></span><code>python3 train_arrival_producer.py
+</code></pre></div>
+
+<p>You can verify that the Kafka topics are being written to using the following commands</p>
+<div class="codehilite"><pre><span></span><code>echo &quot;/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_update_topic --from-beginning&quot; | bash
+</code></pre></div>
+
+<p><Ctrl + C> after a few seconds</p>
+<div class="codehilite"><pre><span></span><code>echo &quot;/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_status_topic --from-beginning&quot; | bash
+</code></pre></div>
+
+<p><Ctrl + C> after a few seconds</p>
+<p>Now let's configure Spark consumer on EMR leader node using Session Manager or SSH. 9). SSH into the leader node of EMR cluster "EMR-Spark-Hive-Presto" (or use AWS Session Manager). Download Spark dependencies in EMR leader node session.</p>
+<div class="codehilite"><pre><span></span><code>sudo su hadoop
+cd ~
+
+cd /usr/lib/spark/jars
+sudo wget https://repo1.maven.org/maven2/org/apache/spark/spark-streaming-kafka-0-10_2.12/3.0.1/spark-streaming-kafka-0-10_2.12-3.0.1.jar
+sudo wget https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.0.1/spark-sql-kafka-0-10_2.12-3.0.1.jar
+sudo wget https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.2.1/kafka-clients-2.2.1.jar
+sudo wget https://repo1.maven.org/maven2/org/apache/spark/spark-streaming-kafka-0-10-assembly_2.12/3.0.1/spark-streaming-kafka-0-10-assembly_2.12-3.0.1.jar
+sudo wget https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.11.1/commons-pool2-2.11.1.jar
+</code></pre></div>
+
+<p>In same session, provide all access to all HDFS folders. You can scope access per user if desired.</p>
+<div class="codehilite"><pre><span></span><code>hdfs dfs -chmod 777 /
+</code></pre></div>
+
+<p>Switch to the SSH/SSM session of EC2 instance “JumpHost”. Get the bootstrap string from the below command on the EC2 JumpHost session.</p>
+<div class="codehilite"><pre><span></span><code>echo $bs
+</code></pre></div>
+
+<p>Example output:
+"b-3.mskcluster.i9x8j1.c4.kafka.us-east-1.amazonaws.com:9092,b-1.mskcluster.i9x8j1.c4.kafka.us-east-1.amazonaws.com:9092,b-2.mskcluster.i9x8j1.c4.kafka.us-east-1.amazonaws.com:9092"</p>
+<p>Copy your bootstrap servers output to a notepad.</p>
+<p>Run the Kafka producer program again and keep it running.</p>
+<div class="codehilite"><pre><span></span><code>python3 train_arrival_producer.py
+</code></pre></div>
+
+<p>Now, go to the EMR Studio's JupyterLab workspace and open workshop-repo/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb. Make sure that "Spark" kernel is selected.</p>
+<p>Replace the broker string with the value of bootstrap servers you copied to your notepad. Replace youraccountID with event engine AWS account ID. Instructions are in the notebook.</p>
+<p>Once you have made the changes, run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using hive or even Athena.</p>
+<p>Go to the AWS Web Console -&gt; Athena -&gt; Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -&gt; Manage and add your Query result location like -&gt; s3://mrworkshop-youraccountID-dayone/athena/.</p>
+<p><img alt="Hudi - 11" src="../images/hudi-11.png" /></p>
+<p>Now, you can run the following queries once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.</p>
+<div class="codehilite"><pre><span></span><code>select count(*) from hudi_trips_streaming_table;
+
+select tripId, numoffuturestops from hudi_trips_streaming_table;
+</code></pre></div>
+
+<p>After inspecting, stop your Python Kafka producer on the EC2 JumpHost session using Ctrl + C.</p>
+<p>On EMR Studio workspace session, click on the stop icon <img alt="Hudi - 12" src="../images/hudi-12.png" /> to stop the Spark Structured Streaming job.</p>
 
               
             </article>

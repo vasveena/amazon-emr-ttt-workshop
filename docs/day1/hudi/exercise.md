@@ -29,6 +29,13 @@ aws s3 cp schema.avsc s3://mrworkshop-youraccountID-dayone/schema/schema.avsc
 
 Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb". Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.
 
+### Apache Hudi with SparkSQL DMLs
+From EMR 6.5.0, you can write Hudi datasets using simple SQL statements. Let's look at an example.
+
+Go to workshop-repo -> files -> notebook -> apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.
+
+Detailed instructions are within the notebook.
+
 ### Apache Hudi with Spark Deltastreamer
 
 Hudi provides a utility called Deltastreamer for creating and manipulating Hudi datasets without the need to write any Spark code. For this activity, let us copy a few files to the S3 location. Run the following commands in your EMR leader node session created using Session Manager or SSH.
@@ -176,7 +183,6 @@ select `_hoodie_commit_time`, street_address from profile_cow where `_hoodie_rec
 Notice the change in commit time and street_address.
 
 ![Hudi - 10](images/hudi-10.png)
-
 
 ### Apache Hudi with Spark Structured Streaming
 
