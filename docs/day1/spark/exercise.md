@@ -152,8 +152,8 @@ val orSchema = StructType(Array(
   )
 )
 
-val df1 = spark.read.schema(liSchema)csv("s3://redshift-downloads/TPC-H/2.18/3TB/lineitem/")
-val df2 = spark.read.schema(orSchema)csv("s3://redshift-downloads/TPC-H/2.18/3TB/orders/")
+val df1 = spark.read.schema(liSchema).option("delimiter","|").csv("s3://redshift-downloads/TPC-H/2.18/3TB/lineitem/")
+val df2 = spark.read.schema(orSchema).option("delimiter","|").csv("s3://redshift-downloads/TPC-H/2.18/3TB/orders/")
 val lineitem = df1.limit(1000)
 val orders = df2.limit(1000)
 

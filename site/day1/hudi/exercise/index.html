@@ -342,6 +342,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#apache-hudi-with-sparksql-dmls" class="md-nav__link">
+    Apache Hudi with SparkSQL DMLs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#apache-hudi-with-spark-deltastreamer" class="md-nav__link">
     Apache Hudi with Spark Deltastreamer
   </a>
@@ -418,6 +425,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#apache-hudi-with-sparksql-dmls" class="md-nav__link">
+    Apache Hudi with SparkSQL DMLs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#apache-hudi-with-spark-deltastreamer" class="md-nav__link">
     Apache Hudi with Spark Deltastreamer
   </a>
@@ -466,6 +480,10 @@ aws s3 cp schema.avsc s3://mrworkshop-youraccountID-dayone/schema/schema.avsc
 </code></pre></div>
 
 <p>Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb". Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
+<h3 id="apache-hudi-with-sparksql-dmls">Apache Hudi with SparkSQL DMLs<a class="headerlink" href="#apache-hudi-with-sparksql-dmls" title="Permanent link">&para;</a></h3>
+<p>From EMR 6.5.0, you can write Hudi datasets using simple SQL statements. Let's look at an example.</p>
+<p>Go to workshop-repo -&gt; files -&gt; notebook -&gt; apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
+<p>Detailed instructions are within the notebook.</p>
 <h3 id="apache-hudi-with-spark-deltastreamer">Apache Hudi with Spark Deltastreamer<a class="headerlink" href="#apache-hudi-with-spark-deltastreamer" title="Permanent link">&para;</a></h3>
 <p>Hudi provides a utility called Deltastreamer for creating and manipulating Hudi datasets without the need to write any Spark code. For this activity, let us copy a few files to the S3 location. Run the following commands in your EMR leader node session created using Session Manager or SSH.</p>
 <div class="codehilite"><pre><span></span><code>sudo su hadoop

@@ -1,6 +1,6 @@
 # ** Exercise 4 - Apache Hudi on Amazon EMR **
 
-In this exercise you will build incremental data lakes on EMR using Apache Hudi. You can build data lakes using Apache Hudi using Spark Datasource APIs, Hudi Deltastreamer utility and SparkSQL.  
+In this exercise you will build incremental data lakes on EMR using Apache Hudi. You can build data lakes using Apache Hudi using Spark Datasource APIs, Hudi Deltastreamer utility and SparkSQL. You will also build a real-time live incremental data lake with Spark Structured Streaming + Amazon Managed Streaming for Apache Kafka (MSK) + Apache Hudi.
 
 In the previous EMR Studio exercise, we linked the Git repository in the Jupyter interface. We will continue to use the same repository to run these exercises.
 
@@ -32,7 +32,7 @@ Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-dem
 ### Apache Hudi with SparkSQL DMLs
 From EMR 6.5.0, you can write Hudi datasets using simple SQL statements. Let's look at an example.
 
-Go to workshop-repo -> files -> notebook -> apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.
+From the EMR Studio workspace Jupyterlab session, go to workshop-repo -> files -> notebook -> apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.
 
 Detailed instructions are within the notebook.
 
