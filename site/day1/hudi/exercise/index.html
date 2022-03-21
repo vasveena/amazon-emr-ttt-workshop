@@ -310,9 +310,47 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          4 - Apache Hudi on Amazon EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         4 - Apache Hudi on Amazon EMR
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#apache-hudi-with-spark-datasource-apis" class="md-nav__link">
+    Apache Hudi with Spark Datasource APIs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apache-hudi-with-spark-deltastreamer" class="md-nav__link">
+    Apache Hudi with Spark Deltastreamer
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -359,6 +397,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#apache-hudi-with-spark-datasource-apis" class="md-nav__link">
+    Apache Hudi with Spark Datasource APIs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apache-hudi-with-spark-deltastreamer" class="md-nav__link">
+    Apache Hudi with Spark Deltastreamer
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -375,6 +435,127 @@
 
 
 <h1 id="exercise-4-apache-hudi-on-amazon-emr"><strong> Exercise 4 - Apache Hudi on Amazon EMR </strong><a class="headerlink" href="#exercise-4-apache-hudi-on-amazon-emr" title="Permanent link">&para;</a></h1>
+<p>In this exercise you will build incremental data lakes on EMR using Apache Hudi. You can build data lakes using Apache Hudi using Spark Datasource APIs, Hudi Deltastreamer utility and SparkSQL.  </p>
+<p>In the previous EMR Studio exercise, we linked the Git repository in the Jupyter interface. We will continue to use the same repository to run these exercises.</p>
+<p>SSH into the EMR leader node of the cluster "EMR-Spark-Hive-Presto" or open a session using AWS Session Manager for the EMR leader node since we will be running a few commands directly on the leader node.</p>
+<h3 id="apache-hudi-with-spark-datasource-apis">Apache Hudi with Spark Datasource APIs<a class="headerlink" href="#apache-hudi-with-spark-datasource-apis" title="Permanent link">&para;</a></h3>
+<p>Open the file workshop-repo -&gt; files -&gt; notebook -&gt; apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb in the Jupyter. Make sure the Kernel is set to PySpark.</p>
+<p><img alt="Hudi - 1" src="../images/hudi-1.png" /></p>
+<p>All the instructions required to run the notebook are within the notebook itself.</p>
+<p>Download the file workshop-repo -&gt; schema -&gt; schema.avsc to your local desktop and upload this file into the following S3 location (replace "youraccountID" with your event engine AWS account ID): <em>s3://mrworkshop-youraccountID-dayone/schema/schema.avsc</em></p>
+<p><img alt="Hudi - 2" src="../images/hudi-2.png" /></p>
+<p>Alternatively, you can run the following commands from the leader node of your EMR cluster. Replace "youraccountID" with your event engine AWS account ID. We will be using this schema AVRO file to run compaction on Merge-On-Read tables.</p>
+<div class="codehilite"><pre><span></span><code>sudo su hadoop
+cd ~
+curl -o schema.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/schema.avsc
+aws s3 cp schema.avsc s3://mrworkshop-youraccountID-dayone/schema/schema.avsc
+</code></pre></div>
+
+<p>Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb". Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
+<h3 id="apache-hudi-with-spark-deltastreamer">Apache Hudi with Spark Deltastreamer<a class="headerlink" href="#apache-hudi-with-spark-deltastreamer" title="Permanent link">&para;</a></h3>
+<p>Hudi provides a utility called Deltastreamer for creating and manipulating Hudi datasets without the need to write any Spark code. For this activity, let us copy a few files to the S3 location. Run the following commands in your EMR leader node session created using Session Manager or SSH.</p>
+<div class="codehilite"><pre><span></span><code>sudo su hadoop
+cd ~
+curl -o source-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/source-schema-json.avsc
+curl -o target-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/target-schema-json.avsc
+curl -o json-deltastreamer.properties https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/properties/json-deltastreamer.properties
+curl -o json-deltastreamer_upsert.properties https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/properties/json-deltastreamer_upsert.properties
+curl -o apache-hudi-on-amazon-emr-deltastreamer-python-demo.py https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
+</code></pre></div>
+
+<p>Replace youraccountID with event engine AWS account ID in the files json-deltastreamer.properties, json-deltastreamer_upsert.properties and apache-hudi-on-amazon-emr-deltastreamer-python-demo.py. You can do so using sed command below. Replace 707263692290 with your event engine account ID.</p>
+<div class="codehilite"><pre><span></span><code>sed -i &#39;s|youraccountID|707263692290|g&#39; json-deltastreamer.properties
+sed -i &#39;s|youraccountID|707263692290|g&#39; json-deltastreamer_upsert.properties
+sed -i &#39;s|youraccountID|707263692290|g&#39; apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
+</code></pre></div>
+
+<p>Now, copy the four files to your S3 location. Replace youraccountID with event engine AWS account ID.</p>
+<div class="codehilite"><pre><span></span><code>aws s3 cp source-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
+aws s3 cp target-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
+aws s3 cp json-deltastreamer.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
+aws s3 cp json-deltastreamer_upsert.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
+</code></pre></div>
+
+<p>Now let's generate some Fake data for the purpose of this workshop. We will use <a href="https://faker.readthedocs.io/en/master/">Faker</a> library for that. Install Faker with the below command.</p>
+<div class="codehilite"><pre><span></span><code>pip3 install Faker
+pip3 install boto3
+</code></pre></div>
+
+<p>Run the Python program to generate Fake data under respective S3 locations. This takes a few minutes to complete.</p>
+<div class="codehilite"><pre><span></span><code>python3 apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
+</code></pre></div>
+
+<p>Once done, make sure the inputdata and update prefixes are populated with JSON data files. You can copy one file using “aws s3 cp” on the EMR leader node session to inspect the data. Replace youraccountID with event engine AWS account ID.</p>
+<div class="codehilite"><pre><span></span><code>aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/inputdata
+aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
+</code></pre></div>
+
+<p><img alt="Hudi - 3" src="../images/hudi-3.png" /></p>
+<p>Copy the Hudi utilities bundle to HDFS.</p>
+<div class="codehilite"><pre><span></span><code>hadoop fs -copyFromLocal /usr/lib/hudi/hudi-utilities-bundle.jar hdfs:///user/hadoop/
+</code></pre></div>
+
+<p>Let's submit DeltaStreamer step to the EMR cluster. You can submit this step on EC2 JumpHost or leader node of EMR cluster "EMR-Spark-Hive-Presto". Since we have the EMR leader node session active, let us use it to run the command.</p>
+<p>Modify Add Steps Command for Bulk Insert Operation. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="n">XXXXXXXXX</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Type</span><span class="o">=</span><span class="n">Spark</span><span class="p">,</span><span class="n">Name</span><span class="o">=</span><span class="s">&quot;Deltastreamer COW - Bulk Insert&quot;</span><span class="p">,</span><span class="n">ActionOnFailure</span><span class="o">=</span><span class="n">CONTINUE</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="o">--</span><span class="n">jars</span><span class="p">,</span><span class="nl">hdfs:</span><span class="c1">///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-707263692290-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,BULK_INSERT] --region us-east-1</span>
+</code></pre></div>
+
+<p><img alt="Hudi - 4" src="../images/hudi-4.png" /></p>
+<p>You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Steps). It will take about 2 minutes to complete.</p>
+<p><img alt="Hudi - 5" src="../images/hudi-5.png" /></p>
+<p>Check the S3 location for Hudi files. Replace youraccountID with event engine AWS account ID.</p>
+<div class="codehilite"><pre><span></span><code>aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1/
+</code></pre></div>
+
+<p><img alt="Hudi - 6" src="../images/hudi-6.png" /></p>
+<p>Let's go to the hive CLI on EMR leader node by typing "hive". Let's run the following command to create a table. Replace youraccountID with event engine AWS account ID.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n n-Quoted">`profile_cow`</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`_hoodie_commit_time`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`_hoodie_commit_seqno`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`_hoodie_record_key`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`_hoodie_partition_path`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`_hoodie_file_name`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`Name`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`phone`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`job`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`company`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`ssn`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`street_address`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`dob`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`email`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="n n-Quoted">`ts`</span><span class="w"> </span><span class="k">string</span><span class="p">)</span><span class="w"></span>
+<span class="k">ROW</span><span class="w"> </span><span class="k">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"></span>
+<span class="w">  </span><span class="s1">&#39;org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe&#39;</span><span class="w"></span>
+<span class="k">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">INPUTFORMAT</span><span class="w"></span>
+<span class="w">  </span><span class="s1">&#39;org.apache.hudi.hadoop.HoodieParquetInputFormat&#39;</span><span class="w"></span>
+<span class="n">OUTPUTFORMAT</span><span class="w"></span>
+<span class="w">  </span><span class="s1">&#39;org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat&#39;</span><span class="w"></span>
+<span class="n">LOCATION</span><span class="w"></span>
+<span class="w">  </span><span class="s1">&#39;s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1/&#39;</span><span class="p">;</span><span class="w"></span>
+</code></pre></div>
+
+<p>Select a record from this table and copy the value of hoodie_record_key and street_address to a notepad.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_commit_time`</span><span class="p">,</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_record_key`</span><span class="p">,</span><span class="w"> </span><span class="n">street_address</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">profile_cow</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+</code></pre></div>
+
+<p><img alt="Hudi - 7" src="../images/hudi-7.png" /></p>
+<p>Exit from hive.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">exit</span><span class="c1">;</span>
+</code></pre></div>
+
+<p>Now, let's do upsert operation with Hudi Deltastreamer. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="n">XXXXXXXXX</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Type</span><span class="o">=</span><span class="n">Spark</span><span class="p">,</span><span class="n">Name</span><span class="o">=</span><span class="s">&quot;Deltastreamer COW - Upsert&quot;</span><span class="p">,</span><span class="n">ActionOnFailure</span><span class="o">=</span><span class="n">CONTINUE</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="o">--</span><span class="n">jars</span><span class="p">,</span><span class="nl">hdfs:</span><span class="c1">///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer_upsert.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,UPSERT] --region us-east-1</span>
+</code></pre></div>
+
+<p><img alt="Hudi - 9" src="../images/hudi-9.png" /></p>
+<p>You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Steps). Wait for the step to complete (~1 minute).</p>
+<p><img alt="Hudi - 8" src="../images/hudi-8.png" /></p>
+<p>Let us check the street_address for the same _hoodie_record_key. Run the following query in hive CLI on the EMR leader node. Replace value of "_hoodie_record_key" in the where clause with the one you obtained from previous select query. </p>
+<div class="codehilite"><pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_commit_time`</span><span class="p">,</span><span class="w"> </span><span class="n">street_address</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">profile_cow</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_record_key`</span><span class="o">=</span><span class="s1">&#39;00000b94-1500-4f10-bd10-d6393ba24643&#39;</span><span class="p">;</span><span class="w"></span>
+</code></pre></div>
+
+<p>Notice the change in commit time and street_address.</p>
+<p><img alt="Hudi - 10" src="../images/hudi-10.png" /></p>
 
               
             </article>

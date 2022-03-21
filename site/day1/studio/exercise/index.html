@@ -596,7 +596,7 @@
 <p><img alt="Studio - 8" src="../images/studio-8.png" /></p>
 <p>It will take about 2 minutes for the Status to change to "Attached".  </p>
 <p><img alt="Studio - 9" src="../images/studio-9.png" /></p>
-<p>Click on the workspace and it will open a managed JupyterLab session. You can create a Jupyter notebook with any kernel.</p>
+<p>Click on the workspace and it will open a managed JupyterLab session. You may need to allow pop-up from this address in your browser to open the JupyterLab. Once opened, you can create a Jupyter notebook with any kernel.</p>
 <h3 id="explore-emr-studio-workspace-features">Explore EMR Studio Workspace Features<a class="headerlink" href="#explore-emr-studio-workspace-features" title="Permanent link">&para;</a></h3>
 <h4 id="cluster">Cluster<a class="headerlink" href="#cluster" title="Permanent link">&para;</a></h4>
 <p>Under cluster tab, check the cluster attachment.</p>
@@ -614,6 +614,7 @@ Git credentials: Use a public repository without credentials</p>
 <p>Once its linked, you can go back to the workspace folder. You will find a folder called "workshop-repo".</p>
 <p><img alt="Studio - 14" src="../images/studio-14.png" /></p>
 <p>Go to workshop-repo -&gt; files -&gt; notebook to see the notebooks.</p>
+<p><img alt="Studio - 29" src="../images/studio-29.png" /></p>
 <p>If you are not able to link repository successfully, download <a href="https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/amazon_reviews.ipynb">amazon_reviews.ipynb</a> and <a href="https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/find_best_sellers.ipynb">find_best_sellers.ipynb</a> files to your local desktop (Right click -&gt; Save Link As). Upload these two files from your local desktop to the JupyterLab. Upload icon looks like <img alt="Studio - 10" src="../images/studio-10.png" />.</p>
 <h4 id="notebook-scoped-libraries">Notebook-scoped libraries<a class="headerlink" href="#notebook-scoped-libraries" title="Permanent link">&para;</a></h4>
 <p>Run all the cells in amazon-reviews.ipynb notebook. Make sure Pyspark kernel is selected.</p>
@@ -663,7 +664,7 @@ pip3 install awscli --upgrade
 
 <p>Copy the editor-ID from notebook URL. For example: https://e-c9zy9cmd24ccf4f2b4uz7d7ma.emrnotebooks-prod.us-east-1.amazonaws.com/e-C9ZY9CMD24CCF4F2B4UZ7D7MA/lab/tree/workshop-repo/files/notebook/find_best_sellers.ipynb</p>
 <p>"e-C9ZY9CMD24CCF4F2B4UZ7D7MA" is the editor ID. In the following command, replace your editor-id with this value.
-Cluster ID in --execution-engine should be replaced with your EMR cluster ID.
+Cluster ID in --execution-engine should be replaced with your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -&gt; Amazon EMR Console -&gt; Summary tab. Looks like j-XXXXXXXXX)
 Change "352365466794" in the OUTPUT_LOCATION parameter with your account ID.</p>
 <div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="o">/</span><span class="p">.</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
 <span class="n">start</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
@@ -711,7 +712,7 @@ Change "352365466794" in the OUTPUT_LOCATION parameter with your account ID.</p>
 <p><img alt="Studio - 20" src="../images/studio-20.png" /></p>
 <p>We will see in tomorrow's exercise how to orchestrate a pipeline with this parameterized notebook using Amazon Managed Workflows for Apache Airflow.</p>
 <h4 id="sql-explorer">SQL Explorer<a class="headerlink" href="#sql-explorer" title="Permanent link">&para;</a></h4>
-<p>Lets check the new SQL explorer feature which helps you run ad-hoc and interactive queries against your tables. </p>
+<p>Lets check the new SQL explorer feature which helps you run ad-hoc and interactive queries against your tables.</p>
 <p>Go to the SQL explorer and select "default" database. You will be able to see the four tables created in Glue catalog for the 4 categories apparel, baby, furniture and PC from our previous job runs.</p>
 <p><img alt="Studio - 27" src="../images/studio-27.png" /></p>
 <p>Click on "Open Editor" and query the tables.</p>
