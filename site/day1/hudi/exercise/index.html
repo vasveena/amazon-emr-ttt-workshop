@@ -635,11 +635,11 @@ pip3 install requests
 <div class="codehilite"><pre><span></span><code>echo &quot;/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_update_topic --from-beginning&quot; | bash
 </code></pre></div>
 
-<p><Ctrl + C> after a few seconds</p>
+<p>After a few seconds exit using Ctrl + C.</p>
 <div class="codehilite"><pre><span></span><code>echo &quot;/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_status_topic --from-beginning&quot; | bash
 </code></pre></div>
 
-<p><Ctrl + C> after a few seconds</p>
+<p>After a few seconds exit using Ctrl + C. </p>
 <p>Now let's configure Spark consumer on EMR leader node using Session Manager or SSH. 9). SSH into the leader node of EMR cluster "EMR-Spark-Hive-Presto" (or use AWS Session Manager). Download Spark dependencies in EMR leader node session.</p>
 <div class="codehilite"><pre><span></span><code>sudo su hadoop
 cd ~

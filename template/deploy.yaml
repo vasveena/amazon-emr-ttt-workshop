@@ -363,11 +363,11 @@ Resources:
                - GroupId
           MasterInstanceFleet:
             InstanceTypeConfigs:
-               - InstanceType: m5.2xlarge
-               - InstanceType: m4.2xlarge
-               - InstanceType: c5.2xlarge
-               - InstanceType: r5.2xlarge
-               - InstanceType: r4.2xlarge
+               - InstanceType: m5.4xlarge
+               - InstanceType: m4.4xlarge
+               - InstanceType: c5.4xlarge
+               - InstanceType: r5.4xlarge
+               - InstanceType: r4.4xlarge
             Name: cfnMaster
             TargetOnDemandCapacity: 1
           CoreInstanceFleet:
@@ -837,6 +837,10 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !Sub 'mrworkshop-${AWS::AccountId}-${AWS::StackName}'
+  IcebergBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'mrworkshop-${AWS::AccountId}-${AWS::StackName}-iceberg'
   HBaseOnS3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
@@ -1120,7 +1124,7 @@ Resources:
 
               cd /home/ec2-user
 
-              curl -o train_arrival_producer.py https://raw.githubusercontent.com/vasveena/hudi-workshop/main/LAB3/train_arrival_producer.py
+              curl -o train_arrival_producer.py https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/train_arrival_producer.py
 
               curl -o ssm-agent.sh https://raw.githubusercontent.com/vasveena/EMRMigrationWorkshop/main/bootstrap/ssm-agent.sh
 
