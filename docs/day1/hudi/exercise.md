@@ -191,17 +191,13 @@ sudo su ec2-user
 cd ~
 ```
 
-Run the two commands in EC2 instance to get the values of ZookeeperConnectString and BootstrapBrokerString.
+Run the following commands in EC2 instance to get the values of ZookeeperConnectString and BootstrapBrokerString.
 
 ```
 clusterArn=`aws kafka list-clusters --region us-east-1 | jq '.ClusterInfoList[0].ClusterArn'`
 echo $clusterArn
 bs=$(echo "aws kafka get-bootstrap-brokers --cluster-arn ${clusterArn} --region us-east-1"  | bash | jq '.BootstrapBrokerString')
-```
-
-Get Zookeeper Connection String to create Kafka topics  
-
-```
+bs_update=$(echo $bs | sed "s|,|\',\'|g" | sed "s|\"|'|g")
 zs=$(echo "aws kafka describe-cluster --cluster-arn $clusterArn" --region us-east-1 | bash | jq '.ClusterInfo.ZookeeperConnectString')
 ```
 
@@ -211,12 +207,6 @@ Create two Kafka topics.
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-topics.sh --create --zookeeper $zs --replication-factor 3 --partitions 1 --topic trip_update_topic" | bash
 
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-topics.sh --create --zookeeper $zs --replication-factor 3 --partitions 1 --topic trip_status_topic" | bash
-```
-
-Export API key on the session
-
-```
-export MTA_API_KEY=UskS0iAsK06DtSffbgqNi8hlDvApPR833wydQAHG
 ```
 
 Install packages required by Kafka client on the JumpHost instance session (via SSH or AWS SSM).
@@ -230,13 +220,17 @@ pip3 install pathlib
 pip3 install requests
 ```
 
-Modify the bootstrap servers in the file train_arrival_producer.py on the JumpHost's /home/ec2-user/ directory. Change
+Run the below command to modify the bootstrap servers in the file train_arrival_producer.py on the JumpHost's /home/ec2-user/ directory. Change
 
 ```
-echo "aws kafka get-bootstrap-brokers --cluster-arn ${clusterArn} --region us-east-1"  | bash | jq '.BootstrapBrokerString'
-
+sudo sed -i "s|'bootstrapserverstring'|$bs_update|g" /home/ec2-user/train_arrival_producer.py
 ```
 
+Export API key on the same session.
+
+```
+export MTA_API_KEY=UskS0iAsK06DtSffbgqNi8hlDvApPR833wydQAHG
+```
 
 Run the Kafka producer client and terminate the process using Ctrl + C after 10 seconds.
 
@@ -246,11 +240,11 @@ python3 train_arrival_producer.py
 
 You can verify that the Kafka topics are being written to using the following commands
 ```
-/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server "b-3.mskcluster.4ihigb.c20.kafka.us-east-1.amazonaws.com:9092,b-2.mskcluster.4ihigb.c20.kafka.us-east-1.amazonaws.com:9092,b-1.mskcluster.4ihigb.c20.kafka.us-east-1.amazonaws.com:9092" --topic trip_update_topic --from-beginning
+echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_update_topic --from-beginning" | bash
 ```
 <Ctrl + C> after a few seconds
 ```
-/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server "b-3.mskcluster.4ihigb.c20.kafka.us-east-1.amazonaws.com:9092,b-2.mskcluster.4ihigb.c20.kafka.us-east-1.amazonaws.com:9092,b-1.mskcluster.4ihigb.c20.kafka.us-east-1.amazonaws.com:9092" --topic trip_status_topic --from-beginning
+echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_status_topic --from-beginning" | bash
 ```
 <Ctrl + C> after a few seconds
 
@@ -275,195 +269,41 @@ In same session, provide all access to all HDFS folders. You can scope access pe
 hdfs dfs -chmod 777 /
 ```
 
-Now, open Spark shell using the "spark-shell" command.
+Switch to the SSH/SSM session of EC2 instance “JumpHost”. Get the bootstrap string from the below command on the EC2 JumpHost session.
 
 ```
-spark-shell --jars hdfs:///user/hadoop/aws-java-sdk-bundle-1.12.31.jar,hdfs:///user/hadoop/httpcore-4.4.11.jar,hdfs:///user/hadoop/httpclient-4.5.9.jar,hdfs:///user/hadoop/hudi-spark-bundle.jar,hdfs:///user/hadoop/spark-avro.jar --conf spark.sql.hive.convertMetastoreParquet=false --conf spark.serializer=org.apache.spark.serializer.KryoSerializer
+echo $bs
 ```
 
-Once the Spark session is created, run the below code block. Replace youraccountID with event engine AWS account ID. Replace "broker" variable's value with your bootstrap string.
+Example output:
+"b-3.mskcluster.i9x8j1.c4.kafka.us-east-1.amazonaws.com:9092,b-1.mskcluster.i9x8j1.c4.kafka.us-east-1.amazonaws.com:9092,b-2.mskcluster.i9x8j1.c4.kafka.us-east-1.amazonaws.com:9092"
+
+Copy your bootstrap servers output to a notepad.
+
+Run the Kafka producer program again and keep it running.
 
 ```
-// General Constants
-val HUDI_FORMAT = "org.apache.hudi"
-val TABLE_NAME = "hoodie.table.name"
-val RECORDKEY_FIELD_OPT_KEY = "hoodie.datasource.write.recordkey.field"
-val PRECOMBINE_FIELD_OPT_KEY = "hoodie.datasource.write.precombine.field"
-val OPERATION_OPT_KEY = "hoodie.datasource.write.operation"
-val BULK_INSERT_OPERATION_OPT_VAL = "bulk_insert"
-val UPSERT_OPERATION_OPT_VAL = "upsert"
-val BULK_INSERT_PARALLELISM = "hoodie.bulkinsert.shuffle.parallelism"
-val UPSERT_PARALLELISM = "hoodie.upsert.shuffle.parallelism"
-val S3_CONSISTENCY_CHECK = "hoodie.consistency.check.enabled"
-val HUDI_CLEANER_POLICY = "hoodie.cleaner.policy"
-val KEEP_LATEST_COMMITS = "KEEP_LATEST_COMMITS"
-val HUDI_COMMITS_RETAINED = "hoodie.cleaner.commits.retained"
-val PAYLOAD_CLASS_OPT_KEY = "hoodie.datasource.write.payload.class"
-val EMPTY_PAYLOAD_CLASS_OPT_VAL = "org.apache.hudi.common.model.EmptyHoodieRecordPayload"
-val TABLE_TYPE_OPT_KEY="hoodie.datasource.write.table.type"
-
-// Hive Constants
-val HIVE_SYNC_ENABLED_OPT_KEY="hoodie.datasource.hive_sync.enable"
-val HIVE_PARTITION_FIELDS_OPT_KEY="hoodie.datasource.hive_sync.partition_fields"
-val HIVE_ASSUME_DATE_PARTITION_OPT_KEY="hoodie.datasource.hive_sync.assume_date_partitioning"
-val HIVE_PARTITION_EXTRACTOR_CLASS_OPT_KEY="hoodie.datasource.hive_sync.partition_extractor_class"
-val HIVE_TABLE_OPT_KEY="hoodie.datasource.hive_sync.table"
-
-// Partition Constants
-val NONPARTITION_EXTRACTOR_CLASS_OPT_VAL="org.apache.hudi.hive.NonPartitionedExtractor"
-val MULTIPART_KEYS_EXTRACTOR_CLASS_OPT_VAL="org.apache.hudi.hive.MultiPartKeysValueExtractor"
-val KEYGENERATOR_CLASS_OPT_KEY="hoodie.datasource.write.keygenerator.class"
-val NONPARTITIONED_KEYGENERATOR_CLASS_OPT_VAL="org.apache.hudi.keygen.NonpartitionedKeyGenerator"
-val COMPLEX_KEYGENERATOR_CLASS_OPT_VAL="org.apache.hudi.ComplexKeyGenerator"
-val PARTITIONPATH_FIELD_OPT_KEY="hoodie.datasource.write.partitionpath.field"
-
-//Incremental Constants
-val VIEW_TYPE_OPT_KEY="hoodie.datasource.view.type"
-val BEGIN_INSTANTTIME_OPT_KEY="hoodie.datasource.read.begin.instanttime"
-val VIEW_TYPE_INCREMENTAL_OPT_VAL="incremental"
-val END_INSTANTTIME_OPT_KEY="hoodie.datasource.read.end.instanttime"
-
-import org.apache.spark.sql.{DataFrame, Row, SaveMode}
-import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
-import org.apache.spark.sql.ForeachWriter
-import org.apache.spark.sql.catalyst.encoders.RowEncoder
-import org.apache.spark.sql._
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.streaming._
-import org.apache.spark.sql.types._
-import org.apache.kafka.clients.producer.{ProducerConfig, KafkaProducer, ProducerRecord}
-import java.util.HashMap
-import spark.implicits._
-import org.apache.hudi._
-
-val trip_update_topic = "trip_update_topic"
-val trip_status_topic = "trip_status_topic"
-//REPLACE your broker
-val broker = "b-3.test.1tklkx.c2.kafka.us-east-1.amazonaws.com:9092,b-1.test.1tklkx.c2.kafka.us-east-1.amazonaws.com:9092,b-2.test.1tklkx.c2.kafka.us-east-1.amazonaws.com:9092"
-
-object MTASubwayTripUpdates extends Serializable {
-
-    val props = new HashMap[String, Object]()
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, broker)
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-      "org.apache.kafka.common.serialization.StringSerializer")
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-      "org.apache.kafka.common.serialization.StringSerializer")
-
-    @transient var producer : KafkaProducer[String, String] = null
-    var msgId : Long = 1
-    @transient var joined_query : StreamingQuery = null
-    @transient var joined_query_s3 : StreamingQuery = null
-
-    val spark = SparkSession.builder.appName("MSK streaming Example").getOrCreate()
-
-
-    def start() = {
-        //Start producer for kafka
-        producer = new KafkaProducer[String, String](props)
-
-        //Create a datastream from trip update topic
-        val trip_update_df = spark.readStream.format("kafka")
-        .option("kafka.bootstrap.servers", broker)
-        .option("subscribe", trip_update_topic)
-        .option("startingOffsets", "latest").option("failOnDataLoss","false").load()
-
-        //Create a datastream from trip status topic
-        val trip_status_df = spark.readStream
-        .format("kafka")
-        .option("kafka.bootstrap.servers", broker)
-        .option("subscribe", trip_status_topic)
-        .option("startingOffsets", "latest").option("failOnDataLoss","false").load()
-
-        // define schema of data
-
-        val trip_update_schema = new StructType()
-        .add("trip", new StructType().add("tripId","string").add("startTime","string").add("startDate","string").add("routeId","string"))
-        .add("stopTimeUpdate",ArrayType(new StructType().add("arrival",new StructType().add("time","string")).add("stopId","string").add("departure",new StructType().add("time","string"))))
-
-        val trip_status_schema = new StructType()
-        .add("trip", new StructType().add("tripId","string").add("startTime","string").add("startDate","string").add("routeId","string")).add("currentStopSequence","integer").add("currentStatus", "string").add("timestamp", "string").add("stopId","string")
-
-        // covert datastream into a datasets and apply schema
-        val trip_update_ds = trip_update_df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").as[(String, String)]
-        val trip_update_ds_schema = trip_update_ds
-        .select(from_json($"value", trip_update_schema).as("data")).select("data.*")
-        trip_update_ds_schema.printSchema()
-
-        val trip_status_ds = trip_status_df
-        .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").as[(String, String)]
-        val trip_status_ds_schema = trip_status_ds
-        .select(from_json($"value", trip_status_schema).as("data")).select("data.*")
-        trip_status_ds_schema.printSchema()
-
-        val trip_status_ds_unnest = trip_status_ds_schema
-        .select("trip.*","currentStopSequence","currentStatus","timestamp","stopId")
-
-        val trip_update_ds_unnest = trip_update_ds_schema
-        .select($"trip.*", $"stopTimeUpdate.arrival.time".as("arrivalTime"),
-                $"stopTimeUpdate.departure.time".as("depatureTime"), $"stopTimeUpdate.stopId")
-
-        val trip_update_ds_unnest2 = trip_update_ds_unnest
-        .withColumn("numOfFutureStops", size($"arrivalTime"))
-        .withColumnRenamed("stopId","futureStopIds")
-
-        val joined_ds = trip_update_ds_unnest2
-        .join(trip_status_ds_unnest, Seq("tripId","routeId","startTime","startDate"))
-        .withColumn("startTime",(col("startTime").cast("timestamp")))
-        .withColumn("currentTs",from_unixtime($"timestamp".divide(1000)))
-        .drop("startDate").drop("timestamp")
-
-        joined_ds.printSchema()
-
-        //console
-        val joined_query = joined_ds
-        .writeStream.outputMode("complete")
-        .format("console")
-        .option("truncate", "true")
-        .outputMode(OutputMode.Append()).trigger(Trigger.ProcessingTime("10 seconds")).start()
-
-        def myFunc( batchDF:DataFrame, batchID:Long ) : Unit = {
-            batchDF.persist()
-
-            batchDF.write.format("org.apache.hudi")
-                .option(TABLE_TYPE_OPT_KEY, "COPY_ON_WRITE")
-                .option(PRECOMBINE_FIELD_OPT_KEY, "currentTs")
-                .option(RECORDKEY_FIELD_OPT_KEY, "tripId")
-                .option(TABLE_NAME, "hudi_trips_streaming_table")
-                .option(UPSERT_PARALLELISM, 200)
-                .option(HUDI_CLEANER_POLICY, KEEP_LATEST_COMMITS)
-                .option(S3_CONSISTENCY_CHECK, "true")
-                .option(HIVE_SYNC_ENABLED_OPT_KEY,"true")
-                .option(OPERATION_OPT_KEY, UPSERT_OPERATION_OPT_VAL)
-                .option(HIVE_PARTITION_EXTRACTOR_CLASS_OPT_KEY,NONPARTITION_EXTRACTOR_CLASS_OPT_VAL)
-                .option(KEYGENERATOR_CLASS_OPT_KEY,NONPARTITIONED_KEYGENERATOR_CLASS_OPT_VAL)
-                .mode(SaveMode.Append)
-                .save("s3://vasveena-test-demo/demos/streaming_output/")
-
-            batchDF.unpersist()
-        }        
-        val query = joined_ds.writeStream.queryName("lab3")
-        .trigger(Trigger.ProcessingTime("60 seconds"))
-        .foreachBatch(myFunc _)
-
-      .option("checkpointLocation", "/user/hadoop/checkpoint")
-      .start()
-
-      query.awaitTermination()
-
-    }
-}
-
-MTASubwayTripUpdates.start
-
-
+python3 train_arrival_producer.py
 ```
 
-Navigate to the SSH/SSM session of EC2 instance “JumpHost”, run the Kafka producer program again and keep it running ->
-python3 train_arrival_producer.py.
+Now, go to the EMR Studio's JupyterLab workspace and open workshop-repo/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb. Make sure that "Spark" kernel is selected.
 
-Start the Spark job using below command within the same spark-shell session.
+Replace the broker string with the value of bootstrap servers you copied to your notepad. Replace youraccountID with event engine AWS account ID. Instructions are in the notebook.
 
+Once you have made the changes, run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using hive or even Athena.
 
-Spark streaming job runs every 60 seconds. You can increase the duration if you want to.
+Go to the AWS Web Console -> Athena -> Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -> Manage and add your Query result location like -> s3://mrworkshop-youraccountID-dayone/athena/.
+
+![Hudi - 11](images/hudi-11.png)
+
+Now, you can run the following queries once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.
+
+```
+select count(*) from hudi_trips_streaming_table;
+
+select tripId, numoffuturestops from hudi_trips_streaming_table;
+```
+
+After inspecting, stop your Python Kafka producer on the EC2 JumpHost session using Ctrl + C.
+
+On EMR Studio workspace session, click on the stop icon ![Hudi - 12](images/hudi-12.png) to stop the Spark Structured Streaming job.
