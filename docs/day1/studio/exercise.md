@@ -154,7 +154,7 @@ Verify that the notebooks APIs are working
 Copy the editor-ID from notebook URL. For example: https://e-c9zy9cmd24ccf4f2b4uz7d7ma.emrnotebooks-prod.us-east-1.amazonaws.com/e-C9ZY9CMD24CCF4F2B4UZ7D7MA/lab/tree/workshop-repo/files/notebook/find_best_sellers.ipynb
 
 "e-C9ZY9CMD24CCF4F2B4UZ7D7MA" is the editor ID. In the following command, replace your editor-id with this value.
-Cluster ID in --execution-engine should be replaced with your EMR cluster ID.
+Cluster ID in --execution-engine should be replaced with your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -> Amazon EMR Console -> Summary tab. Looks like j-XXXXXXXXX)
 Change "352365466794" in the OUTPUT_LOCATION parameter with your account ID.
 
 ```

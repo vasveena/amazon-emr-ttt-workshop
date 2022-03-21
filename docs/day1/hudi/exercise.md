@@ -40,14 +40,15 @@ curl -o source-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazo
 curl -o target-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/target-schema-json.avsc
 curl -o json-deltastreamer.properties https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/properties/json-deltastreamer.properties
 curl -o json-deltastreamer_upsert.properties https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/properties/json-deltastreamer_upsert.properties
-
+curl -o apache-hudi-on-amazon-emr-deltastreamer-python-demo.py https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
 ```
 
-Replace youraccountID with event engine AWS account ID in the files json-deltastreamer.properties and json-deltastreamer_upsert.properties. You can do so using sed command below. Replace 707263692290 with your event engine account ID.
+Replace youraccountID with event engine AWS account ID in the files json-deltastreamer.properties, json-deltastreamer_upsert.properties and apache-hudi-on-amazon-emr-deltastreamer-python-demo.py. You can do so using sed command below. Replace 707263692290 with your event engine account ID.
 
 ```
 sed -i 's|youraccountID|707263692290|g' json-deltastreamer.properties
 sed -i 's|youraccountID|707263692290|g' json-deltastreamer_upsert.properties
+sed -i 's|youraccountID|707263692290|g' apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
 ```
 
 Now, copy the four files to your S3 location. Replace youraccountID with event engine AWS account ID.
@@ -56,131 +57,122 @@ Now, copy the four files to your S3 location. Replace youraccountID with event e
 aws s3 cp source-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
 aws s3 cp target-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
 aws s3 cp json-deltastreamer.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
-aws s3 cp json-deltastreamer.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
+aws s3 cp json-deltastreamer_upsert.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
 
 ```
 
-Now let's generate some Fake data for the purpose of this workshop. We will use [Faker](https://faker.readthedocs.io/en/master/) library for that. Install Faker with the below command. 
+Now let's generate some Fake data for the purpose of this workshop. We will use [Faker](https://faker.readthedocs.io/en/master/) library for that. Install Faker with the below command.
 
 ```
-pip install Faker
+pip3 install Faker
+pip3 install boto3
+
 ```
 
-Open a Python shell in your EMR leader node session by typing "python".
+Run the Python program to generate Fake data under respective S3 locations. This takes a few minutes to complete.
+
+```
+python3 apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
+```
+
+Once done, make sure the inputdata and update prefixes are populated with JSON data files. You can copy one file using “aws s3 cp” on the EMR leader node session to inspect the data. Replace youraccountID with event engine AWS account ID.
+
+```
+aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/inputdata
+aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
+```
 
 ![Hudi - 3](images/hudi-3.png)
 
-Run the following block to generates some fake data. Replace youraccountID with event engine AWS account ID.
+Copy the Hudi utilities bundle to HDFS.
 
 ```
-import os
-import json
-import random
-import boto3
-import io
-from io import StringIO
-from faker import Faker
-from faker.providers import date_time, credit_card
-from json import dumps
-
-
-# Intialize Faker library and S3 client
-fake = Faker()
-fake.add_provider(date_time)
-fake.add_provider(credit_card)
-
-s3 = boto3.resource('s3')
-
-# Write the fake profile data to a S3 bucket
-# REPLACE youraccountID with event engine AWS account ID
-s3_bucket = "mrworkshop-707263692290-dayone"
-s3_load_prefix = 'hudi-ds/inputdata/'
-s3_update_prefix = 'hudi-ds/updates/'
-
-# Number of records in each file and number of files
-# Adjust per your need - this produces 40MB files
-#num_records = 150000
-#num_files = 50
-
-num_records = 10000
-num_files = 15
-
-def generate_bulk_data():
-    '''
-    Generates bulk profile data
-    '''
-    # Generate number of files equivalent to num_files
-    for i in range (num_files):
-        fake_profile_data = fake_profile_generator(num_records, fake)
-        fakeIO = StringIO()
-        filename = 'profile_' + str(i + 1) + '.json'
-        s3key = s3_load_prefix + filename
-        fakeIO.write(str(''.join(dumps_lines(fake_profile_data))))
-        s3object = s3.Object(s3_bucket, s3key)
-        s3object.put(Body=(bytes(fakeIO.getvalue().encode('UTF-8'))))
-        fakeIO.close()
-
-def generate_updates():
-    '''
-    Generates updates for the profiles
-    '''
-    #
-    # We will make updates to records in randomly picked files
-    #
-    random_file_list = []
-    for i in range (1, num_files):
-        random_file_list.append('profile_' + str(i) + '.json')
-    for f in random_file_list:
-        #print(f)
-        s3key = s3_load_prefix + f
-        obj = s3.Object(s3_bucket, s3key)
-        profile_data = obj.get()['Body'].read().decode('utf-8')
-        #s3_profile_list = json.loads(profile_data)
-        stringIO_data = io.StringIO(profile_data)
-        data = stringIO_data.readlines()
-        #Its time to use json module now.
-        json_data = list(map(json.loads, data))
-        fakeIO = StringIO()
-        s3key = s3_update_prefix + f
-        fake_profile_data = []
-        for rec in json_data:
-            # Let's generate a new address
-            #print ("old address: " + rec['street_address'])
-            rec['street_address'] = fake.address()
-            #print ("new address: " + rec['street_address'])
-            fake_profile_data.append(rec)       
-        fakeIO.write(str(''.join(dumps_lines(fake_profile_data))))
-        s3object = s3.Object(s3_bucket, s3key)
-        s3object.put(Body=(bytes(fakeIO.getvalue().encode('UTF-8'))))
-        fakeIO.close()
-
-def fake_profile_generator(length, fake, new_address=""):
-    """
-    Generates fake profiles
-    """
-    for x in range (length):       
-        yield {'Name': fake.name(),
-               'phone': fake.phone_number(),
-               'job': fake.job(),
-               'company': fake.company(),
-               'ssn': fake.ssn(),
-               'street_address': (new_address if new_address else fake.address()),
-               'dob': (fake.date_of_birth(tzinfo=None, minimum_age=21, maximum_age=105).isoformat()),
-               'email': fake.email(),
-               'ts': (fake.date_time_between(start_date='-10y', end_date='now', tzinfo=None).isoformat()),
-               'credit_card': fake.credit_card_number(),
-               'record_id': fake.pyint(),
-               'id': fake.uuid4()}
-
-def dumps_lines(objs):
-    for obj in objs:
-        yield json.dumps(obj, separators=(',',':')) + '\n'
-```
-
-Now, let us run the function in the same python shell to generate bulk insert data and upsert data in the respective S3 locations.
+hadoop fs -copyFromLocal /usr/lib/hudi/hudi-utilities-bundle.jar hdfs:///user/hadoop/
 
 ```
-generate_bulk_data()
-generate_updates()
+
+Let's submit DeltaStreamer step to the EMR cluster. You can submit this step on EC2 JumpHost or leader node of EMR cluster "EMR-Spark-Hive-Presto". Since we have the EMR leader node session active, let us use it to run the command.
+
+Modify Add Steps Command for Bulk Insert Operation. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.
 
 ```
+aws emr add-steps --cluster-id j-XXXXXXXXX --steps Type=Spark,Name="Deltastreamer COW - Bulk Insert",ActionOnFailure=CONTINUE,Args=[--jars,hdfs:///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-707263692290-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,BULK_INSERT] --region us-east-1
+```
+
+![Hudi - 4](images/hudi-4.png)
+
+You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Steps). It will take about 2 minutes to complete.
+
+![Hudi - 5](images/hudi-5.png)
+
+Check the S3 location for Hudi files. Replace youraccountID with event engine AWS account ID.
+
+```
+aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1/
+```
+
+![Hudi - 6](images/hudi-6.png)
+
+Let's go to the hive CLI on EMR leader node by typing "hive". Let's run the following command to create a table. Replace youraccountID with event engine AWS account ID.
+
+```
+CREATE EXTERNAL TABLE `profile_cow`(
+  `_hoodie_commit_time` string,
+  `_hoodie_commit_seqno` string,
+  `_hoodie_record_key` string,
+  `_hoodie_partition_path` string,
+  `_hoodie_file_name` string,
+  `Name` string,
+  `phone` string,
+  `job` string,
+  `company` string,
+  `ssn` string,
+  `street_address` string,
+  `dob` string,
+  `email` string,
+  `ts` string)
+ROW FORMAT SERDE
+  'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
+STORED AS INPUTFORMAT
+  'org.apache.hudi.hadoop.HoodieParquetInputFormat'
+OUTPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
+LOCATION
+  's3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1/';
+```
+
+Select a record from this table and copy the value of hoodie_record_key and street_address to a notepad.
+
+```
+select `_hoodie_commit_time`, `_hoodie_record_key`, street_address from profile_cow limit 1;
+```
+
+![Hudi - 7](images/hudi-7.png)
+
+Exit from hive.
+
+```
+exit;
+```
+
+Now, let's do upsert operation with Hudi Deltastreamer. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.
+
+```
+aws emr add-steps --cluster-id j-XXXXXXXXX --steps Type=Spark,Name="Deltastreamer COW - Upsert",ActionOnFailure=CONTINUE,Args=[--jars,hdfs:///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer_upsert.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,UPSERT] --region us-east-1
+```
+
+![Hudi - 9](images/hudi-9.png)
+
+You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Steps). Wait for the step to complete (~1 minute).
+
+![Hudi - 8](images/hudi-8.png)
+
+Let us check the street_address for the same _hoodie_record_key. Run the following query in hive CLI on the EMR leader node. Replace value of "_hoodie_record_key" in the where clause with the one you obtained from previous select query. 
+
+```
+select `_hoodie_commit_time`, street_address from profile_cow where `_hoodie_record_key`='00000b94-1500-4f10-bd10-d6393ba24643';
+```
+
+Notice the change in commit time and street_address.
+
+![Hudi - 10](images/hudi-10.png)
