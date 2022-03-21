@@ -248,11 +248,11 @@ You can verify that the Kafka topics are being written to using the following co
 ```
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_update_topic --from-beginning" | bash
 ```
-<Ctrl + C> after a few seconds
+After a few seconds exit using Ctrl + C.
 ```
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_status_topic --from-beginning" | bash
 ```
-<Ctrl + C> after a few seconds
+After a few seconds exit using Ctrl + C. 
 
 Now let's configure Spark consumer on EMR leader node using Session Manager or SSH. 9). SSH into the leader node of EMR cluster "EMR-Spark-Hive-Presto" (or use AWS Session Manager). Download Spark dependencies in EMR leader node session.
 
