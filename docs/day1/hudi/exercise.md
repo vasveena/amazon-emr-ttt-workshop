@@ -1,4 +1,4 @@
-# ** Exercise 4 - Apache Hudi on Amazon EMR **
+# ** Exercise 5 - Apache Hudi on Amazon EMR **
 
 In this exercise you will build incremental data lakes on EMR using Apache Hudi. You can build data lakes using Apache Hudi using Spark Datasource APIs, Hudi Deltastreamer utility and SparkSQL. You will also build a real-time live incremental data lake with Spark Structured Streaming + Amazon Managed Streaming for Apache Kafka (MSK) + Apache Hudi.
 
@@ -252,7 +252,7 @@ After a few seconds exit using Ctrl + C.
 ```
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_status_topic --from-beginning" | bash
 ```
-After a few seconds exit using Ctrl + C. 
+After a few seconds exit using Ctrl + C.
 
 Now let's configure Spark consumer on EMR leader node using Session Manager or SSH. 9). SSH into the leader node of EMR cluster "EMR-Spark-Hive-Presto" (or use AWS Session Manager). Download Spark dependencies in EMR leader node session.
 

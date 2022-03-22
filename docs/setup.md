@@ -2,8 +2,8 @@
 
 Perform the following steps to login to the event engine.
 
-1. Type Event Engine URL on to your browser. (Right click [this](https://dashboard.eventengine.run/login?hash=716b-100b636954-38) link -> Open in new tab).
-2. You will see the following page. Accept Terms & Login.
+1. Type Event Engine URL on to your browser. (Right click [this](https://dashboard.eventengine.run/login) link -> Open in new tab).
+2. Enter the hash provided to you. Accept Terms & Login.
 ![Setup - 1](images/setup-1.png)
 3. Choose “Email One-Time Password”. Provide your email ID where your 9-digit OTP will be sent within 5 mins.
 ![Setup - 2](images/setup-2.png)
@@ -17,4 +17,4 @@ Perform the following steps to login to the event engine.
 7. Make a note of your account ID in the top right corner of the AWS Console and store it in a notepad.
 ![Setup - 7](images/setup-7.png)
 8. Go to CloudFormation and verify that the Cloudformation template "dayone" is created.
-![Setup - 7](images/setup-8.png)
+![Setup - 8](images/setup-8.png)
