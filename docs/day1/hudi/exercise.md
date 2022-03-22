@@ -280,18 +280,23 @@ spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer
   --payload-class org.apache.hudi.common.model.AWSDmsAvroPayload \
   --schemaprovider-class org.apache.hudi.utilities.schema.FilebasedSchemaProvider \
   --enable-hive-sync
-  ```
+
+```
 
 Once this job completes, check the Hudi table by logging into Spark SQL or Athena console.
 
 ```
+
 spark-sql --conf "spark.serializer=org.apache.spark.serializer.KryoSerializer" --conf "spark.sql.hive.convertMetastoreParquet=false" --jars hdfs:///user/hadoop/*.jar  
+
 ```
 
 Run the query:
 
 ```
+
 select * from hudiblogdb.retail_transactions order by tran_id
+
 ```
 
 You should see the same data in the table as the MySQL database with a few columns added by Hudi deltastreamer.
@@ -305,6 +310,7 @@ insert into dev.retail_transactions values(15,'2022-03-22',7,'CHICAGO','IL','XXX
 update dev.retail_transactions set store_city='SPRINGFIELD' where tran_id=12;
 delete from dev.retail_transactions where tran_id=2;
 commit;
+
 ```
 
 Exit from the MySQL session. In a few minutes, you see a new .parquet file created under s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/ folder in the S3 bucket. CDC data is being captured by our DMS replication task. You can see the changes in the DMS replication task under "Table statistics".
@@ -330,18 +336,21 @@ spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer
   --schemaprovider-class org.apache.hudi.utilities.schema.FilebasedSchemaProvider \
   --enable-hive-sync \
 --checkpoint 0
+
 ```
 
 Once finished, check the Hudi table by logging into Spark SQL or Athena console.
 
 ```
 spark-sql --conf "spark.serializer=org.apache.spark.serializer.KryoSerializer" --conf "spark.sql.hive.convertMetastoreParquet=false" --jars hdfs:///user/hadoop/*.jar  
+
 ```
 
 Run the query:
 
 ```
 select * from hudiblogdb.retail_transactions order by tran_id
+
 ```
 
 You should see the changes you made in the MySQL table.
@@ -357,6 +366,7 @@ Switch to EC2 user and go to home directory
 ```
 sudo su ec2-user
 cd ~
+
 ```
 
 Run the following commands in EC2 instance to get the values of ZookeeperConnectString and BootstrapBrokerString.
@@ -367,6 +377,7 @@ echo $clusterArn
 bs=$(echo "aws kafka get-bootstrap-brokers --cluster-arn ${clusterArn} --region us-east-1"  | bash | jq '.BootstrapBrokerString')
 bs_update=$(echo $bs | sed "s|,|\',\'|g" | sed "s|\"|'|g")
 zs=$(echo "aws kafka describe-cluster --cluster-arn $clusterArn" --region us-east-1 | bash | jq '.ClusterInfo.ZookeeperConnectString')
+
 ```
 
 Create two Kafka topics.
@@ -375,6 +386,7 @@ Create two Kafka topics.
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-topics.sh --create --zookeeper $zs --replication-factor 3 --partitions 1 --topic trip_update_topic" | bash
 
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-topics.sh --create --zookeeper $zs --replication-factor 3 --partitions 1 --topic trip_status_topic" | bash
+
 ```
 
 Install packages required by Kafka client on the JumpHost instance session (via SSH or AWS SSM).
@@ -386,33 +398,40 @@ pip3 install --upgrade gtfs-realtime-bindings
 pip3 install underground
 pip3 install pathlib
 pip3 install requests
+
 ```
 
 Run the below command to modify the bootstrap servers in the file train_arrival_producer.py on the JumpHost's /home/ec2-user/ directory. Change
 
 ```
 sudo sed -i "s|'bootstrapserverstring'|$bs_update|g" /home/ec2-user/train_arrival_producer.py
+
 ```
 
 Export API key on the same session.
 
 ```
 export MTA_API_KEY=UskS0iAsK06DtSffbgqNi8hlDvApPR833wydQAHG
+
 ```
 
 Run the Kafka producer client and terminate the process using Ctrl + C after 10 seconds.
 
 ```
 python3 train_arrival_producer.py
+
 ```
 
 You can verify that the Kafka topics are being written to using the following commands
 ```
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_update_topic --from-beginning" | bash
+
 ```
 After a few seconds exit using Ctrl + C.
+
 ```
 echo "/home/ec2-user/kafka/kafka_2.12-2.2.1/bin/kafka-console-consumer.sh --bootstrap-server $bs --topic trip_status_topic --from-beginning" | bash
+
 ```
 After a few seconds exit using Ctrl + C.
 
@@ -435,12 +454,14 @@ In same session, provide all access to all HDFS folders. You can scope access pe
 
 ```
 hdfs dfs -chmod 777 /
+
 ```
 
 Switch to the SSH/SSM session of EC2 instance “JumpHost”. Get the bootstrap string from the below command on the EC2 JumpHost session.
 
 ```
 echo $bs
+
 ```
 
 Example output:
@@ -452,6 +473,7 @@ Run the Kafka producer program again and keep it running.
 
 ```
 python3 train_arrival_producer.py
+
 ```
 
 Now, go to the EMR Studio's JupyterLab workspace and open workshop-repo/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb. Make sure that "Spark" kernel is selected.
@@ -470,6 +492,7 @@ Now, you can run the following queries once in every 2 minutes or so to see the 
 select count(*) from hudi_trips_streaming_table;
 
 select tripId, numoffuturestops from hudi_trips_streaming_table;
+
 ```
 
 After inspecting, stop your Python Kafka producer on the EC2 JumpHost session using Ctrl + C.

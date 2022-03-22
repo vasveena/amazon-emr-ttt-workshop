@@ -56,10 +56,8 @@ Go to the directory files -> notebook -> smstudio-pyspark-hive-sentiment-analysi
 
 ![sm - 6](images/sm-6.png)
 
-It will take a few minutes for the kernel to initialize. 
+It will take a few minutes for the kernel to initialize. Once the kernel starts, go to Cluster on the top right corner and choose the EMR cluster "EMR-Spark-Hive-Presto". When it asks for credential type, choose "No credential" and Connect. Now, a Spark application will be created.
 
-When you are in the second code block,
+![sm - 14](images/sm-14.png)
 
-Now, you can run the code blocks of the notebook.
-
-"EMR-Spark-Hive-Presto" EMR cluster (obtained from EMR Web Console -> EMR-Spark-Hive-Presto -> Summary tab).
+Now, you can run the remaining code blocks of the notebook which will perform data transformations and explorations using the EMR cluster and create and host an ML model using Sagemaker.

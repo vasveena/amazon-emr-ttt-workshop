@@ -2,20 +2,24 @@
 
 This workshop contains exercises for the 3-day Amazon EMR Workshop Training.
 
-## Agenda
+# Exercises 
 
 #### Day 1
-- Launch EMR cluster with Managed Scaling and Fleets
-- Run Spark ETL on Amazon EMR and EMR Studio/Notebooks
-- Build Incremental Workloads on Amazon EMR using Apache Hudi and Apache Iceberg
-- Run Streaming Workloads on Amazon EMR
+1. Launch EMR cluster with Managed Scaling and Fleets
+2. Run Spark ETLs and Spark structured streaming workloads
+3. EMR Studio Dive Deep
+4. Sagemaker Studio Integration with EMR
+5. Build transactional data lakes using Apache Hudi and Apache Iceberg
 
 #### Day 2
-- Orchestrate analytical workloads using EMR Notebooks API and Amazon MWAA
-- Run Spark workload using Amazon EMR on EKS
-- Run Spark/Hive jobs on EMR Serverless
+1. Orchestrate analytical workloads using EMR Studio and Amazon MWAA
+2. Orchestrate analytical workloads using AWS Step Functions
+3. Run Spark workloads using Amazon EMR on EKS
+4. Run Spark and Hive workloads on EMR Serverless (preview)
 
 #### Day 3
-- Run Hive and Presto workloads on Amazon EMR
-- Run HBase workloads on Amazon EMR
-- Integrate with AWS LakeFormation and Apache Ranger
+1. Migration methodologies
+2. Run Hive batch ETLs and interactive queries
+3. Ad-hoc querying with Presto
+4. Store and process data using HBase on S3 with migration tips
+5. Integrate with AWS LakeFormation and Apache Ranger
