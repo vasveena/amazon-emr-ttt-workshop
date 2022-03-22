@@ -1,3 +1,4 @@
+sudo pip3 install matplotlib
 curl -sSL https://aws-ml-blog.s3.amazonaws.com/artifacts/sma-milestone1/movie_reviews.csv | hdfs dfs -put - movie_reviews.csv
 hive  <<-EOF1
     DROP TABLE IF EXISTS movie_reviews;
