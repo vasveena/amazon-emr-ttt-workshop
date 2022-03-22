@@ -65,14 +65,17 @@ While the Spark session is still active, you can check the Spark UI. You will ne
 You will also need to update your PATH variable if it is not done automatically following [this](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-troubleshooting.html#windows-plugin-env-var-not-set) document. Otherwise you may get the error "SessionManagerPlugin is not found". Replace --target with your leader node instance ID in the following command. Replace the environmental variables with the values from the Team Dashboard. For Windows, you will need to use "set"  instead of "export".
 
 ```
-#For windows, use set instead of export
 
 export AWS_DEFAULT_REGION=us-east-1
 export AWS_ACCESS_KEY_ID=<redacted>
 export AWS_SECRET_ACCESS_KEY=<redacted>
 export AWS_SESSION_TOKEN=<redacted>
 
-# Replace target with your leader node instance ID
+```
+
+Run the below command. Replace target with your leader node instance ID
+
+```
 
 aws ssm start-session --target i-00785e8946b4ff636 --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["18080"], "localPortNumber":["8158"]}' --region us-east-1
 
@@ -95,12 +98,11 @@ Click on "show" (Spark action) in the SQL tab to see the query plan.
 
 #### Alternative approach - Local SSH tunneling
 
-Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via [local port forwarding](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html) by running the following command in your local desktop's terminal or using Putty for Windows.
+Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via [local port forwarding](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html) by running the following command in your local desktop's terminal or using Putty for Windows. Replace leaderNodePublicDNS with your leader node public DNS (obtained from EMR Web Console -> EMR-Spark-Hive-Presto -> Summary tab -> Master public DNS).
 
 ```
-# Replace with your leader node public DNS
 
-ssh -i ~/ee-default-keypair.pem -N -L 8157:ec2-44-199-199-213.compute-1.amazonaws.com:8088 hadoop@ec2-44-199-199-213.compute-1.amazonaws.com
+ssh -i ~/ee-default-keypair.pem -N -L 8157:leaderNodePublicDNS:8088 hadoop@leaderNodePublicDNS
 
 ```
 
@@ -189,17 +191,22 @@ Copy the EMR Cluster ID in the Summary Tab of your EMR cluster "EMR-Spark-Hive-P
 
 You can submit steps to your EMR from your local desktop after exporting the AWS credentials in your Team Dashboard page.
 
+For windows, use set instead of export.
+
 ```
-#For windows, use set instead of export
 
 export AWS_DEFAULT_REGION=us-east-1
 export AWS_ACCESS_KEY_ID=<redacted>
 export AWS_SECRET_ACCESS_KEY=<redacted>
 export AWS_SESSION_TOKEN=<redacted>
 
-# Replace cluster-id value with your cluster ID
+```
 
-aws emr add-steps --cluster-id j-1HCZO7EIKLFQY --steps Name="Spark Pi Job",Jar=command-runner.jar,Args=[spark-submit,--master,yarn,--num-executors,2,--class,org.apache.spark.examples.SparkPi,/usr/lib/spark/examples/jars/spark-examples.jar,10,-v] --region us-east-1
+Run the below command. Replace cluster-id value with your cluster ID.
+
+```
+
+aws emr add-steps --cluster-id j-XXXXXXXXXX --steps Name="Spark Pi Job",Jar=command-runner.jar,Args=[spark-submit,--master,yarn,--num-executors,2,--class,org.apache.spark.examples.SparkPi,/usr/lib/spark/examples/jars/spark-examples.jar,10,-v] --region us-east-1
 
 ```
 
@@ -212,6 +219,7 @@ You can connect to that instance using Session Manager and submit step to EMR cl
 ```
 sudo su ec2-user
 cd ~
+
 ```
 
 Now, run the AddSteps CLI command below. Replace cluster-id value with your cluster ID. You do not need to export any credentials since the IAM role attached to this JumpHost has all accesses required.

@@ -59,9 +59,13 @@ Note that you will be able to detach and attach this workspace to a different cl
 
 #### Git repository
 Under Git tab, you can add a Git repository by entering the repository name, URL and credentials. You can access public repositories without any credentials.
+
 Repository name: workshop-repo
+
 Git repository URL: https://github.com/vasveena/amazon-emr-ttt-workshop
+
 Branch: main
+
 Git credentials: Use a public repository without credentials
 
 ![Studio - 12](images/studio-12.png)
@@ -103,6 +107,8 @@ You will use these installed dependencies to plot visualizations on top of Amazo
 
 You can have two notebooks within the same workspace with different dependencies. You can even reproduce these dependencies and run the same notebook after your cluster is terminated by attaching it to a different active cluster.
 
+When you are done, terminate the kernel by clicking on stop icon ![Studio - 30](images/studio-30.png).
+
 #### Parameterized notebooks
 
 Open the file find_best_sellers.ipynb. Go to View -> Show Right Sidebar.
@@ -117,7 +123,7 @@ Run all the cells in the notebook and make sure the outputs for categories "Appa
 
 ![Studio - 18](images/studio-18.png)
 
-Save the notebook.
+Save the notebook. When you are done, terminate the kernel by clicking on stop icon ![Studio - 30](images/studio-30.png).
 
 #### Notebooks API
 
@@ -155,17 +161,18 @@ Copy the editor-ID from notebook URL. For example: https://e-c9zy9cmd24ccf4f2b4u
 
 "e-C9ZY9CMD24CCF4F2B4UZ7D7MA" is the editor ID. In the following command, replace your editor-id with this value.
 Cluster ID in --execution-engine should be replaced with your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -> Amazon EMR Console -> Summary tab. Looks like j-XXXXXXXXX)
-Change "352365466794" in the OUTPUT_LOCATION parameter with your account ID.
+Change "youraccountID" in the OUTPUT_LOCATION parameter with your account ID.
 
 ```
 /home/ec2-user/.local/bin/aws emr --region us-east-1 \
 start-notebook-execution \
---editor-id e-C9ZY9CMD24CCF4F2B4UZ7D7MA \
---notebook-params '{"CATEGORIES":["Furniture","PC"], "FROM_DATE":"2015-08-27", "TO_DATE":"2015-08-31", "OUTPUT_LOCATION": "s3://mrworkshop-352365466794-dayone/studio/best_sellers_output_fromapi/"}' \
+--editor-id e-XXXXXXXXXXXXXXXXX \
+--notebook-params '{"CATEGORIES":["Furniture","PC"], "FROM_DATE":"2015-08-27", "TO_DATE":"2015-08-31", "OUTPUT_LOCATION": "s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output_fromapi/"}' \
 --relative-path workshop-repo/files/notebook/find_best_sellers.ipynb \
 --notebook-execution-name demo-execution \
---execution-engine '{"Id" : "j-142PVKGDZTTXS"}' \
---service-role EMRStudio_Service_Role
+--execution-engine s'{"Id" : "j-XXXXXXXXXXXXX"}' \
+--service-role emrStudioRole
+
 ```
 
 {
@@ -176,6 +183,7 @@ You will get a NotebookExecutionId in return. Use this NotebookExecutionId in th
 
 ```
 aws emr --region us-east-1 describe-notebook-execution --notebook-execution-id ex-J02QDLG4TWXSNWLO4OGZ9NNX609MV
+
 ```
 
 After about 2-3 minutes, the Status will be FINISHED.

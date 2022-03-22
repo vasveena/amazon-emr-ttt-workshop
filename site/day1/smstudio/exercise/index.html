@@ -13,7 +13,7 @@
     
     
       
-        <title>1 - Launching EMR cluster with Instance Fleets - Amazon EMR Train-The-Trainer Workshop</title>
+        <title>4 - Sagemaker Studio Integration - Amazon EMR Train-The-Trainer Workshop</title>
       
     
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#exercise-1-launching-an-emr-cluster" class="md-skip">
+        <a href="#exercise-4-sagemaker-studio-integration-with-amazon-emr" class="md-skip">
           Skip to content
         </a>
       
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              1 - Launching EMR cluster with Instance Fleets
+              4 - Sagemaker Studio Integration
             
           </span>
         </div>
@@ -257,86 +257,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          1 - Launching EMR cluster with Instance Fleets
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#create-emr-cluster-with-instance-fleets" class="md-nav__link">
-    Create EMR Cluster with Instance Fleets
-  </a>
-  
-    <nav class="md-nav" aria-label="Create EMR Cluster with Instance Fleets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-software-and-steps" class="md-nav__link">
-    Step 1: Software and Steps
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-hardware" class="md-nav__link">
-    Step 2: Hardware
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-general-cluster-settings" class="md-nav__link">
-    Step 3: General Cluster Settings
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-security" class="md-nav__link">
-    Step 4: Security
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -374,11 +299,66 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../smstudio/exercise/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          4 - Sagemaker Studio Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         4 - Sagemaker Studio Integration
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#login-to-the-sagemaker-studio" class="md-nav__link">
+    Login to the Sagemaker Studio
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-emr-clusters-in-sagemaker-studio" class="md-nav__link">
+    Explore EMR clusters in Sagemaker Studio
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs" class="md-nav__link">
+    Connect to EMR cluster from Sagemaker Studio and run data processing jobs
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -445,43 +425,23 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-emr-cluster-with-instance-fleets" class="md-nav__link">
-    Create EMR Cluster with Instance Fleets
-  </a>
-  
-    <nav class="md-nav" aria-label="Create EMR Cluster with Instance Fleets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-software-and-steps" class="md-nav__link">
-    Step 1: Software and Steps
+  <a href="#login-to-the-sagemaker-studio" class="md-nav__link">
+    Login to the Sagemaker Studio
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-hardware" class="md-nav__link">
-    Step 2: Hardware
+      
+        <li class="md-nav__item">
+  <a href="#explore-emr-clusters-in-sagemaker-studio" class="md-nav__link">
+    Explore EMR clusters in Sagemaker Studio
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-general-cluster-settings" class="md-nav__link">
-    Step 3: General Cluster Settings
+      
+        <li class="md-nav__item">
+  <a href="#connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs" class="md-nav__link">
+    Connect to EMR cluster from Sagemaker Studio and run data processing jobs
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-security" class="md-nav__link">
-    Step 4: Security
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -497,99 +457,43 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/vasveena/amazon-emr-ttt-workshop/edit/master/docs/day1/fleet/exercise.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/vasveena/amazon-emr-ttt-workshop/edit/master/docs/day1/smstudio/exercise.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-<h1 id="exercise-1-launching-an-emr-cluster"><strong> Exercise 1 – Launching an EMR cluster  </strong><a class="headerlink" href="#exercise-1-launching-an-emr-cluster" title="Permanent link">&para;</a></h1>
-<p>This exercise is meant to show you different options and features available while trying to create an EMR cluster. EMR clusters required are already created in your event engine accounts which we will use for our exercises.</p>
-<h3 id="create-emr-cluster-with-instance-fleets">Create EMR Cluster with Instance Fleets<a class="headerlink" href="#create-emr-cluster-with-instance-fleets" title="Permanent link">&para;</a></h3>
-<p>Go to the EMR Web Console from AWS Management Console
-<img alt="Fleet - 1" src="../images/fleet-1.png" />
-Click on “Create cluster”
-<img alt="Fleet - 2" src="../images/fleet-2.png" />
-Click on “Go to advanced options”
-<img alt="Fleet - 3" src="../images/fleet-3.png" />
-Explore the options on all 4 Steps.
-<img alt="Fleet - 4" src="../images/fleet-4.png" /></p>
-<h4 id="step-1-software-and-steps">Step 1: Software and Steps<a class="headerlink" href="#step-1-software-and-steps" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Choose latest release label: EMR 6.5.0.</li>
-<li>Look at the applications available. Choose Spark, Hive and Hue for example.</li>
-<li>You can choose Use multiple master nodes to improve cluster availability which will launch 3 X EMR Leader Nodes.</li>
-<li>You can use AWS Glue Data Catalog for Hive and Spark tables.</li>
-<li>Under Software Configurations, you can provide a JSON config to override default values. For example, you can use below JSON:</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="p">[{</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;Classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;Properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="s2">&quot;maximizeResourceAllocation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hive-site&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="s2">&quot;hive.blobstore.use.output-committer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;Classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hadoop-env&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;Properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-
-<span class="w">        </span><span class="p">},</span><span class="w"></span>
-<span class="w">        </span><span class="s2">&quot;Configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"></span>
-<span class="w">            </span><span class="s2">&quot;Classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;export&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="s2">&quot;Properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                </span><span class="s2">&quot;HADOOP_DATANODE_HEAPSIZE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2048&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">                </span><span class="s2">&quot;HADOOP_NAMENODE_OPTS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;-XX:GCTimeRatio=19&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="p">},</span><span class="w"></span>
-<span class="w">            </span><span class="s2">&quot;Configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-
-<span class="w">            </span><span class="p">]</span><span class="w"></span>
-<span class="w">        </span><span class="p">}]</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
-</code></pre></div>
-
-<ul>
-<li>Select "Run multiple steps at the same time to improve cluster utilization". You can change the step concurrency as well which is defaulted to 10. You can submit a Spark step during cluster creation. But for now, we can leave it as is. We can also submit steps to a running EMR cluster.</li>
-<li>For transient or short-lived EMR clusters, you can add steps during cluster creation and choose to auto-terminate your clusters after last step completion using option "Cluster auto-terminates". For now, we can leave it at default "Clusters enters waiting state".</li>
-<li>Click on Next. <img alt="Fleet - 5" src="../images/fleet-5.png" /></li>
-</ul>
-<h4 id="step-2-hardware">Step 2: Hardware<a class="headerlink" href="#step-2-hardware" title="Permanent link">&para;</a></h4>
-<ul>
-<li>There are two types of Cluster Compositions: Uniform instance groups and Instance fleets. Uniform instance groups will allow you to provision only one instance type within a single node group. Also, this option will only look at a single subnet while provisioning clusters. Let's choose instance fleets which provide us more flexibility in terms of hardware configuration.</li>
-<li>Under Networking, leave it at default VPC and choose all the 6 EC2 subnets in that VPC.</li>
-<li>Allocation strategy option is an improved method of launching clusters with lowest-priced On-Demand instances and capacity-optimized Spot instances. This option is recommended for faster cluster provisioning, more accurate Spot instance allocation, and fewer Spot instance interruptions compared to default EMR instance fleet allocation. Select "Apply allocation strategy". <img alt="Fleet - 6" src="../images/fleet-6.png" /></li>
-<li>Under Cluster Nodes and Instances, for leader node type, click on "Add / remove instance types to fleet" and choose m5.xlarge, m4.xlarge, c5.xlarge, c4.xlarge. Choose on-demand.</li>
-<li>For core node type, choose 8 on-demand units and 8 spot units and select m5.xlarge, m5.2xlarge, m4.xlarge, m4.2xlarge. Under Provisioning timeout
-after "60" minutes Spot unavailability, change 60 mins to 30 mins and choose "Switch to On-Demand instances" from the drop down.</li>
-<li>For task node type, choose 8 spot units and select r5.xlarge, r5.2xlarge, r4.xlarge, r4.2xlarge. You can choose up to 30 different instance types for each node type. <img alt="Fleet - 7" src="../images/fleet-7.png" /></li>
-<li>Click on "Enable cluster scaling" and choose core and task units. Choose minimum=16, maximum=32, on-demand limit=16, maximum core node=16. You can also enable scaling  after the cluster has been launched.</li>
-<li>Enabling auto-termination helps you save cost by terminating idle clusters. You can leave this enabled since we will not be using this cluster.</li>
-<li>You can change the EBS root volume. You can increase this value if you are installing many different applications on your cluster. For now, you do not need to change the value.</li>
-<li>Click on Next. <img alt="Fleet - 8" src="../images/fleet-8.png" /></li>
-</ul>
-<h4 id="step-3-general-cluster-settings">Step 3: General Cluster Settings<a class="headerlink" href="#step-3-general-cluster-settings" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Choose a friendly name for your cluster.</li>
-<li>Keep logging, debugging and termination protection enabled.</li>
-<li>Add a type with key named "type" and  value "DEV".</li>
-<li>You have the option to customize your EC2 AMI and specify the customized image during your cluster launch. This is especially useful for applying security patches or applying CIS/STIG compliance. For now, we can use default EC2 AMI for EMR.</li>
-<li>You can specify a custom bootstrap action to run a script on all your cluster nodes. For now, we can leave it empty.</li>
-<li>Click on Next. <img alt="Fleet - 9" src="../images/fleet-9.png" /></li>
-</ul>
-<h4 id="step-4-security">Step 4: Security<a class="headerlink" href="#step-4-security" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Under Security Options, choose EC2 key pair "ee-default-keypair" which is the key pair we downloaded during event engine setup.</li>
-<li>You can define custom EMR Service IAM Role which will be used by the EMR control plane and custom EC2 IAM role to be assumed by all the nodes in your cluster. If you leave these values at default, the default IAM roles (EMR_DefaultRole and EMR_EC2_DefaultRole) will be automatically created during cluster creation. Leave it as is.</li>
-<li>You can create a new Security Configuration in your EMR Web Console and use it in the "Security Configuration" section. This is where you define encryption, authentication and authorization for your cluster. We will look into this in detail on Day 3. For now, you can leave it at default.</li>
-<li>You can provide custom EC2 security groups for your leader and worker node types. You can configure up to 5 security groups per node type. If you do not specify, default EC2 security groups will be automatically created for leader and worker node types.</li>
-<li>Click on "Create Cluster". <img alt="Fleet - 10" src="../images/fleet-10.png" /></li>
-</ul>
-<p>After about 10 mins, you can observe that the EMR cluster is created and is in "WAITING" state. Check all the tabs to see the cluster configurations.</p>
-<p><img alt="Fleet - 11" src="../images/fleet-11.png" /></p>
+<h1 id="exercise-4-sagemaker-studio-integration-with-amazon-emr"><strong> Exercise 4 - Sagemaker Studio Integration with Amazon EMR </strong><a class="headerlink" href="#exercise-4-sagemaker-studio-integration-with-amazon-emr" title="Permanent link">&para;</a></h1>
+<p>Amazon Sagemaker provides native integration with Amazon EMR from Sagemaker Studio so that you can run data preparation tasks for your machine learning workloads using EMR from Sagemaker.</p>
+<h3 id="login-to-the-sagemaker-studio">Login to the Sagemaker Studio<a class="headerlink" href="#login-to-the-sagemaker-studio" title="Permanent link">&para;</a></h3>
+<p>Go to the Amazon Sagemaker Web Console -&gt; Get started -&gt; Sagemaker Studio</p>
+<p><img alt="sm - 7" src="../images/sm-7.png" /></p>
+<p>You should see the Sagemaker domain ready status. Launch the Sagemaker Studio from Launch app -&gt; Studio.</p>
+<p><img alt="sm - 8" src="../images/sm-8.png" /></p>
+<p>It will take about 2 minutes to initialize after which you will be taken to the Sagemaker Studio interface.</p>
+<p><img alt="sm - 11" src="../images/sm-11.png" /></p>
+<p>Once you are in, carry on with rest of the steps.</p>
+<p><img alt="sm - 12" src="../images/sm-12.png" /></p>
+<h3 id="explore-emr-clusters-in-sagemaker-studio">Explore EMR clusters in Sagemaker Studio<a class="headerlink" href="#explore-emr-clusters-in-sagemaker-studio" title="Permanent link">&para;</a></h3>
+<p>Click on the <img alt="sm - 1" src="../images/sm-1.png" /> icon and choose Clusters from the Sagemaker resources drop down. You will be able to see the EMR clusters.</p>
+<p><img alt="sm - 2" src="../images/sm-2.png" /></p>
+<p>You can filter the EMR clusters and also create a new one with a cluster template created from AWS Service Catalog. Go to Clusters -&gt; Create cluster. You will be able to see a template.</p>
+<p><img alt="sm - 9" src="../images/sm-9.png" /></p>
+<p>When you select the template, it will show you the blueprint for your EMR cluster creation.</p>
+<p><img alt="sm - 10" src="../images/sm-10.png" /></p>
+<p>For now, let's use our existing cluster.</p>
+<h3 id="connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs">Connect to EMR cluster from Sagemaker Studio and run data processing jobs<a class="headerlink" href="#connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs" title="Permanent link">&para;</a></h3>
+<p>Go to Git repository section and click on Clone the repository.</p>
+<p><img alt="sm - 3" src="../images/sm-3.png" /></p>
+<p>Specify the repository to clone: https://github.com/vasveena/amazon-emr-ttt-workshop.git</p>
+<p>Make sure that the repository is cloned.</p>
+<p><img alt="sm - 4" src="../images/sm-4.png" /></p>
+<p>Go to Files section (folder icon on the left hand side pane).</p>
+<p><img alt="sm - 5" src="../images/sm-5.png" /></p>
+<p>Go to the directory files -&gt; notebook -&gt; smstudio-pyspark-hive-sentiment-analysis.ipynb. Choose the SparkMagic Kernel when prompted and click "Select".</p>
+<p><img alt="sm - 6" src="../images/sm-6.png" /></p>
+<p>It will take a few minutes for the kernel to initialize. Once the kernel starts, go to Cluster on the top right corner and choose the EMR cluster "EMR-Spark-Hive-Presto". When it asks for credential type, choose "No credential" and Connect. Now, a Spark application will be created.</p>
+<p><img alt="sm - 14" src="../images/sm-14.png" /></p>
+<p>Now, you can run the remaining code blocks of the notebook which will perform data transformations and explorations using the EMR cluster and create and host an ML model using Sagemaker.</p>
 
               
             </article>
@@ -603,7 +507,7 @@ after "60" minutes Spot unavailability, change 60 mins to 30 mins and choose "Sw
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../../../setup/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Setup" rel="prev">
+        <a href="../../studio/exercise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3 - Amazon EMR Studio" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -612,20 +516,20 @@ after "60" minutes Spot unavailability, change 60 mins to 30 mins and choose "Sw
               <span class="md-footer__direction">
                 Previous
               </span>
-              Setup
+              3 - Amazon EMR Studio
             </div>
           </div>
         </a>
       
       
         
-        <a href="../../spark/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 2 - Apache Spark on Amazon EMR" rel="next">
+        <a href="../../hudi/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 5 - Apache Hudi on Amazon EMR" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              2 - Apache Spark on Amazon EMR
+              5 - Apache Hudi on Amazon EMR
             </div>
           </div>
           <div class="md-footer__button md-icon">

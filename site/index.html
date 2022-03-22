@@ -210,67 +210,9 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Introduction
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="." class="md-nav__link md-nav__link--active">
         Introduction
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#agenda" class="md-nav__link">
-    Agenda
-  </a>
-  
-    <nav class="md-nav" aria-label="Agenda">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#day-1" class="md-nav__link">
-    Day 1
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#day-2" class="md-nav__link">
-    Day 2
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#day-3" class="md-nav__link">
-    Day 3
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -367,8 +309,22 @@
   
   
     <li class="md-nav__item">
+      <a href="day1/smstudio/exercise/" class="md-nav__link">
+        4 - Sagemaker Studio Integration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="day1/hudi/exercise/" class="md-nav__link">
-        4 - Apache Hudi on Amazon EMR
+        5 - Apache Hudi on Amazon EMR
       </a>
     </li>
   
@@ -382,7 +338,7 @@
   
     <li class="md-nav__item">
       <a href="day1/icebrg/exercise/" class="md-nav__link">
-        5 - Apache Iceberg on Amazon EMR
+        6 - Apache Iceberg on Amazon EMR
       </a>
     </li>
   
@@ -415,48 +371,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#agenda" class="md-nav__link">
-    Agenda
-  </a>
-  
-    <nav class="md-nav" aria-label="Agenda">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#day-1" class="md-nav__link">
-    Day 1
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#day-2" class="md-nav__link">
-    Day 2
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#day-3" class="md-nav__link">
-    Day 3
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -474,26 +388,30 @@
 
 <h1 id="welcome-to-amazon-emr-train-the-trainer-workshop">Welcome to Amazon EMR Train-The-Trainer Workshop<a class="headerlink" href="#welcome-to-amazon-emr-train-the-trainer-workshop" title="Permanent link">&para;</a></h1>
 <p>This workshop contains exercises for the 3-day Amazon EMR Workshop Training.</p>
-<h2 id="agenda">Agenda<a class="headerlink" href="#agenda" title="Permanent link">&para;</a></h2>
+<h1 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">&para;</a></h1>
 <h4 id="day-1">Day 1<a class="headerlink" href="#day-1" title="Permanent link">&para;</a></h4>
-<ul>
+<ol>
 <li>Launch EMR cluster with Managed Scaling and Fleets</li>
-<li>Run Spark ETL on Amazon EMR and EMR Studio/Notebooks</li>
-<li>Build Incremental Workloads on Amazon EMR using Apache Hudi and Apache Iceberg</li>
-<li>Run Streaming Workloads on Amazon EMR</li>
-</ul>
+<li>Run Spark ETLs and Spark structured streaming workloads</li>
+<li>EMR Studio Dive Deep</li>
+<li>Sagemaker Studio Integration with EMR</li>
+<li>Build transactional data lakes using Apache Hudi and Apache Iceberg</li>
+</ol>
 <h4 id="day-2">Day 2<a class="headerlink" href="#day-2" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Orchestrate analytical workloads using EMR Notebooks API and Amazon MWAA</li>
-<li>Run Spark workload using Amazon EMR on EKS</li>
-<li>Run Spark/Hive jobs on EMR Serverless</li>
-</ul>
+<ol>
+<li>Orchestrate analytical workloads using EMR Studio and Amazon MWAA</li>
+<li>Orchestrate analytical workloads using AWS Step Functions</li>
+<li>Run Spark workloads using Amazon EMR on EKS</li>
+<li>Run Spark and Hive workloads on EMR Serverless (preview)</li>
+</ol>
 <h4 id="day-3">Day 3<a class="headerlink" href="#day-3" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Run Hive and Presto workloads on Amazon EMR</li>
-<li>Run HBase workloads on Amazon EMR</li>
+<ol>
+<li>Migration methodologies</li>
+<li>Run Hive batch ETLs and interactive queries</li>
+<li>Ad-hoc querying with Presto</li>
+<li>Store and process data using HBase on S3 with migration tips</li>
 <li>Integrate with AWS LakeFormation and Apache Ranger</li>
-</ul>
+</ol>
 
               
             </article>
