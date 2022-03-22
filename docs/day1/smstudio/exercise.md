@@ -1,22 +1,16 @@
 # ** Exercise 4 - Sagemaker Studio Integration with Amazon EMR **
 
-### Create a new Sagemaker Studio
+Amazon Sagemaker provides native integration with Amazon EMR from Sagemaker Studio so that you can run data preparation tasks for your machine learning workloads using EMR from Sagemaker.
+
+### Login to the Sagemaker Studio
 
 Go to the Amazon Sagemaker Web Console -> Get started -> Sagemaker Studio
 
 ![sm - 7](images/sm-7.png)
 
-Under User profile, leave Name defaulted. For Default execution role, choose "Create New Role". Choose "Any S3 Bucket". Create role.
-
-![sm - 9](images/sm-9.png)
-
-Submit. You will now be prompted to select a VPC. Choose the "MMVPC" from the options. For subnet, choose "MMPublicSubnetOne". Save and continue.
+You should see the Sagemaker domain ready status. Launch the Sagemaker Studio from Launch app -> Studio.
 
 ![sm - 8](images/sm-8.png)
-
-Wait for the Sagemaker domain is ready (it will take about 3-4 mins). Once the Sagemaker domain is ready, launch the Sagemaker Studio from Launch app -> Studio.
-
-![sm - 10](images/sm-10.png)
 
 It will take about 2 minutes to initialize after which you will be taken to the Sagemaker Studio interface.
 
@@ -32,7 +26,15 @@ Click on the ![sm - 1](images/sm-1.png) icon and choose Clusters from the Sagema
 
 ![sm - 2](images/sm-2.png)
 
-You can filter the EMR clusters and also create a new one with a cluster template created from AWS Service Catalog. For this time, we will use an existing cluster.
+You can filter the EMR clusters and also create a new one with a cluster template created from AWS Service Catalog. Go to Clusters -> Create cluster. You will be able to see a template.
+
+![sm - 9](images/sm-9.png)
+
+When you select the template, it will show you the blueprint for your EMR cluster creation.
+
+![sm - 10](images/sm-10.png)
+
+For now, let's use our existing cluster.
 
 ### Connect to EMR cluster from Sagemaker Studio and run data processing jobs
 
@@ -54,4 +56,10 @@ Go to the directory files -> notebook -> smstudio-pyspark-hive-sentiment-analysi
 
 ![sm - 6](images/sm-6.png)
 
-It will take a minute or so for the kernel to initialize. Now, you can run the code blocks of the notebook. In the ln[2], uncomment the code block and replace j-xxxxxxxxxxxx with the cluster ID of "EMR-Spark-Hive-Presto" EMR cluster (obtained from EMR Web Console -> EMR-Spark-Hive-Presto -> Summary tab).
+It will take a few minutes for the kernel to initialize. 
+
+When you are in the second code block,
+
+Now, you can run the code blocks of the notebook.
+
+"EMR-Spark-Hive-Presto" EMR cluster (obtained from EMR Web Console -> EMR-Spark-Hive-Presto -> Summary tab).

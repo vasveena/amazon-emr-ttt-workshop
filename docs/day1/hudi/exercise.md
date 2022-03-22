@@ -238,7 +238,7 @@ commit;
 
 We will now use AWS DMS to start pushing this data to S3.
 
-Go to the DMS Web Console -> Endpoints -> hudidssource. Check if the connection is successful. If not, test the connection again.
+Go to the DMS Web Console -> Endpoints -> hudidmsource. Check if the connection is successful. If not, test the connection again.
 
 ![Hudi - 16](images/hudi-16.png)
 
