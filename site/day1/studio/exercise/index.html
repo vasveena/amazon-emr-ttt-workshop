@@ -418,22 +418,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../smstudio/exercise/" class="md-nav__link">
-        4 - Sagemaker Studio Integration
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../hudi/exercise/" class="md-nav__link">
-        5 - Apache Hudi on Amazon EMR
+        4 - Apache Hudi on Amazon EMR
       </a>
     </li>
   
@@ -447,7 +433,7 @@
   
     <li class="md-nav__item">
       <a href="../../icebrg/exercise/" class="md-nav__link">
-        6 - Apache Iceberg on Amazon EMR
+        5 - Apache Iceberg on Amazon EMR
       </a>
     </li>
   
@@ -617,11 +603,11 @@
 <p><img alt="Studio - 11" src="../images/studio-11.png" /></p>
 <p>Note that you will be able to detach and attach this workspace to a different cluster. For now, you can leave it as is.</p>
 <h4 id="git-repository">Git repository<a class="headerlink" href="#git-repository" title="Permanent link">&para;</a></h4>
-<p>Under Git tab, you can add a Git repository by entering the repository name, URL and credentials. You can access public repositories without any credentials.
-Repository name: workshop-repo
-Git repository URL: https://github.com/vasveena/amazon-emr-ttt-workshop
-Branch: main
-Git credentials: Use a public repository without credentials</p>
+<p>Under Git tab, you can add a Git repository by entering the repository name, URL and credentials. You can access public repositories without any credentials.</p>
+<p>Repository name: workshop-repo</p>
+<p>Git repository URL: https://github.com/vasveena/amazon-emr-ttt-workshop</p>
+<p>Branch: main</p>
+<p>Git credentials: Use a public repository without credentials</p>
 <p><img alt="Studio - 12" src="../images/studio-12.png" /></p>
 <p>Once the repository is added, select it from the "Git repositories" drop down. You will see that the Git repository will be linked successfully.
 <img alt="Studio - 13" src="../images/studio-13.png" /></p>
@@ -646,6 +632,7 @@ sc.list_packages()
 <p>You will use these installed dependencies to plot visualizations on top of Amazon Reviews data.</p>
 <p><img alt="Studio - 16" src="../images/studio-16.png" /></p>
 <p>You can have two notebooks within the same workspace with different dependencies. You can even reproduce these dependencies and run the same notebook after your cluster is terminated by attaching it to a different active cluster.</p>
+<p>When you are done, terminate the kernel by clicking on stop icon <img alt="Studio - 30" src="../images/studio-30.png" />.</p>
 <h4 id="parameterized-notebooks">Parameterized notebooks<a class="headerlink" href="#parameterized-notebooks" title="Permanent link">&para;</a></h4>
 <p>Open the file find_best_sellers.ipynb. Go to View -&gt; Show Right Sidebar.</p>
 <p>Click on the first cell with comment "Default parameters". In the Right Sidebar, click on "Add tag" and  type "parameters" and click "+". Now check the "Advanced Tools" and make sure that the parameters tag is applied to that cell.</p>
@@ -653,7 +640,7 @@ sc.list_packages()
 <p>Replace OUTPUT_LOCATION "s3://mrworkshop-<accountID>-dayone/studio/best_sellers_output/" with your event engine AWS account ID. Check the S3 Web Console for the bucket name if required. Do not create the S3 prefix "studio" before running the notebook cells.</p>
 <p>Run all the cells in the notebook and make sure the outputs for categories "Apparel" and "Baby" are created under the S3 output location using AWS CLI or S3 Web Console.</p>
 <p><img alt="Studio - 18" src="../images/studio-18.png" /></p>
-<p>Save the notebook.</p>
+<p>Save the notebook. When you are done, terminate the kernel by clicking on stop icon <img alt="Studio - 30" src="../images/studio-30.png" />.</p>
 <h4 id="notebooks-api">Notebooks API<a class="headerlink" href="#notebooks-api" title="Permanent link">&para;</a></h4>
 <p>Let us run the parameterized notebook "find_best_sellers.ipynb" using EMR Notebooks API.</p>
 <p>Run the below command with your JumpHost EC2 instance (connected with Session Manager).</p>
@@ -679,15 +666,15 @@ pip3 install awscli --upgrade
 <p>Copy the editor-ID from notebook URL. For example: https://e-c9zy9cmd24ccf4f2b4uz7d7ma.emrnotebooks-prod.us-east-1.amazonaws.com/e-C9ZY9CMD24CCF4F2B4UZ7D7MA/lab/tree/workshop-repo/files/notebook/find_best_sellers.ipynb</p>
 <p>"e-C9ZY9CMD24CCF4F2B4UZ7D7MA" is the editor ID. In the following command, replace your editor-id with this value.
 Cluster ID in --execution-engine should be replaced with your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -&gt; Amazon EMR Console -&gt; Summary tab. Looks like j-XXXXXXXXX)
-Change "352365466794" in the OUTPUT_LOCATION parameter with your account ID.</p>
+Change "youraccountID" in the OUTPUT_LOCATION parameter with your account ID.</p>
 <div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="o">/</span><span class="p">.</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
 <span class="n">start</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">editor</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">e</span><span class="o">-</span><span class="n">C9ZY9CMD24CCF4F2B4UZ7D7MA</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">params</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;CATEGORIES&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;Furniture&quot;</span><span class="p">,</span><span class="s">&quot;PC&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;FROM_DATE&quot;</span><span class="o">:</span><span class="s">&quot;2015-08-27&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TO_DATE&quot;</span><span class="o">:</span><span class="s">&quot;2015-08-31&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;OUTPUT_LOCATION&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;s3://mrworkshop-352365466794-dayone/studio/best_sellers_output_fromapi/&quot;</span><span class="p">}&#39;</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">editor</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">e</span><span class="o">-</span><span class="n">XXXXXXXXXXXXXXXXX</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">params</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;CATEGORIES&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;Furniture&quot;</span><span class="p">,</span><span class="s">&quot;PC&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;FROM_DATE&quot;</span><span class="o">:</span><span class="s">&quot;2015-08-27&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TO_DATE&quot;</span><span class="o">:</span><span class="s">&quot;2015-08-31&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;OUTPUT_LOCATION&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output_fromapi/&quot;</span><span class="p">}&#39;</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
 <span class="o">--</span><span class="n">relative</span><span class="o">-</span><span class="n">path</span><span class="w"> </span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">find_best_sellers</span><span class="p">.</span><span class="n">ipynb</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
 <span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">demo</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">execution</span><span class="o">-</span><span class="n">engine</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;Id&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;j-142PVKGDZTTXS&quot;</span><span class="p">}&#39;</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="n">role</span><span class="w"> </span><span class="n">EMRStudio_Service_Role</span><span class="w"></span>
+<span class="o">--</span><span class="n">execution</span><span class="o">-</span><span class="n">engine</span><span class="w"> </span><span class="n">s</span><span class="p">&#39;{</span><span class="s">&quot;Id&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;j-XXXXXXXXXXXXX&quot;</span><span class="p">}&#39;</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="n">role</span><span class="w"> </span><span class="n">emrStudioRole</span><span class="w"></span>
 </code></pre></div>
 
 <p>{
@@ -783,13 +770,13 @@ Change "352365466794" in the OUTPUT_LOCATION parameter with your account ID.</p>
       
       
         
-        <a href="../../smstudio/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 4 - Sagemaker Studio Integration" rel="next">
+        <a href="../../hudi/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 4 - Apache Hudi on Amazon EMR" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              4 - Sagemaker Studio Integration
+              4 - Apache Hudi on Amazon EMR
             </div>
           </div>
           <div class="md-footer__button md-icon">

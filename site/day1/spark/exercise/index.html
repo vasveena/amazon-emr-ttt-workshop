@@ -383,22 +383,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../smstudio/exercise/" class="md-nav__link">
-        4 - Sagemaker Studio Integration
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../hudi/exercise/" class="md-nav__link">
-        5 - Apache Hudi on Amazon EMR
+        4 - Apache Hudi on Amazon EMR
       </a>
     </li>
   
@@ -412,7 +398,7 @@
   
     <li class="md-nav__item">
       <a href="../../icebrg/exercise/" class="md-nav__link">
-        6 - Apache Iceberg on Amazon EMR
+        5 - Apache Iceberg on Amazon EMR
       </a>
     </li>
   
@@ -556,16 +542,14 @@ cd ~
 <h4 id="investigate-spark-ui">Investigate Spark UI<a class="headerlink" href="#investigate-spark-ui" title="Permanent link">&para;</a></h4>
 <p>While the Spark session is still active, you can check the Spark UI. You will need to install <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">AWS CLI</a> and <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html">Session Manager plugin</a> on your local desktop to do this.</p>
 <p>You will also need to update your PATH variable if it is not done automatically following <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-troubleshooting.html#windows-plugin-env-var-not-set">this</a> document. Otherwise you may get the error "SessionManagerPlugin is not found". Replace --target with your leader node instance ID in the following command. Replace the environmental variables with the values from the Team Dashboard. For Windows, you will need to use "set"  instead of "export".</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#For windows, use set instead of export</span><span class="w"></span>
-
-<span class="k">export</span><span class="w"> </span><span class="n">AWS_DEFAULT_REGION</span><span class="o">=</span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">AWS_DEFAULT_REGION</span><span class="o">=</span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
 <span class="k">export</span><span class="w"> </span><span class="n">AWS_ACCESS_KEY_ID</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
 <span class="k">export</span><span class="w"> </span><span class="n">AWS_SECRET_ACCESS_KEY</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
 <span class="k">export</span><span class="w"> </span><span class="n">AWS_SESSION_TOKEN</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
 
-<span class="c1"># Replace target with your leader node instance ID</span><span class="w"></span>
-
-<span class="n">aws</span><span class="w"> </span><span class="n">ssm</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">session</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="w"> </span><span class="n">i</span><span class="o">-</span><span class="mf">00785e8946</span><span class="n">b4ff636</span><span class="w"> </span><span class="o">--</span><span class="n">document</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">AWS</span><span class="o">-</span><span class="n">StartPortForwardingSession</span><span class="w"> </span><span class="o">--</span><span class="n">parameters</span><span class="w"> </span><span class="s1">&#39;{&quot;portNumber&quot;:[&quot;18080&quot;], &quot;localPortNumber&quot;:[&quot;8158&quot;]}&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
+<p>Run the below command. Replace target with your leader node instance ID</p>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">ssm</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">session</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="w"> </span><span class="n">i</span><span class="o">-</span><span class="mf">00785e8946</span><span class="n">b4ff636</span><span class="w"> </span><span class="o">--</span><span class="n">document</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">AWS</span><span class="o">-</span><span class="n">StartPortForwardingSession</span><span class="w"> </span><span class="o">--</span><span class="n">parameters</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;portNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;18080&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;localPortNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;8158&quot;</span><span class="p">]}&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
 </code></pre></div>
 
 <p>Following image shows the commands run in macOS terminal. <em>18080</em> is the Spark History Server Port and <em>8157</em> is the local port.</p>
@@ -577,10 +561,8 @@ cd ~
 <p>Click on "show" (Spark action) in the SQL tab to see the query plan.</p>
 <p><img alt="Spark - 12" src="../images/spark-12.png" /></p>
 <h4 id="alternative-approach-local-ssh-tunneling">Alternative approach - Local SSH tunneling<a class="headerlink" href="#alternative-approach-local-ssh-tunneling" title="Permanent link">&para;</a></h4>
-<p>Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html">local port forwarding</a> by running the following command in your local desktop's terminal or using Putty for Windows.</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="nf">Replace</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">leader</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">DNS</span><span class="w"></span>
-
-<span class="n">ssh</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="o">~/</span><span class="n">ee</span><span class="o">-</span><span class="k">default</span><span class="o">-</span><span class="n">keypair</span><span class="p">.</span><span class="n">pem</span><span class="w"> </span><span class="o">-</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="n">L</span><span class="w"> </span><span class="mi">8157</span><span class="err">:</span><span class="n">ec2</span><span class="o">-</span><span class="mi">44</span><span class="o">-</span><span class="mi">199</span><span class="o">-</span><span class="mi">199</span><span class="o">-</span><span class="mf">213.</span><span class="k">compute</span><span class="o">-</span><span class="mf">1.</span><span class="n">amazonaws</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="mi">8088</span><span class="w"> </span><span class="n">hadoop</span><span class="nv">@ec2</span><span class="o">-</span><span class="mi">44</span><span class="o">-</span><span class="mi">199</span><span class="o">-</span><span class="mi">199</span><span class="o">-</span><span class="mf">213.</span><span class="k">compute</span><span class="o">-</span><span class="mf">1.</span><span class="n">amazonaws</span><span class="p">.</span><span class="n">com</span><span class="w"></span>
+<p>Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html">local port forwarding</a> by running the following command in your local desktop's terminal or using Putty for Windows. Replace leaderNodePublicDNS with your leader node public DNS (obtained from EMR Web Console -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab -&gt; Master public DNS).</p>
+<div class="codehilite"><pre><span></span><code><span class="n">ssh</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="o">~/</span><span class="n">ee</span><span class="o">-</span><span class="k">default</span><span class="o">-</span><span class="n">keypair</span><span class="p">.</span><span class="n">pem</span><span class="w"> </span><span class="o">-</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="n">L</span><span class="w"> </span><span class="mi">8157</span><span class="err">:</span><span class="nl">leaderNodePublicDNS</span><span class="p">:</span><span class="mi">8088</span><span class="w"> </span><span class="n">hadoop</span><span class="nv">@leaderNodePublicDNS</span><span class="w"></span>
 </code></pre></div>
 
 <p>Now enter http://localhost:8157 on your browser to see the Resource Manager UI. You can use this method as well to access Spark UI (replace port 8088 in the above command with port 18080).</p>
@@ -649,16 +631,15 @@ cd ~
 <p>Copy the EMR Cluster ID in the Summary Tab of your EMR cluster "EMR-Spark-Hive-Presto" from EMR Web Console. It looks like ‘j-XXXXXXXXXX’.</p>
 <p><img alt="Spark - 13" src="../images/spark-13.png" /></p>
 <p>You can submit steps to your EMR from your local desktop after exporting the AWS credentials in your Team Dashboard page.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#For windows, use set instead of export</span><span class="w"></span>
-
-<span class="k">export</span><span class="w"> </span><span class="n">AWS_DEFAULT_REGION</span><span class="o">=</span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
+<p>For windows, use set instead of export.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">AWS_DEFAULT_REGION</span><span class="o">=</span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
 <span class="k">export</span><span class="w"> </span><span class="n">AWS_ACCESS_KEY_ID</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
 <span class="k">export</span><span class="w"> </span><span class="n">AWS_SECRET_ACCESS_KEY</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
 <span class="k">export</span><span class="w"> </span><span class="n">AWS_SESSION_TOKEN</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
 
-<span class="c1"># Replace cluster-id value with your cluster ID</span><span class="w"></span>
-
-<span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="n">HCZO7EIKLFQY</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Name</span><span class="o">=</span><span class="s2">&quot;Spark Pi Job&quot;</span><span class="p">,</span><span class="n">Jar</span><span class="o">=</span><span class="n">command</span><span class="o">-</span><span class="n">runner</span><span class="o">.</span><span class="n">jar</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="p">,</span><span class="o">--</span><span class="k">master</span><span class="p">,</span><span class="n">yarn</span><span class="p">,</span><span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">executors</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">--</span><span class="k">class</span><span class="p">,</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">SparkPi</span><span class="p">,</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">jars</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">examples</span><span class="o">.</span><span class="n">jar</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
+<p>Run the below command. Replace cluster-id value with your cluster ID.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="n">XXXXXXXXXX</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Name</span><span class="o">=</span><span class="s">&quot;Spark Pi Job&quot;</span><span class="p">,</span><span class="n">Jar</span><span class="o">=</span><span class="n">command</span><span class="o">-</span><span class="n">runner</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="p">,</span><span class="o">--</span><span class="n">master</span><span class="p">,</span><span class="n">yarn</span><span class="p">,</span><span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">executors</span><span class="p">,</span><span class="mh">2</span><span class="p">,</span><span class="o">--</span><span class="n">class</span><span class="p">,</span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">spark</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">SparkPi</span><span class="p">,</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">jars</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">examples</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="mh">10</span><span class="p">,</span><span class="o">-</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
 </code></pre></div>
 
 <p>If you cannot use AWS CLI for some reason, you will find an EC2 instance called "JumpHost" in the EC2 Web Console. In real life scenario, you can run this command from any machine as long as your IAM user or role has IAM access to invoke EMR AddSteps API.</p>
