@@ -79,8 +79,8 @@ JOB_FLOW_OVERRIDES = {
         'KeepJobFlowAliveWhenNoSteps': True,
         'TerminationProtected': False,
     },
-    'JobFlowRole': 'EMR_EC2_DefaultRole',
-    'ServiceRole': 'EMR_DefaultRole',
+    'JobFlowRole': 'emrEc2InstanceProfileRole',
+    'ServiceRole': 'emrServiceRole',
     'LogUri': EMR_LOG_URI
 }
 
