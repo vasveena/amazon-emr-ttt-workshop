@@ -184,6 +184,168 @@ Notice the change in commit time and street_address.
 
 ![Hudi - 10](images/hudi-10.png)
 
+### Change Data Capture with Hudi Deltastreamer
+
+Go to RDS Web console and open the database that was created. Copy the endpoint of this database.
+
+![Hudi - 13](images/hudi-13.png)
+
+Login to your EC2 JumpHost using Session Manager or SSH and run the following command to connect to your DB. Replace "dbendpoint" value with the endpoint you copied from the RDS console.
+
+```
+sudo yum install -y mysql
+mysql -h dbendpoint -uadmin -pTest123$
+```
+
+![Hudi - 14](images/hudi-14.png)
+
+Once you are logged in to your database, run the following commands in the MySQL session to create a DB table.
+
+```
+call mysql.rds_set_configuration('binlog retention hours', 24);
+
+create table dev.retail_transactions(
+tran_id INT,
+tran_date DATE,
+store_id INT,
+store_city varchar(50),
+store_state char(2),
+item_code varchar(50),
+quantity INT,
+total FLOAT);
+
+```
+
+Once the table is created, run the below queries to insert data into this table.
+
+```
+insert into dev.retail_transactions values(1,'2019-03-17',1,'CHICAGO','IL','XXXXXX',5,106.25);
+insert into dev.retail_transactions values(2,'2019-03-16',2,'NEW YORK','NY','XXXXXX',6,116.25);
+insert into dev.retail_transactions values(3,'2019-03-15',3,'SPRINGFIELD','IL','XXXXXX',7,126.25);
+insert into dev.retail_transactions values(4,'2019-03-17',4,'SAN FRANCISCO','CA','XXXXXX',8,136.25);
+insert into dev.retail_transactions values(5,'2019-03-11',1,'CHICAGO','IL','XXXXXX',9,146.25);
+insert into dev.retail_transactions values(6,'2019-03-18',1,'CHICAGO','IL','XXXXXX',10,156.25);
+insert into dev.retail_transactions values(7,'2019-03-14',2,'NEW YORK','NY','XXXXXX',11,166.25);
+insert into dev.retail_transactions values(8,'2019-03-11',1,'CHICAGO','IL','XXXXXX',12,176.25);
+insert into dev.retail_transactions values(9,'2019-03-10',4,'SAN FRANCISCO','CA','XXXXXX',13,186.25);
+insert into dev.retail_transactions values(10,'2019-03-13',1,'CHICAGO','IL','XXXXXX',14,196.25);
+insert into dev.retail_transactions values(11,'2019-03-14',5,'CHICAGO','IL','XXXXXX',15,106.25);
+insert into dev.retail_transactions values(12,'2019-03-15',6,'CHICAGO','IL','XXXXXX',16,116.25);
+insert into dev.retail_transactions values(13,'2019-03-16',7,'CHICAGO','IL','XXXXXX',17,126.25);
+insert into dev.retail_transactions values(14,'2019-03-16',7,'CHICAGO','IL','XXXXXX',17,126.25);
+commit;
+```
+
+We will now use AWS DMS to start pushing this data to S3.
+
+Go to the DMS Web Console -> Endpoints -> hudidssource. Check if the connection is successful. If not, test the connection again.
+
+![Hudi - 16](images/hudi-16.png)
+
+Start the Database migration task hudiload.
+
+![Hudi - 15](images/hudi-15.png)
+
+Once the task state changes from Running to "Load complete, replication ongoing", check the below S3 location for deposited files. Replace youraccountID with AWS event engine account ID.
+
+```
+aws s3 ls s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/
+```
+
+Now login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" using Session Manager or SSH and run the following commands. Replace youraccountID with AWS event engine account ID.
+
+```
+sudo su hadoop
+cd ~
+aws s3 mv s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/ s3://mrworkshop-dms-youraccountID-dayone/dmsdata/data-full/dev/retail_transactions/  --exclude "*" --include "LOAD*.parquet" --recursive
+```
+
+With the full table dump available in the data-full S3 folder, we will now use the Hudi Deltastreamer utility on the EMR cluster to populate the Hudi dataset on S3.
+
+Run the following command directly on leader node. Replace youraccountID with AWS event engine account ID.
+
+```
+spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer  \
+  --jars hdfs:///user/hadoop/*.jar \
+  --master yarn --deploy-mode client \
+  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
+  --conf spark.sql.hive.convertMetastoreParquet=false \
+  /usr/lib/hudi/hudi-utilities-bundle.jar  \
+  --table-type COPY_ON_WRITE \
+  --source-ordering-field dms_received_ts \
+  --props s3://mrworkshop-dms-youraccountID-dayone/properties/dfs-source-retail-transactions-full.properties \
+  --source-class org.apache.hudi.utilities.sources.ParquetDFSSource \
+  --target-base-path s3://mrworkshop-dms-youraccountID-dayone/hudi/retail_transactions --target-table hudiblogdb.retail_transactions \
+  --transformer-class org.apache.hudi.utilities.transform.SqlQueryBasedTransformer \
+  --payload-class org.apache.hudi.common.model.AWSDmsAvroPayload \
+  --schemaprovider-class org.apache.hudi.utilities.schema.FilebasedSchemaProvider \
+  --enable-hive-sync
+  ```
+
+Once this job completes, check the Hudi table by logging into Spark SQL or Athena console.
+
+```
+spark-sql --conf "spark.serializer=org.apache.spark.serializer.KryoSerializer" --conf "spark.sql.hive.convertMetastoreParquet=false" --jars hdfs:///user/hadoop/*.jar  
+```
+
+Run the query:
+
+```
+select * from hudiblogdb.retail_transactions order by tran_id
+```
+
+You should see the same data in the table as the MySQL database with a few columns added by Hudi deltastreamer.
+
+![Hudi - 19](images/hudi-19.png)
+
+Now let's run some DML statements on our MySQL database and take these changes through to the Hudi dataset. Run the following commands in MySQL session from your EC2 JumpHost.
+
+```
+insert into dev.retail_transactions values(15,'2022-03-22',7,'CHICAGO','IL','XXXXXX',17,126.25);
+update dev.retail_transactions set store_city='SPRINGFIELD' where tran_id=12;
+delete from dev.retail_transactions where tran_id=2;
+commit;
+```
+
+Exit from the MySQL session. In a few minutes, you see a new .parquet file created under s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/ folder in the S3 bucket. CDC data is being captured by our DMS replication task. You can see the changes in the DMS replication task under "Table statistics".
+
+![Hudi - 18](images/hudi-18.png)
+
+Now, lets take the incremental changes we made to Hudi. Run the following command on EMR leader node. Replace youraccountID with your AWS event engine account ID.
+
+```
+spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer  \
+  --jars hdfs:///user/hadoop/*.jar \
+  --master yarn --deploy-mode client \
+  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
+  --conf spark.sql.hive.convertMetastoreParquet=false \
+  /usr/lib/hudi/hudi-utilities-bundle.jar \
+  --table-type COPY_ON_WRITE \
+  --source-ordering-field dms_received_ts \
+  --props s3://mrworkshop-dms-youraccountID-dayone/properties/dfs-source-retail-transactions-incremental.properties \
+  --source-class org.apache.hudi.utilities.sources.ParquetDFSSource \
+  --target-base-path s3://mrworkshop-dms-youraccountID-dayone/hudi/retail_transactions --target-table hudiblogdb.retail_transactions \
+  --transformer-class org.apache.hudi.utilities.transform.SqlQueryBasedTransformer \
+  --payload-class org.apache.hudi.common.model.AWSDmsAvroPayload\
+  --schemaprovider-class org.apache.hudi.utilities.schema.FilebasedSchemaProvider \
+  --enable-hive-sync \
+--checkpoint 0
+```
+
+Once finished, check the Hudi table by logging into Spark SQL or Athena console.
+
+```
+spark-sql --conf "spark.serializer=org.apache.spark.serializer.KryoSerializer" --conf "spark.sql.hive.convertMetastoreParquet=false" --jars hdfs:///user/hadoop/*.jar  
+```
+
+Run the query:
+
+```
+select * from hudiblogdb.retail_transactions order by tran_id
+```
+
+You should see the changes you made in the MySQL table.
+
 ### Apache Hudi with Spark Structured Streaming
 
 This exercise will show how you can write real time Hudi data sets using Spark Structured Streaming. For this exercise, we will use real-time NYC Metro Subway data using [MTA API](https://api.mta.info/#/landing).
