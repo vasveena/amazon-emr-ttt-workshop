@@ -146,7 +146,7 @@ def start_execution(**context):
         RelativePath=NOTEBOOK_FILE_NAME,
         ExecutionEngine={'Id': cluster_id, 'Type': 'EMR'},
         NotebookParams=parameters,
-        ServiceRole='EMR_Notebooks_DefaultRole'
+        ServiceRole='emrStudioRole'
     )
 
     execution_id = start_resp['NotebookExecutionId']
