@@ -65,14 +65,14 @@ JOB_FLOW_OVERRIDES = {
                 'Name': 'Master node',
                 'Market': 'ON_DEMAND',
                 'InstanceRole': 'MASTER',
-                'InstanceType': 'm5.xlarge',
+                'InstanceType': 'm4.xlarge',
                 'InstanceCount': 1,
             },
             {
                 'Name': 'Core node',
                 'Market': 'ON_DEMAND',
                 'InstanceRole': 'CORE',
-                'InstanceType': 'm5.xlarge',
+                'InstanceType': 'm4.xlarge',
                 'InstanceCount': 2,
             }
         ],
