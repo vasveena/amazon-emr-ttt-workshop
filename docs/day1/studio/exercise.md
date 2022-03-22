@@ -232,6 +232,7 @@ Click on "Open Editor" and query the tables.
 
 ```
 select * from default.baby limit 10;
+
 ```
 
 ![Studio - 28](images/studio-28.png)
@@ -244,6 +245,7 @@ Go to the root folder and choose studio-ws.ipynb which is the default notebook c
 
 ```
 print("hello world")
+
 ```
 
 ![Studio - 21](images/studio-21.png)

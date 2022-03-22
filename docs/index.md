@@ -2,14 +2,13 @@
 
 This workshop contains exercises for the 3-day Amazon EMR Workshop Training.
 
-# Exercises 
+# Exercises
 
 #### Day 1
 1. Launch EMR cluster with Managed Scaling and Fleets
 2. Run Spark ETLs and Spark structured streaming workloads
 3. EMR Studio Dive Deep
-4. Sagemaker Studio Integration with EMR
-5. Build transactional data lakes using Apache Hudi and Apache Iceberg
+4. Build transactional data lakes using Apache Hudi and Apache Iceberg
 
 #### Day 2
 1. Orchestrate analytical workloads using EMR Studio and Amazon MWAA
