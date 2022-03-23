@@ -93,7 +93,7 @@ Turn on the DAG by using the Toggle switch.
 
 ![mwaa - 8](images/mwaa-8.png)
 
-This DAG will execute once each hour (based on cron schedule: 0 * * * *). For now, let us execute the DAG manually. Click on "Trigger DAG".
+This DAG will execute once at the start of each hour (based on cron schedule: 0 * * * *). For now, let us execute the DAG manually. Click on "Trigger DAG".
 
 ![mwaa - 9](images/mwaa-9.png)
 
@@ -138,7 +138,7 @@ After the job is finished, the cluster "Test-cluster" will be automatically term
 
 ![mwaa - 18](images/mwaa-18.png)
 
-This DAG will execute every hour automatically. You can change the parameters or airflow schedule and play around. You can stop the DAG by using the toggle switch and turn it OFF.
+This DAG will be executed once every hour automatically. You can play around by changing the notebook parameters or pipeline schedule. You can stop the DAG by using the toggle switch and turn it OFF.
 
 ![mwaa - 16](images/mwaa-16.png)
 

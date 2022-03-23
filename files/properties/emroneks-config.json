@@ -1,0 +1,35 @@
+{
+	"name": "spark-python-in-s3-debug-log-classification",
+	"virtualClusterId": "ljvwkokyon5j1x4z649lh65x0",
+	"executionRoleArn": "arn:aws:iam::620614497509:role/EMRContainers-JobExecutionRole",
+	"releaseLabel": "emr-6.2.0-latest",
+	"jobDriver": {
+		"sparkSubmitJobDriver": {
+			"entryPoint": "file:///usr/lib/spark/examples/src/main/python/pi.py",
+			"sparkSubmitParameters": "--conf spark.driver.cores=1 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2"
+		}
+	},
+	"configurationOverrides": {
+		"applicationConfiguration": [{
+				"classification": "spark-defaults",
+				"properties": {
+					"spark.dynamicAllocation.enabled": "false"
+				}
+			},
+			{
+				"classification": "spark-log4j",
+				"properties": {
+					"log4j.rootCategory": "DEBUG, console"
+				}
+			}
+		],
+		"monitoringConfiguration": {
+			"cloudWatchMonitoringConfiguration": {
+				"logGroupName": "emroneks"
+			},
+			"s3MonitoringConfiguration": {
+				"logUri": "s3://vasveena-datapipeline/emroneks/"
+			}
+		}
+	}
+}

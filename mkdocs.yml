@@ -19,6 +19,7 @@ nav:
   - Day 2 Exercises:
     - 1 - Orchestration using Amazon MWAA: 'day2/mwaa/exercise.md'
     - 2 - Deployment Options:
+      - Introduction: 'day2/index.md'
       - 2.1 - Amazon EMR on EKS: 'day2/emroneks/exercise.md'
       - 2.2 - Amazon EMR Serverless: 'day2/serverless/exercise.md'
 markdown_extensions:
