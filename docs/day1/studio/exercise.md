@@ -170,7 +170,7 @@ start-notebook-execution \
 --notebook-params '{"CATEGORIES":["Furniture","PC"], "FROM_DATE":"2015-08-27", "TO_DATE":"2015-08-31", "OUTPUT_LOCATION": "s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output_fromapi/"}' \
 --relative-path workshop-repo/files/notebook/find_best_sellers.ipynb \
 --notebook-execution-name demo-execution \
---execution-engine s'{"Id" : "j-XXXXXXXXXXXXX"}' \
+--execution-engine '{"Id" : "j-XXXXXXXXXXXXX"}' \
 --service-role emrStudioRole
 
 ```
