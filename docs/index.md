@@ -21,4 +21,4 @@ This workshop contains exercises for the 3-day Amazon EMR Workshop Training.
 3. Orchestrate analytical workloads using AWS Step Functions
 4. Ad-hoc querying with Presto
 5. Store and process data using HBase on S3 with migration tips
-6. Integrate with AWS LakeFormation and Apache Ranger
+6. Integrate with AWS LakeFormation
