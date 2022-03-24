@@ -1,4 +1,4 @@
-# ** Exercise 4 - Apache Hudi on Amazon EMR **
+# **Apache Hudi on Amazon EMR**
 
 In this exercise you will build incremental data lakes on EMR using Apache Hudi. You can build data lakes using Apache Hudi using Spark Datasource APIs, Hudi Deltastreamer utility and SparkSQL. You will also build a real-time live incremental data lake with Spark Structured Streaming + Amazon Managed Streaming for Apache Kafka (MSK) + Apache Hudi.
 

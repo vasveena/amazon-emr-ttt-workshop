@@ -1,4 +1,4 @@
-# ** Exercise 3 - Amazon EMR Studio **
+# **Amazon EMR Studio**
 
 ### Log in to EMR Studio
 

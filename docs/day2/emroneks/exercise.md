@@ -1,4 +1,4 @@
-# **Exercise 2.1 - Amazon EMR on EKS**
+# **Amazon EMR on EKS**
 
 In this exercise, you will run Spark applications using EMR on EKS. For this exercise, we are going to use an EKS cluster created using the CloudFormation template. If you are interested in building this environment end-to-end, you can do that following the first 10 steps (until line 131) in this [note](https://github.com/vasveena/EMROnEKS/blob/main/emroneks-note).
 

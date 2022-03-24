@@ -1,4 +1,4 @@
-# ** Exercise 2 - Apache Spark on Amazon EMR **
+# **Apache Spark on Amazon EMR**
 
 ### Initial Setup
 

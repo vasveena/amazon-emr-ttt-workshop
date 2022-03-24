@@ -9,23 +9,23 @@ theme:
 nav:
   - Introduction: 'index.md'
   - Setup: 'setup.md'
-  - Day 1 Exercises:
+  - Part 1 Exercises:
     - 1 - Launching EMR cluster with Instance Fleets: 'day1/fleet/exercise.md'
     - 2 - Apache Spark on Amazon EMR: 'day1/spark/exercise.md'
     - 3 - Amazon EMR Studio: 'day1/studio/exercise.md'
     #- 4 - Sagemaker Studio Integration: 'day1/smstudio/exercise.md'
-    - 4 - Apache Hudi on Amazon EMR: 'day1/hudi/exercise.md'
-    - 5 - Apache Iceberg on Amazon EMR: 'day1/icebrg/exercise.md'
-  - Day 2 Exercises:
-    - 1 - Orchestration using Amazon MWAA: 'day2/mwaa/exercise.md'
-    - 2 - Deployment Options:
+  - Part 2 Exercises:
+    - 1 - Apache Hudi on Amazon EMR: 'day1/hudi/exercise.md'
+    - 2 - Apache Iceberg on Amazon EMR: 'day1/icebrg/exercise.md'
+    - 3 - Orchestration using Amazon MWAA: 'day2/mwaa/exercise.md'
+  - Part 3 Exercises:
+    - 1 - Deployment Options:
       - Introduction: 'day2/index.md'
-      - 2.1 - Amazon EMR on EKS: 'day2/emroneks/exercise.md'
-      - 2.2 - Amazon EMR Serverless: 'day2/serverless/exercise.md'
-  - Day 3 Exercises:
-    - 1 - Hive and Presto on Amazon EMR: 'day3/hive/exercise.md'
-    - 2 - HBase on S3: 'day3/hbase/exercise.md'
-    - 3 - LakeFormation Integration: 'day3/lf/exercise.md'
+      - 1.1 - Amazon EMR on EKS: 'day2/emroneks/exercise.md'
+      - 1.2 - Amazon EMR Serverless: 'day2/serverless/exercise.md'
+    - 2 - LakeFormation Integration: 'day3/lf/exercise.md'
+  #  - 3 - Hive and Presto on Amazon EMR: 'day3/hive/exercise.md'
+  #  - 4 - HBase on S3: 'day3/hbase/exercise.md'
 markdown_extensions:
     - toc:
         permalink: true

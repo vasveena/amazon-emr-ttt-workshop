@@ -17,8 +17,4 @@ This workshop contains exercises for the 3-day Amazon EMR Workshop Training.
 
 #### Day 3
 1. Migration methodologies
-2. Run Hive batch ETLs and interactive queries
-3. Orchestrate analytical workloads using AWS Step Functions
-4. Ad-hoc querying with Presto
-5. Store and process data using HBase on S3 with migration tips
-6. Integrate with AWS LakeFormation
+2. Integrate with AWS LakeFormation

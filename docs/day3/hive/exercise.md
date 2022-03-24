@@ -2,7 +2,9 @@
 
 In this section we are going to use Hive and Presto to run batch ETL jobs and adhoc queries.
 
-### Hive ETLs
+### Hive on EMR
+
+#### Running Hive jobs on Hue
 
 In AWS Web Console, Go to EMR Console -> EMR-Hive-HBaseOnS3
 
@@ -101,15 +103,6 @@ LOCATION
   LOCATION
     's3://redshift-downloads/TPC-H/10GB/orders/';
 
-  select l_quantity * (o_totalprice + l_extendedprice + l_tax - l_discount) as finalprice
-  from lineitem join orders
-  where l_receiptdate > 1992-01-03
-  and o_orderpriority in ('1-URGENT','2-HIGH',')
-  order by 1 desc
-  limit 5;
-
-  drop table lineitemorders
-
   -- REPLACE your account ID in S3 location
 
 CREATE EXTERNAL TABLE `lineitemorders`(
@@ -160,22 +153,344 @@ limit 5;
 
 ```
 
-We can submit a parameterized Hive step to EMR cluster. Run the below command on your EMR leader node session. 
+#### Hive ACID tables
+
+Hive supports ACID tables. A single statement can write to multiple partitions or multiple tables. If the operation fails, partial writes or inserts are not visible to users. Operations remain performant even if data changes often, such as one percent per hour. Does not overwrite the entire partition to perform update or delete operations.
+
+Run the below commands in Hue editor one by one. Replace youraccountID with your AWS event engine account ID.
 
 ```
-accountID=$(aws sts get-caller-identity --query Account --output text)
-clusterID=$(cat /mnt/var/lib/info/job-flow.json | jq -r ".jobFlowId")
+set hive.support.concurrency=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
 
-aws emr add-steps --cluster-id $clusterID --steps Type=Hive,Name="Hive Job",ActionOnFailure=CONTINUE,Args=[-f,s3://elasticmapreduce/samples/hive-ads/libs/response-time-stats.q,-d,INPUT=s3://elasticmapreduce/samples/hive-ads/tables,-d,OUTPUT=s3://mrworkshop-$accountID-dayone/hive-ads/output/,-d,SAMPLE=s3://elasticmapreduce/samples/hive-ads/]
+--REPLACE your account in the S3 location
+
+CREATE TABLE acid_tbl
+(
+  key INT,
+  value STRING,
+  action STRING
+)
+CLUSTERED BY (key) INTO 3 BUCKETS
+STORED AS ORC
+LOCATION 's3://mrworkshop-youraccountID-dayone/hive/acid_tbl'
+TBLPROPERTIES ('transactional'='true');
+
+INSERT INTO acid_tbl VALUES
+(1, 'val1', 'insert'),
+(2, 'val2', 'insert'),
+(3, 'val3', 'insert'),
+(4, 'val4', 'insert'),
+(5, 'val5', 'insert');
+
+SELECT * FROM acid_tbl;
+
+UPDATE acid_tbl SET value = 'val5_1', action = 'update' WHERE key = 5;
+SELECT * FROM acid_tbl;
+
+DELETE FROM acid_tbl WHERE key = 4;
+SELECT * FROM acid_tbl;
+
+DROP TABLE IF EXISTS acid_merge;
+CREATE TABLE acid_merge
+(
+  key INT,
+  new_value STRING
+)
+STORED AS ORC;
+
+INSERT INTO acid_merge VALUES
+(1, 'val1_1'),
+(3, NULL),
+(6, 'val6');
+
+MERGE INTO acid_tbl AS T
+USING acid_merge AS M
+ON T.key = M.key
+WHEN MATCHED AND M.new_value IS NOT NULL
+  THEN UPDATE SET value = M.new_value, action = 'merge_update'
+WHEN MATCHED AND M.new_value IS NULL
+  THEN DELETE
+WHEN NOT MATCHED
+  THEN INSERT VALUES (M.key, M.new_value, 'merge_insert');
+
+SELECT * FROM acid_tbl;
+
+ALTER TABLE acid_tbl COMPACT 'minor';
+SHOW COMPACTIONS;
+
+SET hive.compactor.check.interval;
+
+ALTER TABLE acid_tbl COMPACT 'major';
+show compactions;
+
+select row__id, key, value, action from acid_tbl;
 
 ```
 
-aws emr add-steps --cluster-id j-30Q6UZV8FU5RN --steps Type=Hive,Name="Hive Job",ActionOnFailure=CONTINUE,Args=[-f,s3://elasticmapreduce/samples/hive-ads/libs/response-time-stats.q,-d,INPUT=s3://elasticmapreduce/samples/hive-ads/tables,-d,OUTPUT=s3://mrworkshop-475742350974-dayone/hive-ads/output/,-d,SAMPLE=s3://elasticmapreduce/samples/hive-ads/]
-
-
-Hive also supports ACID tables.
+#### Orchestrate Hive jobs with AWS Step Functions
 
 Simba provides [JDBC drivers](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/HiveJDBCDriver.html) for Hive and Presto to connect from BI tools like Tableau or SQL Workbench.
+
+Please note you can use AWS Step Functions to orchestrate any kind of EMR steps. But we are just using Hive steps here as an example.
+
+Go to AWS Management Console -> AWS Step Functions -> Create State Machine.
+
+Choose middle option “Write your own workflow in code”. Under “Definition” enter the following code block.
+
+Edit InstanceProfile Role and account ID in below code (marked as CHANGEME). Use the instance profile being used by your "EMR-Spark-Hive-Presto" cluster. It will look like "dayone-emrEc2InstanceProfile-XXXXXXX". This information can be retrieved from the Summary tab of your EMR cluster. (EMR Web Console -> EMR-Spark-Hive-Presto -> EC2 instance profile under Security Access). Change your account ID in the S3 bucket names.
+
+```
+
+{
+  "StartAt": "Should_Create_Cluster",
+  "States": {
+    "Should_Create_Cluster": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.CreateCluster",
+          "BooleanEquals": true,
+          "Next": "Create_A_Cluster"
+        },
+        {
+          "Variable": "$.CreateCluster",
+          "BooleanEquals": false,
+          "Next": "Enable_Termination_Protection"
+        }
+      ],
+      "Default": "Create_A_Cluster"
+    },
+    "Create_A_Cluster": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::elasticmapreduce:createCluster.sync",
+      "Parameters": {
+        "Name": "WorkflowCluster",
+        "VisibleToAllUsers": true,
+        "ReleaseLabel": "emr-5.28.0",
+        "Applications": [{ "Name": "Hive" }],
+        "ServiceRole": "emrServiceRole",
+        "JobFlowRole": "CHANGEME",
+        "Instances": {
+          "KeepJobFlowAliveWhenNoSteps": true,
+          "InstanceFleets": [
+            {
+              "InstanceFleetType": "MASTER",
+              "TargetOnDemandCapacity": 1,
+              "InstanceTypeConfigs": [
+                {
+                  "InstanceType": "m4.xlarge"
+                }
+              ]
+            },
+            {
+              "InstanceFleetType": "CORE",
+              "TargetOnDemandCapacity": 1,
+              "InstanceTypeConfigs": [
+                {
+                  "InstanceType": "m4.xlarge"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ResultPath": "$.CreateClusterResult",
+      "Next": "Merge_Results"
+    },
+    "Merge_Results": {
+      "Type": "Pass",
+      "Parameters": {
+        "CreateCluster.$": "$.CreateCluster",
+        "TerminateCluster.$": "$.TerminateCluster",
+        "ClusterId.$": "$.CreateClusterResult.ClusterId"
+      },
+      "Next": "Enable_Termination_Protection"
+    },
+    "Enable_Termination_Protection": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::elasticmapreduce:setClusterTerminationProtection",
+      "Parameters": {
+        "ClusterId.$": "$.ClusterId",
+        "TerminationProtected": true
+      },
+      "ResultPath": null,
+      "Next": "Add_Steps_Parallel"
+    },
+    "Add_Steps_Parallel": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "Step_One",
+          "States": {
+            "Step_One": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::elasticmapreduce:addStep.sync",
+              "Parameters": {
+                "ClusterId.$": "$.ClusterId",
+                "Step": {
+                  "Name": "The first step",
+                  "ActionOnFailure": "CONTINUE",
+                  "HadoopJarStep": {
+                    "Jar": "command-runner.jar",
+                    "Args": [
+                      "hive-script",
+                      "--run-hive-script",
+                      "--args",
+                      "-f",
+                      "s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q",
+                      "-d",
+                      "INPUT=s3://eu-west-1.elasticmapreduce.samples",
+                      "-d",
+                      "OUTPUT=s3://mrworkshop-CHANGEME-dayone/MyHiveQueryResults/"
+                    ]
+                  }
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "Wait_10_Seconds",
+          "States": {
+            "Wait_10_Seconds": {
+              "Type": "Wait",
+              "Seconds": 10,
+              "Next": "Step_Two (async)"
+            },
+            "Step_Two (async)": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::elasticmapreduce:addStep",
+              "Parameters": {
+                "ClusterId.$": "$.ClusterId",
+                "Step": {
+                  "Name": "The second step",
+                  "ActionOnFailure": "CONTINUE",
+                  "HadoopJarStep": {
+                    "Jar": "command-runner.jar",
+                    "Args": [
+                      "hive-script",
+                      "--run-hive-script",
+                      "--args",
+                      "-f",
+                      "s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q",
+                      "-d",
+                      "INPUT=s3://eu-west-1.elasticmapreduce.samples",
+                      "-d",
+                      "OUTPUT=s3://mrworkshop-CHANGEME-dayone/MyHiveQueryResults/"
+                    ]                  
+                  }
+                }
+              },
+              "ResultPath": "$.AddStepsResult",
+              "Next": "Wait_Another_10_Seconds"
+            },
+            "Wait_Another_10_Seconds": {
+              "Type": "Wait",
+              "Seconds": 10,
+              "Next": "Cancel_Step_Two"
+            },
+            "Cancel_Step_Two": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::elasticmapreduce:cancelStep",
+              "Parameters": {
+                "ClusterId.$": "$.ClusterId",
+                "StepId.$": "$.AddStepsResult.StepId"
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": null,
+      "Next": "Step_Three"
+    },
+    "Step_Three": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::elasticmapreduce:addStep.sync",
+      "Parameters": {
+        "ClusterId.$": "$.ClusterId",
+        "Step": {
+          "Name": "The third step",
+          "ActionOnFailure": "CONTINUE",
+          "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                      "hive-script",
+                      "--run-hive-script",
+                      "--args",
+                      "-f",
+                      "s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q",
+                      "-d",
+                      "INPUT=s3://eu-west-1.elasticmapreduce.samples",
+                      "-d",
+                      "OUTPUT=s3://mrworkshop-CHANGEME-dayone/MyHiveQueryResults/"
+             ]
+          }
+        }
+      },
+      "ResultPath": null,
+      "Next": "Disable_Termination_Protection"
+    },
+    "Disable_Termination_Protection": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::elasticmapreduce:setClusterTerminationProtection",
+      "Parameters": {
+        "ClusterId.$": "$.ClusterId",
+        "TerminationProtected": false
+      },
+      "ResultPath": null,
+      "Next": "Should_Terminate_Cluster"
+    },
+    "Should_Terminate_Cluster": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.TerminateCluster",
+          "BooleanEquals": true,
+          "Next": "Terminate_Cluster"
+        },
+        {
+          "Variable": "$.TerminateCluster",
+          "BooleanEquals": false,
+          "Next": "Wrapping_Up"
+        }
+      ],
+      "Default": "Wrapping_Up"
+    },
+    "Terminate_Cluster": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::elasticmapreduce:terminateCluster.sync",
+      "Parameters": {
+        "ClusterId.$": "$.ClusterId"
+      },
+      "Next": "Wrapping_Up"
+    },
+    "Wrapping_Up": {
+      "Type": "Pass",
+      "End": true
+    }
+  }
+}
+
+```
+
+Then, you can keep rest as default and create state machine.
+
+After the state machine is created, click on “Start Execution” and enter the below JSON input.
+
+```
+
+{
+  "CreateCluster": true,
+  "TerminateCluster": true
+}
+
+```
+
+Click on “Start Execution” and observe the workflow. You can see the “Workflow cluster” being created. It will run the EMR Hive steps as chained workflows. You can also use AWS Event Bridge to schedule jobs using AWS Step Functions.
 
 ### S3DistCp Utility
 

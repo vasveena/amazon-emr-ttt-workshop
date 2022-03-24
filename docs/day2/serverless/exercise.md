@@ -1,4 +1,4 @@
-# **Exercise 2.2 - Amazon EMR Serverless**
+# **Amazon EMR Serverless**
 
 In this exercise, you will run Hive and Spark applications using EMR Serverless.
 
@@ -315,26 +315,25 @@ result=$(echo "aws --region us-east-1 emr-serverless start-job-run \
     }' \
     --configuration-overrides '{
         \"applicationConfiguration\": [{
-            \"classification\": \"hive-site\",
-            \"properties\": {
-                \"hive.exec.scratchdir\": \"s3://$s3bucket/emr-serverless-hive/hive/scratch\",
-                \"hive.metastore.warehouse.dir\": "s3://$s3bucket/emr-serverless-hive/hive/warehouse\",
-                \"hive.driver.cores\": \"2\",
-                \"hive.driver.memory\": \"4g\",
-                \"hive.tez.container.size\": \"4096\",
-                \"hive.tez.cpu.vcores\": \"1\"
+           \"classification\": \"hive-site\",
+               \"properties\": {
+               \"hive.exec.scratchdir\": \"s3://$s3bucket/emr-serverless-hive/hive/scratch\",
+               \"hive.metastore.warehouse.dir\": \"s3://$s3bucket/emr-serverless-hive/hive/warehouse\",
+               \"hive.driver.cores\": \"2\",
+               \"hive.driver.memory\": \"4g\",
+               \"hive.tez.container.size\": \"4096\",
+               \"hive.tez.cpu.vcores\": \"1\"
             }
-        }],
+            }
+            ],
         \"monitoringConfiguration\": {
-            \"s3MonitoringConfiguration\": {
-                \"logUri\": \"s3://$s3bucket/emr-serverless-hive/logs/\"
-            }
+          \"s3MonitoringConfiguration\": {
+            \"logUri\": \"s3://$s3bucket/emrserverless-hive/logs\"
+          }
         }
-    }'" | bash )
-
+      }'" | bash )
 
 ```
-
 
 Get the job run ID.
 
@@ -351,3 +350,94 @@ aws --region us-east-1 emr-serverless get-job-run \
       --job-run-id $jobID
 
 ```
+
+Look at the S3 stdout for results. Check the table in Glue catalog.
+
+### Changing minor and major versions
+
+Let's use a different Hive version for our application. Create a new application with release label 5.34.0-preview.
+
+```
+
+result=$(aws --region us-east-1 emr-serverless create-application \
+    --release-label emr-5.34.0-preview \
+    --initial-capacity '{
+    "DRIVER": {
+        "workerCount": 5,
+        "resourceConfiguration": {
+            "cpu": "2vCPU",
+            "memory": "4GB"
+        }
+    },
+    "TEZ_TASK": {
+        "workerCount": 50,
+        "resourceConfiguration": {
+            "cpu": "4vCPU",
+            "memory": "8GB"
+        }
+    }
+  }' \
+  --maximum-capacity '{
+    "cpu": "400vCPU",
+    "memory": "1024GB"
+  }' \
+  --type 'HIVE' \
+  --name hive-6.5.0-demo-application)
+
+  echo $result
+
+  appID=$(echo $result | jq -r .applicationId)
+
+```
+
+Now let's submit the same Hive job to this application.
+
+```
+result=$(echo "aws --region us-east-1 emr-serverless start-job-run \
+    --application-id ${appID} \
+    --execution-role-arn ${serverlessArn} \
+    --job-driver '{
+        \"hive\": {
+            \"query\": \"s3://$s3bucket/emr-serverless-hive/query/hive-query.ql\",
+            \"parameters\": \"--hiveconf hive.root.logger=DEBUG,DRFA\"
+        }
+    }' \
+    --configuration-overrides '{
+        \"applicationConfiguration\": [{
+           \"classification\": \"hive-site\",
+               \"properties\": {
+               \"hive.exec.scratchdir\": \"s3://$s3bucket/emr-serverless-hive/hive/scratch\",
+               \"hive.metastore.warehouse.dir\": \"s3://$s3bucket/emr-serverless-hive/hive/warehouse\",
+               \"hive.driver.cores\": \"2\",
+               \"hive.driver.memory\": \"4g\",
+               \"hive.tez.container.size\": \"4096\",
+               \"hive.tez.cpu.vcores\": \"1\"
+            }
+            }
+            ],
+        \"monitoringConfiguration\": {
+          \"s3MonitoringConfiguration\": {
+            \"logUri\": \"s3://$s3bucket/emrserverless-hive/logs\"
+          }
+        }
+      }'" | bash )
+
+```
+
+Get the job run ID.
+
+```
+jobID=$(echo $result | jq -r .'jobRunId')
+
+```
+
+You can get the status of our job using the following command.
+
+```
+aws --region us-east-1 emr-serverless get-job-run \
+      --application-id $appID \
+      --job-run-id $jobID
+
+```
+
+Once it finishes, check the stdout log in S3 for results and check the Glue catalog.

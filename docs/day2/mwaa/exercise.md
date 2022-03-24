@@ -1,4 +1,4 @@
-# **Exercise 1 - Orchestrating Notebook Pipelines using Amazon MWAA**
+# **Orchestrating Notebook Pipelines using Amazon MWAA**
 
 In the previous [Amazon EMR Studio](/day1/studio/exercise/#parameterized-notebooks) exercise, you ran a parameterized notebook programmatically using start-notebook-execution API. In this exercise, we are going to orchestrate a pipeline with the same parameterized notebook [find_best_sellers.ipynb](https://github.com/vasveena/amazon-emr-ttt-workshop/blob/main/files/notebook/find_best_sellers.ipynb) using Amazon Managed Workflows for Apache Airflow
 
