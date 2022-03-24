@@ -1,0 +1,1067 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.11">
+    
+    
+      
+        <title>**Apache Hive and Presto on EMR** - Amazon EMR Train-The-Trainer Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.50e68009.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#apache-hive-and-presto-on-emr" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Amazon EMR Train-The-Trainer Workshop" class="md-header__button md-logo" aria-label="Amazon EMR Train-The-Trainer Workshop" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon EMR Train-The-Trainer Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              **Apache Hive and Presto on EMR**
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vasveena/amazon-emr-ttt-workshop/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vasveena/amazon-emr-ttt-workshop
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Amazon EMR Train-The-Trainer Workshop" class="md-nav__button md-logo" aria-label="Amazon EMR Train-The-Trainer Workshop" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Amazon EMR Train-The-Trainer Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vasveena/amazon-emr-ttt-workshop/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vasveena/amazon-emr-ttt-workshop
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../setup/" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Part 1 Exercises
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Part 1 Exercises" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Part 1 Exercises
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/fleet/exercise/" class="md-nav__link">
+        1 - Launching EMR cluster with Instance Fleets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/spark/exercise/" class="md-nav__link">
+        2 - Apache Spark on Amazon EMR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/studio/exercise/" class="md-nav__link">
+        3 - Amazon EMR Studio
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Part 2 Exercises
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Part 2 Exercises" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Part 2 Exercises
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/hudi/exercise/" class="md-nav__link">
+        1 - Apache Hudi on Amazon EMR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/icebrg/exercise/" class="md-nav__link">
+        2 - Apache Iceberg on Amazon EMR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day2/mwaa/exercise/" class="md-nav__link">
+        3 - Orchestration using Amazon MWAA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Part 3 Exercises
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Part 3 Exercises" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Part 3 Exercises
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1">
+          Deployment Options
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Deployment Options" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Deployment Options
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day2/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day2/emroneks/exercise/" class="md-nav__link">
+        1.1 - Amazon EMR on EKS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day2/serverless/exercise/" class="md-nav__link">
+        1.2 - Amazon EMR Serverless
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hive-on-emr" class="md-nav__link">
+    Hive on EMR
+  </a>
+  
+    <nav class="md-nav" aria-label="Hive on EMR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-hive-jobs-on-hue" class="md-nav__link">
+    Running Hive jobs on Hue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-acid-tables" class="md-nav__link">
+    Hive ACID tables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestrate-hive-jobs-with-aws-step-functions" class="md-nav__link">
+    Orchestrate Hive jobs with AWS Step Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3distcp-utility" class="md-nav__link">
+    S3DistCp Utility
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+<a href="https://github.com/vasveena/amazon-emr-ttt-workshop/edit/master/docs/day3/hive/exercise.md" title="Edit this page" class="md-content__button md-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+</a>
+
+
+<h1 id="apache-hive-and-presto-on-emr"><strong>Apache Hive and Presto on EMR</strong><a class="headerlink" href="#apache-hive-and-presto-on-emr" title="Permanent link">&para;</a></h1>
+<p>In this section we are going to use Hive and Presto to run batch ETL jobs and adhoc queries.</p>
+<h3 id="hive-on-emr">Hive on EMR<a class="headerlink" href="#hive-on-emr" title="Permanent link">&para;</a></h3>
+<h4 id="running-hive-jobs-on-hue">Running Hive jobs on Hue<a class="headerlink" href="#running-hive-jobs-on-hue" title="Permanent link">&para;</a></h4>
+<p>In AWS Web Console, Go to EMR Console -&gt; EMR-Hive-HBaseOnS3</p>
+<p><img alt="hv - 1" src="../images/hv-1.png" /></p>
+<p>Login to the leader node of this cluster using Session Manager or SSH (Go to Hardware tab -&gt; master fleet -&gt; Click on the instance ID -&gt; Go to EC2 console -&gt; Connect with Session Manager). Run the following command:</p>
+<div class="codehilite"><pre><span></span><code>cd ~
+sudo su hadoop
+sudo -su hdfs hdfs dfs -chmod -R 777 /
+</code></pre></div>
+
+<p>Let's connect to Hue in this cluster to submit Hive queries. For this you will need to install <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">AWS CLI</a> and <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html">Session Manager plugin</a> on your local desktop to do this.</p>
+<p>Replace the environmental variables with the values from the Team Dashboard. Run the below commands in your local desktop. For Windows, you will need to use "set" instead of "export".</p>
+<p><img alt="hv - 2" src="../images/hv-2.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">AWS_DEFAULT_REGION</span><span class="o">=</span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="n">AWS_ACCESS_KEY_ID</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="n">AWS_SECRET_ACCESS_KEY</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="n">AWS_SESSION_TOKEN</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
+
+<p>Run the below command on your local desktop. Replace --target with your leader node instance ID of the EMR cluster in the following command.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">ssm</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">session</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="w"> </span><span class="n">i</span><span class="o">-</span><span class="mh">054</span><span class="n">c79edd2456227b</span><span class="w"> </span><span class="o">--</span><span class="n">document</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">AWS</span><span class="o">-</span><span class="n">StartPortForwardingSession</span><span class="w"> </span><span class="o">--</span><span class="n">parameters</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;portNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;8888&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;localPortNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;8158&quot;</span><span class="p">]}&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
+</code></pre></div>
+
+<p><img alt="hv - 3" src="../images/hv-3.png" /></p>
+<p>It should start a session on Hue port (8888). Go to the your browser and type <em>http://localhost:8158</em> in the address bar. You should now be taken to the Hue console.</p>
+<p><img alt="hv - 4" src="../images/hv-4.png" /></p>
+<p>Login to Hue by. You can choose any user name and password you like. Click "Create account". Once you are logged in, you will see Hue editor.</p>
+<p><img alt="hv - 5" src="../images/hv-5.png" /></p>
+<p>By default, it goes to MySQL editor. Click on this icon <img alt="hv - 6" src="../images/hv-6.png" /> on the top left corner and choose Hive editor.</p>
+<p><img alt="hv - 7" src="../images/hv-7.png" /></p>
+<p>Now we can run some Hive queries. Copy the below contents into Hue editor. Run these queries on Hue one at a time. REPLACE your account ID in S3 location wherever instructed.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">CREATE</span><span class="w"> </span><span class="n">TABLE</span><span class="w"> </span><span class="err">`</span><span class="n">lineitem</span><span class="err">`</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_orderkey</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_partkey</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_suppkey</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_linenumber</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_quantity</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_extendedprice</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_discount</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_tax</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_returnflag</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_linestatus</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_shipdate</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_commitdate</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_receiptdate</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_shipinstruct</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_shipmode</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">l_comment</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">)</span><span class="w"></span>
+<span class="n">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w"></span>
+<span class="w">  </span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w"></span>
+<span class="n">STORED</span><span class="w"> </span><span class="n">AS</span><span class="w"> </span><span class="n">INPUTFORMAT</span><span class="w"></span>
+<span class="w">  </span><span class="s1">&#39;org.apache.hadoop.mapred.TextInputFormat&#39;</span><span class="w"></span>
+<span class="n">OUTPUTFORMAT</span><span class="w"></span>
+<span class="w">  </span><span class="s1">&#39;org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat&#39;</span><span class="w"></span>
+<span class="n">LOCATION</span><span class="w"></span>
+<span class="w">  </span><span class="s1">&#39;s3://redshift-downloads/TPC-H/10GB/lineitem/&#39;</span><span class="p">;</span><span class="w"></span>
+
+
+<span class="w">  </span><span class="n">CREATE</span><span class="w"> </span><span class="n">EXTERNAL</span><span class="w"> </span><span class="n">TABLE</span><span class="w"> </span><span class="err">`</span><span class="n">orders</span><span class="err">`</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_orderkey</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_custkey</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_orderstatus</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_totalprice</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_orderdate</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_orderpriority</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_clerk</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_shippriority</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="err">`</span><span class="n">o_comment</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w"></span>
+<span class="w">    </span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="n">STORED</span><span class="w"> </span><span class="n">AS</span><span class="w"> </span><span class="n">INPUTFORMAT</span><span class="w"></span>
+<span class="w">    </span><span class="s1">&#39;org.apache.hadoop.mapred.TextInputFormat&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="n">OUTPUTFORMAT</span><span class="w"></span>
+<span class="w">    </span><span class="s1">&#39;org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="n">LOCATION</span><span class="w"></span>
+<span class="w">    </span><span class="s1">&#39;s3://redshift-downloads/TPC-H/10GB/orders/&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">  </span><span class="o">--</span><span class="w"> </span><span class="n">REPLACE</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">account</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">S3</span><span class="w"> </span><span class="n">location</span><span class="w"></span>
+
+<span class="n">CREATE</span><span class="w"> </span><span class="n">EXTERNAL</span><span class="w"> </span><span class="n">TABLE</span><span class="w"> </span><span class="err">`</span><span class="n">lineitemorders</span><span class="err">`</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">orderkey</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">linenumber</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">quantity</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">totalprice</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">extendedprice</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">tax</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">discount</span><span class="err">`</span><span class="w"> </span><span class="n">double</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">orderpriority</span><span class="err">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="err">`</span><span class="n">shippriority</span><span class="err">`</span><span class="w"> </span><span class="n">bigint</span><span class="p">)</span><span class="w"></span>
+<span class="n">PARTITIONED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="p">(</span><span class="n">linestatus</span><span class="w"> </span><span class="n">string</span><span class="p">)</span><span class="w"></span>
+<span class="n">CLUSTERED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="p">(</span><span class="n">orderkey</span><span class="p">)</span><span class="w"></span>
+<span class="n">SORTED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="p">(</span><span class="n">orderkey</span><span class="w"> </span><span class="n">ASC</span><span class="p">)</span><span class="w"></span>
+<span class="n">INTO</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">BUCKETS</span><span class="w"></span>
+<span class="n">STORED</span><span class="w"> </span><span class="n">AS</span><span class="w"> </span><span class="n">PARQUET</span><span class="w"></span>
+<span class="n">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://mrworkshop-youraccountID-dayone/hive/lineitemorders/&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="n">set</span><span class="w"> </span><span class="n">hive</span><span class="o">.</span><span class="n">exec</span><span class="o">.</span><span class="n">dynamic</span><span class="o">.</span><span class="n">partition</span><span class="o">=</span><span class="bp">true</span><span class="p">;</span><span class="w">  </span>
+<span class="n">set</span><span class="w"> </span><span class="n">hive</span><span class="o">.</span><span class="n">exec</span><span class="o">.</span><span class="n">dynamic</span><span class="o">.</span><span class="n">partition</span><span class="o">.</span><span class="n">mode</span><span class="o">=</span><span class="n">nonstrict</span><span class="p">;</span><span class="w"></span>
+
+<span class="n">insert</span><span class="w"> </span><span class="n">overwrite</span><span class="w"> </span><span class="n">table</span><span class="w"> </span><span class="n">lineitemorders</span><span class="w"></span>
+<span class="n">partition</span><span class="w"> </span><span class="p">(</span><span class="n">linestatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;O&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="n">select</span><span class="w"> </span><span class="n">o_orderkey</span><span class="p">,</span><span class="w"></span>
+<span class="n">l_linenumber</span><span class="w"></span>
+<span class="n">l_quantity</span><span class="p">,</span><span class="w"></span>
+<span class="n">o_totalprice</span><span class="p">,</span><span class="w"></span>
+<span class="n">l_extendedprice</span><span class="p">,</span><span class="w"></span>
+<span class="n">l_tax</span><span class="p">,</span><span class="w"></span>
+<span class="n">l_discount</span><span class="p">,</span><span class="w"></span>
+<span class="n">o_orderpriority</span><span class="p">,</span><span class="w"></span>
+<span class="n">o_shippriority</span><span class="p">,</span><span class="w"></span>
+<span class="n">o_orderdate</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">orderdate</span><span class="w"></span>
+<span class="n">from</span><span class="w"> </span><span class="n">lineitem</span><span class="w"> </span><span class="n">join</span><span class="w"> </span><span class="n">orders</span><span class="w"></span>
+<span class="n">on</span><span class="w"> </span><span class="n">l_orderkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o_orderkey</span><span class="w"></span>
+<span class="n">where</span><span class="w"> </span><span class="n">l_linestatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;O&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="n">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">lineitemorders</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"></span>
+
+
+<span class="n">select</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">totalprice</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">extendedprice</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">finalprice</span><span class="p">,</span><span class="w"> </span><span class="n">orderpriority</span><span class="w"></span>
+<span class="n">from</span><span class="w"> </span><span class="n">lineitemorders</span><span class="w"></span>
+<span class="n">where</span><span class="w"> </span><span class="n">linestatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;O&#39;</span><span class="w"></span>
+<span class="n">group</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">orderpriority</span><span class="p">,</span><span class="w"> </span><span class="n">quantity</span><span class="p">,</span><span class="w"> </span><span class="n">totalprice</span><span class="p">,</span><span class="w"> </span><span class="n">extendedprice</span><span class="p">,</span><span class="w"> </span><span class="n">tax</span><span class="p">,</span><span class="w"> </span><span class="n">discount</span><span class="w"></span>
+<span class="n">order</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">desc</span><span class="w"></span>
+<span class="n">limit</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"></span>
+</code></pre></div>
+
+<h4 id="hive-acid-tables">Hive ACID tables<a class="headerlink" href="#hive-acid-tables" title="Permanent link">&para;</a></h4>
+<p>Hive supports ACID tables. A single statement can write to multiple partitions or multiple tables. If the operation fails, partial writes or inserts are not visible to users. Operations remain performant even if data changes often, such as one percent per hour. Does not overwrite the entire partition to perform update or delete operations.</p>
+<p>Run the below commands in Hue editor one by one. Replace youraccountID with your AWS event engine account ID.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">set</span><span class="w"> </span><span class="nt">hive</span><span class="p">.</span><span class="nc">support</span><span class="p">.</span><span class="nc">concurrency</span><span class="o">=</span><span class="nt">true</span><span class="o">;</span><span class="w"></span>
+<span class="nt">set</span><span class="w"> </span><span class="nt">hive</span><span class="p">.</span><span class="nc">exec</span><span class="p">.</span><span class="nc">dynamic</span><span class="p">.</span><span class="nc">partition</span><span class="p">.</span><span class="nc">mode</span><span class="o">=</span><span class="nt">nonstrict</span><span class="o">;</span><span class="w"></span>
+<span class="nt">set</span><span class="w"> </span><span class="nt">hive</span><span class="p">.</span><span class="nc">txn</span><span class="p">.</span><span class="nc">manager</span><span class="o">=</span><span class="nt">org</span><span class="p">.</span><span class="nc">apache</span><span class="p">.</span><span class="nc">hadoop</span><span class="p">.</span><span class="nc">hive</span><span class="p">.</span><span class="nc">ql</span><span class="p">.</span><span class="nc">lockmgr</span><span class="p">.</span><span class="nc">DbTxnManager</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">--REPLACE</span><span class="w"> </span><span class="nt">your</span><span class="w"> </span><span class="nt">account</span><span class="w"> </span><span class="nt">in</span><span class="w"> </span><span class="nt">the</span><span class="w"> </span><span class="nt">S3</span><span class="w"> </span><span class="nt">location</span><span class="w"></span>
+
+<span class="nt">CREATE</span><span class="w"> </span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="w"></span>
+<span class="o">(</span><span class="w"></span>
+<span class="w">  </span><span class="nt">key</span><span class="w"> </span><span class="nt">INT</span><span class="o">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">value</span><span class="w"> </span><span class="nt">STRING</span><span class="o">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">action</span><span class="w"> </span><span class="nt">STRING</span><span class="w"></span>
+<span class="o">)</span><span class="w"></span>
+<span class="nt">CLUSTERED</span><span class="w"> </span><span class="nt">BY</span><span class="w"> </span><span class="o">(</span><span class="nt">key</span><span class="o">)</span><span class="w"> </span><span class="nt">INTO</span><span class="w"> </span><span class="nt">3</span><span class="w"> </span><span class="nt">BUCKETS</span><span class="w"></span>
+<span class="nt">STORED</span><span class="w"> </span><span class="nt">AS</span><span class="w"> </span><span class="nt">ORC</span><span class="w"></span>
+<span class="nt">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://mrworkshop-youraccountID-dayone/hive/acid_tbl&#39;</span><span class="w"></span>
+<span class="nt">TBLPROPERTIES</span><span class="w"> </span><span class="o">(</span><span class="s1">&#39;transactional&#39;</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="o">);</span><span class="w"></span>
+
+<span class="nt">INSERT</span><span class="w"> </span><span class="nt">INTO</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="w"> </span><span class="nt">VALUES</span><span class="w"></span>
+<span class="o">(</span><span class="nt">1</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;val1&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;insert&#39;</span><span class="o">),</span><span class="w"></span>
+<span class="o">(</span><span class="nt">2</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;val2&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;insert&#39;</span><span class="o">),</span><span class="w"></span>
+<span class="o">(</span><span class="nt">3</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;val3&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;insert&#39;</span><span class="o">),</span><span class="w"></span>
+<span class="o">(</span><span class="nt">4</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;val4&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;insert&#39;</span><span class="o">),</span><span class="w"></span>
+<span class="o">(</span><span class="nt">5</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;val5&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;insert&#39;</span><span class="o">);</span><span class="w"></span>
+
+<span class="nt">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">FROM</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">UPDATE</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="w"> </span><span class="nt">SET</span><span class="w"> </span><span class="nt">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;val5_1&#39;</span><span class="o">,</span><span class="w"> </span><span class="nt">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;update&#39;</span><span class="w"> </span><span class="nt">WHERE</span><span class="w"> </span><span class="nt">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">5</span><span class="o">;</span><span class="w"></span>
+<span class="nt">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">FROM</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">DELETE</span><span class="w"> </span><span class="nt">FROM</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="w"> </span><span class="nt">WHERE</span><span class="w"> </span><span class="nt">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">4</span><span class="o">;</span><span class="w"></span>
+<span class="nt">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">FROM</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">DROP</span><span class="w"> </span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">IF</span><span class="w"> </span><span class="nt">EXISTS</span><span class="w"> </span><span class="nt">acid_merge</span><span class="o">;</span><span class="w"></span>
+<span class="nt">CREATE</span><span class="w"> </span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">acid_merge</span><span class="w"></span>
+<span class="o">(</span><span class="w"></span>
+<span class="w">  </span><span class="nt">key</span><span class="w"> </span><span class="nt">INT</span><span class="o">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">new_value</span><span class="w"> </span><span class="nt">STRING</span><span class="w"></span>
+<span class="o">)</span><span class="w"></span>
+<span class="nt">STORED</span><span class="w"> </span><span class="nt">AS</span><span class="w"> </span><span class="nt">ORC</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">INSERT</span><span class="w"> </span><span class="nt">INTO</span><span class="w"> </span><span class="nt">acid_merge</span><span class="w"> </span><span class="nt">VALUES</span><span class="w"></span>
+<span class="o">(</span><span class="nt">1</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;val1_1&#39;</span><span class="o">),</span><span class="w"></span>
+<span class="o">(</span><span class="nt">3</span><span class="o">,</span><span class="w"> </span><span class="nt">NULL</span><span class="o">),</span><span class="w"></span>
+<span class="o">(</span><span class="nt">6</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;val6&#39;</span><span class="o">);</span><span class="w"></span>
+
+<span class="nt">MERGE</span><span class="w"> </span><span class="nt">INTO</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="w"> </span><span class="nt">AS</span><span class="w"> </span><span class="nt">T</span><span class="w"></span>
+<span class="nt">USING</span><span class="w"> </span><span class="nt">acid_merge</span><span class="w"> </span><span class="nt">AS</span><span class="w"> </span><span class="nt">M</span><span class="w"></span>
+<span class="nt">ON</span><span class="w"> </span><span class="nt">T</span><span class="p">.</span><span class="nc">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">M</span><span class="p">.</span><span class="nc">key</span><span class="w"></span>
+<span class="nt">WHEN</span><span class="w"> </span><span class="nt">MATCHED</span><span class="w"> </span><span class="nt">AND</span><span class="w"> </span><span class="nt">M</span><span class="p">.</span><span class="nc">new_value</span><span class="w"> </span><span class="nt">IS</span><span class="w"> </span><span class="nt">NOT</span><span class="w"> </span><span class="nt">NULL</span><span class="w"></span>
+<span class="w">  </span><span class="nt">THEN</span><span class="w"> </span><span class="nt">UPDATE</span><span class="w"> </span><span class="nt">SET</span><span class="w"> </span><span class="nt">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">M</span><span class="p">.</span><span class="nc">new_value</span><span class="o">,</span><span class="w"> </span><span class="nt">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;merge_update&#39;</span><span class="w"></span>
+<span class="nt">WHEN</span><span class="w"> </span><span class="nt">MATCHED</span><span class="w"> </span><span class="nt">AND</span><span class="w"> </span><span class="nt">M</span><span class="p">.</span><span class="nc">new_value</span><span class="w"> </span><span class="nt">IS</span><span class="w"> </span><span class="nt">NULL</span><span class="w"></span>
+<span class="w">  </span><span class="nt">THEN</span><span class="w"> </span><span class="nt">DELETE</span><span class="w"></span>
+<span class="nt">WHEN</span><span class="w"> </span><span class="nt">NOT</span><span class="w"> </span><span class="nt">MATCHED</span><span class="w"></span>
+<span class="w">  </span><span class="nt">THEN</span><span class="w"> </span><span class="nt">INSERT</span><span class="w"> </span><span class="nt">VALUES</span><span class="w"> </span><span class="o">(</span><span class="nt">M</span><span class="p">.</span><span class="nc">key</span><span class="o">,</span><span class="w"> </span><span class="nt">M</span><span class="p">.</span><span class="nc">new_value</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;merge_insert&#39;</span><span class="o">);</span><span class="w"></span>
+
+<span class="nt">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">FROM</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">ALTER</span><span class="w"> </span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="w"> </span><span class="nt">COMPACT</span><span class="w"> </span><span class="s1">&#39;minor&#39;</span><span class="o">;</span><span class="w"></span>
+<span class="nt">SHOW</span><span class="w"> </span><span class="nt">COMPACTIONS</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">SET</span><span class="w"> </span><span class="nt">hive</span><span class="p">.</span><span class="nc">compactor</span><span class="p">.</span><span class="nc">check</span><span class="p">.</span><span class="nc">interval</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">ALTER</span><span class="w"> </span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="w"> </span><span class="nt">COMPACT</span><span class="w"> </span><span class="s1">&#39;major&#39;</span><span class="o">;</span><span class="w"></span>
+<span class="nt">show</span><span class="w"> </span><span class="nt">compactions</span><span class="o">;</span><span class="w"></span>
+
+<span class="nt">select</span><span class="w"> </span><span class="nt">row__id</span><span class="o">,</span><span class="w"> </span><span class="nt">key</span><span class="o">,</span><span class="w"> </span><span class="nt">value</span><span class="o">,</span><span class="w"> </span><span class="nt">action</span><span class="w"> </span><span class="nt">from</span><span class="w"> </span><span class="nt">acid_tbl</span><span class="o">;</span><span class="w"></span>
+</code></pre></div>
+
+<h4 id="orchestrate-hive-jobs-with-aws-step-functions">Orchestrate Hive jobs with AWS Step Functions<a class="headerlink" href="#orchestrate-hive-jobs-with-aws-step-functions" title="Permanent link">&para;</a></h4>
+<p>Simba provides <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/HiveJDBCDriver.html">JDBC drivers</a> for Hive and Presto to connect from BI tools like Tableau or SQL Workbench.</p>
+<p>Please note you can use AWS Step Functions to orchestrate any kind of EMR steps. But we are just using Hive steps here as an example.</p>
+<p>Go to AWS Management Console -&gt; AWS Step Functions -&gt; Create State Machine.</p>
+<p>Choose middle option “Write your own workflow in code”. Under “Definition” enter the following code block.</p>
+<p>Edit InstanceProfile Role and account ID in below code (marked as CHANGEME). Use the instance profile being used by your "EMR-Spark-Hive-Presto" cluster. It will look like "dayone-emrEc2InstanceProfile-XXXXXXX". This information can be retrieved from the Summary tab of your EMR cluster. (EMR Web Console -&gt; EMR-Spark-Hive-Presto -&gt; EC2 instance profile under Security Access). Change your account ID in the S3 bucket names.</p>
+<div class="codehilite"><pre><span></span><code>{
+  <span class="s2">&quot;</span><span class="s">StartAt</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Should_Create_Cluster</span><span class="s2">&quot;</span>,
+  <span class="s2">&quot;</span><span class="s">States</span><span class="s2">&quot;</span>: {
+    <span class="s2">&quot;</span><span class="s">Should_Create_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Choice</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Choices</span><span class="s2">&quot;</span>: [
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Create_A_Cluster</span><span class="s2">&quot;</span>
+        },
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">false</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Enable_Termination_Protection</span><span class="s2">&quot;</span>
+        }
+      ],
+      <span class="s2">&quot;</span><span class="s">Default</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Create_A_Cluster</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Create_A_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:createCluster.sync</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">WorkflowCluster</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">VisibleToAllUsers</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+        <span class="s2">&quot;</span><span class="s">ReleaseLabel</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">emr-5.28.0</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">Applications</span><span class="s2">&quot;</span>: [{ <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Hive</span><span class="s2">&quot;</span> }],
+        <span class="s2">&quot;</span><span class="s">ServiceRole</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">emrServiceRole</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">JobFlowRole</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CHANGEME</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">Instances</span><span class="s2">&quot;</span>: {
+          <span class="s2">&quot;</span><span class="s">KeepJobFlowAliveWhenNoSteps</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+          <span class="s2">&quot;</span><span class="s">InstanceFleets</span><span class="s2">&quot;</span>: [
+            {
+              <span class="s2">&quot;</span><span class="s">InstanceFleetType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">MASTER</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">TargetOnDemandCapacity</span><span class="s2">&quot;</span>: <span class="mi">1</span>,
+              <span class="s2">&quot;</span><span class="s">InstanceTypeConfigs</span><span class="s2">&quot;</span>: [
+                {
+                  <span class="s2">&quot;</span><span class="s">InstanceType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">m4.xlarge</span><span class="s2">&quot;</span>
+                }
+              ]
+            },
+            {
+              <span class="s2">&quot;</span><span class="s">InstanceFleetType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CORE</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">TargetOnDemandCapacity</span><span class="s2">&quot;</span>: <span class="mi">1</span>,
+              <span class="s2">&quot;</span><span class="s">InstanceTypeConfigs</span><span class="s2">&quot;</span>: [
+                {
+                  <span class="s2">&quot;</span><span class="s">InstanceType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">m4.xlarge</span><span class="s2">&quot;</span>
+                }
+              ]
+            }
+          ]
+        }
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateClusterResult</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Merge_Results</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Merge_Results</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Pass</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">CreateCluster.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateCluster</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">TerminateCluster.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.TerminateCluster</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateClusterResult.ClusterId</span><span class="s2">&quot;</span>
+      },
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Enable_Termination_Protection</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Enable_Termination_Protection</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:setClusterTerminationProtection</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">TerminationProtected</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Add_Steps_Parallel</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Add_Steps_Parallel</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Parallel</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Branches</span><span class="s2">&quot;</span>: [
+        {
+          <span class="s2">&quot;</span><span class="s">StartAt</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Step_One</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">States</span><span class="s2">&quot;</span>: {
+            <span class="s2">&quot;</span><span class="s">Step_One</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:addStep.sync</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+                <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+                <span class="s2">&quot;</span><span class="s">Step</span><span class="s2">&quot;</span>: {
+                  <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">The first step</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">ActionOnFailure</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CONTINUE</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">HadoopJarStep</span><span class="s2">&quot;</span>: {
+                    <span class="s2">&quot;</span><span class="s">Jar</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">command-runner.jar</span><span class="s2">&quot;</span>,
+                    <span class="s2">&quot;</span><span class="s">Args</span><span class="s2">&quot;</span>: [
+                      <span class="s2">&quot;</span><span class="s">hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--run-hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--args</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-f</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">INPUT=s3://eu-west-1.elasticmapreduce.samples</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">OUTPUT=s3://mrworkshop-CHANGEME-dayone/MyHiveQueryResults/</span><span class="s2">&quot;</span>
+                    ]
+                  }
+                }
+              },
+              <span class="s2">&quot;</span><span class="s">End</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+            }
+          }
+        },
+        {
+          <span class="s2">&quot;</span><span class="s">StartAt</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait_10_Seconds</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">States</span><span class="s2">&quot;</span>: {
+            <span class="s2">&quot;</span><span class="s">Wait_10_Seconds</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Seconds</span><span class="s2">&quot;</span>: <span class="mi">10</span>,
+              <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Step_Two (async)</span><span class="s2">&quot;</span>
+            },
+            <span class="s2">&quot;</span><span class="s">Step_Two (async)</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:addStep</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+                <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+                <span class="s2">&quot;</span><span class="s">Step</span><span class="s2">&quot;</span>: {
+                  <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">The second step</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">ActionOnFailure</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CONTINUE</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">HadoopJarStep</span><span class="s2">&quot;</span>: {
+                    <span class="s2">&quot;</span><span class="s">Jar</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">command-runner.jar</span><span class="s2">&quot;</span>,
+                    <span class="s2">&quot;</span><span class="s">Args</span><span class="s2">&quot;</span>: [
+                      <span class="s2">&quot;</span><span class="s">hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--run-hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--args</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-f</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">INPUT=s3://eu-west-1.elasticmapreduce.samples</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">OUTPUT=s3://mrworkshop-CHANGEME-dayone/MyHiveQueryResults/</span><span class="s2">&quot;</span>
+                    ]                  
+                  }
+                }
+              },
+              <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.AddStepsResult</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait_Another_10_Seconds</span><span class="s2">&quot;</span>
+            },
+            <span class="s2">&quot;</span><span class="s">Wait_Another_10_Seconds</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Seconds</span><span class="s2">&quot;</span>: <span class="mi">10</span>,
+              <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Cancel_Step_Two</span><span class="s2">&quot;</span>
+            },
+            <span class="s2">&quot;</span><span class="s">Cancel_Step_Two</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:cancelStep</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+                <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+                <span class="s2">&quot;</span><span class="s">StepId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.AddStepsResult.StepId</span><span class="s2">&quot;</span>
+              },
+              <span class="s2">&quot;</span><span class="s">End</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+            }
+          }
+        }
+      ],
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Step_Three</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Step_Three</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:addStep.sync</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">Step</span><span class="s2">&quot;</span>: {
+          <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">The third step</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">ActionOnFailure</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CONTINUE</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">HadoopJarStep</span><span class="s2">&quot;</span>: {
+            <span class="s2">&quot;</span><span class="s">Jar</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">command-runner.jar</span><span class="s2">&quot;</span>,
+            <span class="s2">&quot;</span><span class="s">Args</span><span class="s2">&quot;</span>: [
+                      <span class="s2">&quot;</span><span class="s">hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--run-hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--args</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-f</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">INPUT=s3://eu-west-1.elasticmapreduce.samples</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">OUTPUT=s3://mrworkshop-CHANGEME-dayone/MyHiveQueryResults/</span><span class="s2">&quot;</span>
+             ]
+          }
+        }
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Disable_Termination_Protection</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Disable_Termination_Protection</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:setClusterTerminationProtection</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">TerminationProtected</span><span class="s2">&quot;</span>: <span class="nv">false</span>
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Should_Terminate_Cluster</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Should_Terminate_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Choice</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Choices</span><span class="s2">&quot;</span>: [
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.TerminateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Terminate_Cluster</span><span class="s2">&quot;</span>
+        },
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.TerminateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">false</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>
+        }
+      ],
+      <span class="s2">&quot;</span><span class="s">Default</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Terminate_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:terminateCluster.sync</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>
+      },
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Pass</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">End</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+    }
+  }
+}
+</code></pre></div>
+
+<p>Then, you can keep rest as default and create state machine.</p>
+<p>After the state machine is created, click on “Start Execution” and enter the below JSON input.</p>
+<div class="codehilite"><pre><span></span><code>{
+  &quot;CreateCluster&quot;: true,
+  &quot;TerminateCluster&quot;: true
+}
+</code></pre></div>
+
+<p>Click on “Start Execution” and observe the workflow. You can see the “Workflow cluster” being created. It will run the EMR Hive steps as chained workflows. You can also use AWS Event Bridge to schedule jobs using AWS Step Functions.</p>
+<h3 id="s3distcp-utility">S3DistCp Utility<a class="headerlink" href="#s3distcp-utility" title="Permanent link">&para;</a></h3>
+<p>Hive is typically used for batch ETL transformations. Presto is used for adhoc/interactive querying.</p>
+<p>For flat copy (copying files without applying any transformations), it is always better to use S3-Dist-Cp than using Hive insert overwrite queries. Before we use Hive and Presto for querying, lets use S3-Dist-Cp utility to migrate CSV data and convert it into Parquet format.</p>
+<p>Run the below two commands on EMR leader node.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">su</span><span class="w"> </span><span class="n">hadoop</span><span class="w"></span>
+<span class="n">cd</span><span class="w"> </span><span class="o">~</span><span class="w"></span>
+
+<span class="n">s3</span><span class="o">-</span><span class="n">dist</span><span class="o">-</span><span class="n">cp</span><span class="w"> </span><span class="o">--</span><span class="n">src</span><span class="w">  </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">redshift</span><span class="o">-</span><span class="n">downloads</span><span class="o">/</span><span class="n">TPC</span><span class="o">-</span><span class="n">H</span><span class="o">/</span><span class="mi">3</span><span class="n">TB</span><span class="o">/</span><span class="n">lineitem</span><span class="o">/</span><span class="w"> </span><span class="o">--</span><span class="n">dest</span><span class="w"> </span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">lineitem</span><span class="w"></span>
+<span class="n">s3</span><span class="o">-</span><span class="n">dist</span><span class="o">-</span><span class="n">cp</span><span class="w"> </span><span class="o">--</span><span class="n">src</span><span class="w">  </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">redshift</span><span class="o">-</span><span class="n">downloads</span><span class="o">/</span><span class="n">TPC</span><span class="o">-</span><span class="n">H</span><span class="o">/</span><span class="mi">3</span><span class="n">TB</span><span class="o">/</span><span class="n">orders</span><span class="o">/</span><span class="w"> </span><span class="o">--</span><span class="n">dest</span><span class="w"> </span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">orders</span><span class="w"></span>
+</code></pre></div>
+
+<p>Now, lets</p>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.092fa1f6.min.js"}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.5a9542cf.min.js"></script>
+      
+    
+  </body>
+</html>

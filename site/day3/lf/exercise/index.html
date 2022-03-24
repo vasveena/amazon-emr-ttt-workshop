@@ -13,7 +13,7 @@
     
     
       
-        <title>** Exercise 4 - Sagemaker Studio Integration with Amazon EMR ** - Amazon EMR Train-The-Trainer Workshop</title>
+        <title>**Fine-grained Authorization with LakeFormation Integration** - Amazon EMR Train-The-Trainer Workshop</title>
       
     
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#exercise-4-sagemaker-studio-integration-with-amazon-emr" class="md-skip">
+        <a href="#fine-grained-authorization-with-lakeformation-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ** Exercise 4 - Sagemaker Studio Integration with Amazon EMR **
+              **Fine-grained Authorization with LakeFormation Integration**
             
           </span>
         </div>
@@ -257,7 +257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../fleet/exercise/" class="md-nav__link">
+      <a href="../../../day1/fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
       </a>
     </li>
@@ -271,7 +271,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spark/exercise/" class="md-nav__link">
+      <a href="../../../day1/spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
     </li>
@@ -285,7 +285,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../studio/exercise/" class="md-nav__link">
+      <a href="../../../day1/studio/exercise/" class="md-nav__link">
         3 - Amazon EMR Studio
       </a>
     </li>
@@ -333,7 +333,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hudi/exercise/" class="md-nav__link">
+      <a href="../../../day1/hudi/exercise/" class="md-nav__link">
         1 - Apache Hudi on Amazon EMR
       </a>
     </li>
@@ -347,7 +347,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../icebrg/exercise/" class="md-nav__link">
+      <a href="../../../day1/icebrg/exercise/" class="md-nav__link">
         2 - Apache Iceberg on Amazon EMR
       </a>
     </li>
@@ -511,22 +511,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#login-to-the-sagemaker-studio" class="md-nav__link">
-    Login to the Sagemaker Studio
+  <a href="#setup-okta-idp" class="md-nav__link">
+    Setup Okta IdP
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-emr-clusters-in-sagemaker-studio" class="md-nav__link">
-    Explore EMR clusters in Sagemaker Studio
+  <a href="#set-up-lake-formation" class="md-nav__link">
+    Set up Lake Formation
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs" class="md-nav__link">
-    Connect to EMR cluster from Sagemaker Studio and run data processing jobs
+  <a href="#launch-cloudformation-stack" class="md-nav__link">
+    Launch Cloudformation Stack
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-the-solution" class="md-nav__link">
+    Validate the solution
   </a>
   
 </li>
@@ -543,43 +550,200 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/vasveena/amazon-emr-ttt-workshop/edit/master/docs/day1/smstudio/exercise.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/vasveena/amazon-emr-ttt-workshop/edit/master/docs/day3/lf/exercise.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-<h1 id="exercise-4-sagemaker-studio-integration-with-amazon-emr"><strong> Exercise 4 - Sagemaker Studio Integration with Amazon EMR </strong><a class="headerlink" href="#exercise-4-sagemaker-studio-integration-with-amazon-emr" title="Permanent link">&para;</a></h1>
-<p>Amazon Sagemaker provides native integration with Amazon EMR from Sagemaker Studio so that you can run data preparation tasks for your machine learning workloads using EMR from Sagemaker.</p>
-<h3 id="login-to-the-sagemaker-studio">Login to the Sagemaker Studio<a class="headerlink" href="#login-to-the-sagemaker-studio" title="Permanent link">&para;</a></h3>
-<p>Go to the Amazon Sagemaker Web Console -&gt; Get started -&gt; Sagemaker Studio</p>
-<p><img alt="sm - 7" src="../images/sm-7.png" /></p>
-<p>You should see the Sagemaker domain ready status. Launch the Sagemaker Studio from Launch app -&gt; Studio.</p>
-<p><img alt="sm - 8" src="../images/sm-8.png" /></p>
-<p>It will take about 2 minutes to initialize after which you will be taken to the Sagemaker Studio interface.</p>
-<p><img alt="sm - 11" src="../images/sm-11.png" /></p>
-<p>Once you are in, carry on with rest of the steps.</p>
-<p><img alt="sm - 12" src="../images/sm-12.png" /></p>
-<h3 id="explore-emr-clusters-in-sagemaker-studio">Explore EMR clusters in Sagemaker Studio<a class="headerlink" href="#explore-emr-clusters-in-sagemaker-studio" title="Permanent link">&para;</a></h3>
-<p>Click on the <img alt="sm - 1" src="../images/sm-1.png" /> icon and choose Clusters from the Sagemaker resources drop down. You will be able to see the EMR clusters.</p>
-<p><img alt="sm - 2" src="../images/sm-2.png" /></p>
-<p>You can filter the EMR clusters and also create a new one with a cluster template created from AWS Service Catalog. Go to Clusters -&gt; Create cluster. You will be able to see a template.</p>
-<p><img alt="sm - 9" src="../images/sm-9.png" /></p>
-<p>When you select the template, it will show you the blueprint for your EMR cluster creation.</p>
-<p><img alt="sm - 10" src="../images/sm-10.png" /></p>
-<p>For now, let's use our existing cluster.</p>
-<h3 id="connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs">Connect to EMR cluster from Sagemaker Studio and run data processing jobs<a class="headerlink" href="#connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs" title="Permanent link">&para;</a></h3>
-<p>Go to Git repository section and click on Clone the repository.</p>
-<p><img alt="sm - 3" src="../images/sm-3.png" /></p>
-<p>Specify the repository to clone: https://github.com/vasveena/amazon-emr-ttt-workshop.git</p>
-<p>Make sure that the repository is cloned.</p>
-<p><img alt="sm - 4" src="../images/sm-4.png" /></p>
-<p>Go to Files section (folder icon on the left hand side pane).</p>
-<p><img alt="sm - 5" src="../images/sm-5.png" /></p>
-<p>Go to the directory files -&gt; notebook -&gt; smstudio-pyspark-hive-sentiment-analysis.ipynb. Choose the SparkMagic Kernel when prompted and click "Select".</p>
-<p><img alt="sm - 6" src="../images/sm-6.png" /></p>
-<p>It will take a few minutes for the kernel to initialize. Once the kernel starts, go to Cluster on the top right corner and choose the EMR cluster "EMR-Spark-Hive-Presto". When it asks for credential type, choose "No credential" and Connect. Now, a Spark application will be created.</p>
-<p><img alt="sm - 14" src="../images/sm-14.png" /></p>
-<p>Now, you can run the remaining code blocks of the notebook which will perform data transformations and explorations using the EMR cluster and create and host an ML model using Sagemaker.</p>
+<h1 id="fine-grained-authorization-with-lakeformation-integration"><strong>Fine-grained Authorization with LakeFormation Integration</strong><a class="headerlink" href="#fine-grained-authorization-with-lakeformation-integration" title="Permanent link">&para;</a></h1>
+<p>In this exercise you will integrate LakeFormation with EMR for fine-grained access control.</p>
+<h3 id="setup-okta-idp">Setup Okta IdP<a class="headerlink" href="#setup-okta-idp" title="Permanent link">&para;</a></h3>
+<p>For this lab, you will create an Okta account with your business email. It is free to create. This is the <a href="https://developer.okta.com/signup/">sign up page</a>.</p>
+<p>Once you create the account and login, this is how the page will look like.</p>
+<p><img alt="lf - 1" src="../images/lf-1.png" /></p>
+<p>From the left hand side pane, go to Directory -&gt; People -&gt; Add person.</p>
+<p>Add the following users:</p>
+<p>Analyst One – analyst1@dsar.com
+Analyst Two – analyst2@dsar.com</p>
+<p>For Password, choose Set by admin and enter a valid password. Deselect the option User must change password on first login. Choose Save.</p>
+<p><img alt="lf - 2" src="../images/lf-2.png" /></p>
+<p>Once user is created, click on the user name and go to Profile tab. Edit the profile attributes for the newly created users to specify the Display name as analyst1 and analyst2 respectively. <strong>Do not specify @dsar.com in the Display name field</strong>.</p>
+<p><img alt="lf - 3" src="../images/lf-3.png" /></p>
+<p>Again from the left hand side pane, go to Applications -&gt; Applications.</p>
+<p>Choose Create App Integration and choose SAML 2.0. Click Next.</p>
+<p><img alt="lf - 4" src="../images/lf-4.png" /></p>
+<p>In App name, provide a friendly name for your application. For eg: lfemrapp. Go to next.</p>
+<p>Enter following values in the next section. Replace youraccountID with your AWS event engine account ID in the two IAM ARNs in the Value column of 3rd row. Be careful to not add any extra trailing whitespaces.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Section</th>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>General</td>
+<td>Single Sign-On URL</td>
+<td>https://public-dns:8442/gateway/knoxsso/api/v1/websso?pac4jCallback=true&amp;client_name=SAML2Client</td>
+</tr>
+<tr>
+<td>2</td>
+<td>General</td>
+<td>Audience URI (SP Entity ID)</td>
+<td>urn:amazon:webservices</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Attribute Statements</td>
+<td>https://aws.amazon.com/SAML/Attributes/Role</td>
+<td>arn:aws:iam::youraccountID:role/LF-SAML-Role-emr-lf-saml,arn:aws:iam::youraccountID:saml-provider/oktaSAMLProvider</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Attribute Statements</td>
+<td>https://aws.amazon.com/SAML/Attributes/RoleSessionName</td>
+<td>user.displayName</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Attribute Statements</td>
+<td>https://glue.amazon.com/SAML/Attributes/UserName</td>
+<td>user.displayName</td>
+</tr>
+</tbody>
+</table>
+<p>Filled out form with above values looks like below.</p>
+<p><img alt="lf - 5" src="../images/lf-5.png" /></p>
+<p>Go to Next. Choose "I'm an Okta customer adding an internal app".</p>
+<p><img alt="lf - 6" src="../images/lf-6.png" /></p>
+<p>Click Finish. Your application will now be created and will be in active state.</p>
+<p><img alt="lf - 7" src="../images/lf-7.png" /></p>
+<p>Now go the Assignments tab (last tab in the above screenshot) to assign analyst1 and analyst2 to this newly created application. <strong>Do not specify @dsar.com in the User Name field when assigning people to the application.</strong>.</p>
+<p>Click on Assign -&gt; Assign to People.</p>
+<p><img alt="lf - 8" src="../images/lf-8.png" /></p>
+<p>Click on Assign next to analyst 1 and analyst 2 users. Remove the @dsar.com for both users. <strong>Do not specify @dsar.com in the User Name field when assigning people to the application.</strong>.</p>
+<p><img alt="lf - 9" src="../images/lf-9.png" /></p>
+<p>Save and go back. Once both users are in Assigned state, click Done.</p>
+<p>Now go to Sign On tab. Under Sign On Methods, choose the link location for the IdP metadata file (right-click) and choose Copy Link Address.</p>
+<p><img alt="lf - 10" src="../images/lf-10.png" /></p>
+<p>It should look like: https://dev-<oktaaccountid>.okta.com/app/<randomString>/sso/saml/metadata</p>
+<p>Also, save this metadata to your local desktop. (Right click -&gt; Save File). Type .xml as extension.</p>
+<p><img alt="lf - 17" src="../images/lf-17.png" /></p>
+<!--
+### Create Identity Provider
+
+Go to IAM Web Console -> Identity Providers -> Add Provider
+
+Choose SAML. Provider name is oktaSAMLProvider. In the Metadata document, upload the file you downloaded in the previous step (metadata.xml).
+
+![lf - 18](images/lf-18.png)
+
+Click on Add Provider. -->
+
+<h3 id="set-up-lake-formation">Set up Lake Formation<a class="headerlink" href="#set-up-lake-formation" title="Permanent link">&para;</a></h3>
+<p>In your AWS Web Console (event engine), go to the AWS Lake Formation Console. Once you go to the console, the screen will look like below.</p>
+<p><img alt="lf - 11" src="../images/lf-11.png" /></p>
+<p>Click Get Started.</p>
+<p>In left side pane, under Data catalog, choose Settings. For Data catalog settings, deselect the two permissions check-boxes. Choose Save.</p>
+<p><img alt="lf - 12" src="../images/lf-12.png" /></p>
+<p>In left side pane, go to Permissions -&gt; Administrative roles and tasks. In Database creators section, click on Revoke. Under IAM users and roles, type IAMAllowedPrincipals and select it from drop down. Select "Create Database" and click "Revoke".</p>
+<p><img alt="lf - 13" src="../images/lf-13.png" /></p>
+<p>Now, choose Data catalog -&gt; Databases from the left navigation pane. Choose Create database.</p>
+<p>Database name: lfoktasamlblogdb</p>
+<p>For Location, enter S3 path with your account ID replaced -&gt; s3://mrworkshop-youraccountID-dayone/lf/</p>
+<p><img alt="lf - 14" src="../images/lf-14.png" /></p>
+<p>Click Create Database.</p>
+<h3 id="launch-cloudformation-stack">Launch Cloudformation Stack<a class="headerlink" href="#launch-cloudformation-stack" title="Permanent link">&para;</a></h3>
+<p>Now, launch the <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=emr-lf-saml&amp;templateURL=https://vasveena-test-demo.s3.amazonaws.com/template/emr-lf-saml.json">CloudFormation Stack</a> (Right click -&gt; Open Link in New Tab).</p>
+<p>Provide following parameters. Replace youraccountID with your AWS event engine account ID.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>StackName</td>
+<td>emr-lf-saml</td>
+</tr>
+<tr>
+<td>userBucketName</td>
+<td>s3://mrworkshop-youraccountID-dayone/</td>
+</tr>
+<tr>
+<td>OktaAppMetadataURL</td>
+<td>metadata URL we copied from the Okta console</td>
+</tr>
+<tr>
+<td>SAMLProviderName</td>
+<td>oktaSAMLProvider</td>
+</tr>
+<tr>
+<td>Realm</td>
+<td>EC2.INTERNAL</td>
+</tr>
+<tr>
+<td>KdcAdminPassword</td>
+<td>Test123$</td>
+</tr>
+<tr>
+<td>ReleaseLabel</td>
+<td>emr-5.31.0</td>
+</tr>
+<tr>
+<td>InstanceType</td>
+<td>c4.xlarge</td>
+</tr>
+<tr>
+<td>VPCSubnet</td>
+<td>Choose MMPublicSubnetOne</td>
+</tr>
+<tr>
+<td>myIPCidr</td>
+<td>0.0.0.0/0</td>
+</tr>
+<tr>
+<td>oktaUser1</td>
+<td>analyst1</td>
+</tr>
+<tr>
+<td>oktaUser2</td>
+<td>analyst2</td>
+</tr>
+<tr>
+<td>EC2KeyPair</td>
+<td>ee-default-keypair</td>
+</tr>
+</tbody>
+</table>
+<p>Screenshot of filled values:</p>
+<p><img alt="lf - 15" src="../images/lf-15.png" /></p>
+<p>Click on Next two times. Then check "I acknowledge that AWS CloudFormation might create IAM resources with custom names." and click "Create Stack".  </p>
+<p><img alt="lf - 16" src="../images/lf-16.png" /></p>
+<p>The stack will take about 15 minutes to get created.</p>
+<p>Once the stack is created, in the Outputs tab of the Cloud Formation console, make a note of the primary DNS, SAML role ARN, and IdP ARN.</p>
+<p>Go back to your Okta page. Go to General tab under application. Update the attributes.</p>
+<h3 id="validate-the-solution">Validate the solution<a class="headerlink" href="#validate-the-solution" title="Permanent link">&para;</a></h3>
+<p>Launch a web browser in incognito mode and open a Zeppelin notebook using the URL https://<EMR primary DNS>:8442/gateway/default/zeppelin/ (replace <EMR primary DNS> with the master node public DNS of the EMR cluster obtained from Cloudformation Output).</p>
+<p>The Single Sign-On login page appears. Okta validates the login credentials with the system of record, like Active Directory, and returns a SAML, which is parsed and the next page is displayed based on the redirect URL parameter.</p>
+<p>Log in to Zeppelin as analyst1.</p>
+<p><img alt="lf - 18" src="../images/lf-18.jpeg" /></p>
+<p>After login, choose Create a note and run this SQL statement:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">spark</span>.<span class="nv">sql</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">select * from lfoktasamlblogdb.taxi_data limit 10</span><span class="s2">&quot;</span><span class="ss">)</span>.<span class="k">show</span><span class="ss">()</span>
+</code></pre></div>
+
+<p>The following screenshot shows that analyst1 can only see the two columns that you specified in Lake Formation.</p>
+<p><img alt="lf - 19" src="../images/lf-19.jpeg" /></p>
+<p>Open another web browser in incognito mode and log in to Zeppelin as analyst2.</p>
+<p><img alt="lf - 20" src="../images/lf-20.jpeg" /></p>
+<p>The same select query shows all the columns, as shown in the following screenshot.</p>
+<p><img alt="lf - 21" src="../images/lf-21.jpeg" /></p>
 
               
             </article>
