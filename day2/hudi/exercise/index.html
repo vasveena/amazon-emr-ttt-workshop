@@ -1032,10 +1032,21 @@ aws s3 ls s3://mrworkshop-dms-$accountID-dayone/dmsdata/dev/retail_transactions/
 </code></pre></div>
 
 <p>Once this job completes, check the Hudi table by logging into Spark SQL or Athena console.</p>
+<p>If using SparkSQL, run the following command on the same EMR leader node session.</p>
 <div class="codehilite"><pre><span></span><code>spark-sql --conf &quot;spark.serializer=org.apache.spark.serializer.KryoSerializer&quot; --conf &quot;spark.sql.hive.convertMetastoreParquet=false&quot; --jars hdfs:///user/hadoop/*.jar  
 </code></pre></div>
 
-<p>Run the query:</p>
+<p>To set up Athena, go to the <a href="https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/landing-page">Athena Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -&gt; Manage and add your Query result location like -&gt; s3://mrworkshop-youraccountID-dayone/athena/.</p>
+<p><img alt="Hudi - 11" src="../images/hudi-11.png" /></p>
+<p>OR you can run the following command to set up Athena Query Output location using EC2 JumpHost Session Manager session.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">su</span><span class="w"> </span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="w"></span>
+<span class="n">cd</span><span class="w"> </span><span class="o">~</span><span class="w"></span>
+
+<span class="n">accountID</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="n">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="k">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">athena</span><span class="w"> </span><span class="n">update</span><span class="o">-</span><span class="n">work</span><span class="o">-</span><span class="n">group</span><span class="w"> </span><span class="o">--</span><span class="n">work</span><span class="o">-</span><span class="n">group</span><span class="w"> </span><span class="n">primary</span><span class="w"> </span><span class="o">--</span><span class="n">configuration</span><span class="o">-</span><span class="n">updates</span><span class="w"> </span><span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">ResultConfigurationUpdates</span><span class="se">\&quot;</span><span class="s">: { </span><span class="se">\&quot;</span><span class="s">OutputLocation</span><span class="se">\&quot;</span><span class="s">: </span><span class="se">\&quot;</span><span class="s">s3://mrworkshop-$accountID-dayone/athena/</span><span class="se">\&quot;</span><span class="s">}}&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
+</code></pre></div>
+
+<p>Run the query in SparkSQL session or <a href="https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor">Athena console</a> (Right click -&gt; Open Link in New Tab):</p>
 <div class="codehilite"><pre><span></span><code>select * from hudiblogdb.retail_transactions order by tran_id
 </code></pre></div>
 
@@ -1071,7 +1082,7 @@ commit;
 <span class="o">--</span><span class="n">checkpoint</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
 </code></pre></div>
 
-<p>Once finished, check the Hudi table by logging into Spark SQL or Athena console.</p>
+<p>Once finished, check the Hudi table by logging into Spark SQL or <a href="https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor">Athena console</a> (Right click -&gt; Open Link in New Tab). If using SparkSQL, run the following command on the same EMR leader node session.</p>
 <div class="codehilite"><pre><span></span><code>spark-sql --conf &quot;spark.serializer=org.apache.spark.serializer.KryoSerializer&quot; --conf &quot;spark.sql.hive.convertMetastoreParquet=false&quot; --jars hdfs:///user/hadoop/*.jar  
 </code></pre></div>
 
@@ -1161,17 +1172,7 @@ sudo wget https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.11.1
 
 <p>Now, go to the EMR Studio's JupyterLab workspace and open workshop-repo/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb. Make sure that "Spark" kernel is selected.</p>
 <p>Run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using Hive or Athena.</p>
-<p>To set up Athena, go to the <a href="https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/landing-page">Amazon Athena Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -&gt; Manage and add your Query result location like -&gt; s3://mrworkshop-youraccountID-dayone/athena/.</p>
-<p><img alt="Hudi - 11" src="../images/hudi-11.png" /></p>
-<p>OR you can run the following command to set up Athena Output location using EC2 JumpHost Session Manager session.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">su</span><span class="w"> </span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="w"></span>
-<span class="n">cd</span><span class="w"> </span><span class="o">~</span><span class="w"></span>
-
-<span class="n">accountID</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="n">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="k">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
-<span class="n">aws</span><span class="w"> </span><span class="n">athena</span><span class="w"> </span><span class="n">update</span><span class="o">-</span><span class="n">work</span><span class="o">-</span><span class="n">group</span><span class="w"> </span><span class="o">--</span><span class="n">work</span><span class="o">-</span><span class="n">group</span><span class="w"> </span><span class="n">primary</span><span class="w"> </span><span class="o">--</span><span class="n">configuration</span><span class="o">-</span><span class="n">updates</span><span class="w"> </span><span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">ResultConfigurationUpdates</span><span class="se">\&quot;</span><span class="s">: { </span><span class="se">\&quot;</span><span class="s">OutputLocation</span><span class="se">\&quot;</span><span class="s">: </span><span class="se">\&quot;</span><span class="s">s3://mrworkshop-$accountID-dayone/athena/</span><span class="se">\&quot;</span><span class="s">}}&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
-</code></pre></div>
-
-<p>Now, you can run the following queries once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.</p>
+<p>You can run the following queries in <a href="https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor">Athena Web Console</a> (Right click -&gt; Open Link in New Tab) once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.</p>
 <div class="codehilite"><pre><span></span><code>select count(*) from hudi_trips_streaming_table;
 
 select tripId, numoffuturestops from hudi_trips_streaming_table;
