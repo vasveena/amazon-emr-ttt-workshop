@@ -4,7 +4,8 @@
 
 In this exercise we will run Spark workflows using EMR Studio with managed Jupyter-based notebooks. We will also cover the most standout features of Amazon EMR Studio.
 
-Go to the EMR Web Console and navigate to "EMR Studio" on the right hand side. Click on "Get Started".
+Go to the [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#)
+(Right click -> Open Link in New Tab) and navigate to "EMR Studio" on the right hand side. Click on "Get Started".
 
 ![Studio - 1](images/studio-1.png)
 
@@ -82,7 +83,9 @@ Go to workshop-repo -> files -> notebook to see the notebooks.
 
 ![Studio - 29](images/studio-29.png)
 
-If you are not able to link repository successfully, create 3 nested folders under your workspace root folder: workshop-repo/files/notebook. Create Folder Icon looks like ![Studio - 33](images/studio-33.png). Download all the .ipynb files from [here](https://github.com/vasveena/amazon-emr-ttt-workshop) to your local desktop. You can download the entire project [Zip File](https://github.com/vasveena/amazon-emr-ttt-workshop/archive/refs/heads/main.zip). Unzip the zip file and go to amazon-emr-ttt-workshop-main/files/notebook. Upload these .ipynb files from your local desktop to the Jupyter interface under the nested folders created (workshop-repo/files/notebook). Upload icon looks like ![Studio - 10](images/studio-10.png). Alternatively, you can run the below commands on EC2 JumpHost Session Manager.
+If you are not able to link repository successfully, create 3 nested folders under your workspace root folder: workshop-repo/files/notebook. Create Folder Icon looks like ![Studio - 33](images/studio-33.png). Download all the .ipynb files from [here](https://github.com/vasveena/amazon-emr-ttt-workshop) to your local desktop. You can download the entire project [Zip File](https://github.com/vasveena/amazon-emr-ttt-workshop/archive/refs/heads/main.zip). Unzip the zip file and go to amazon-emr-ttt-workshop-main/files/notebook. Upload these .ipynb files from your local desktop to the Jupyter interface under the nested folders created (workshop-repo/files/notebook). Upload icon looks like ![Studio - 10](images/studio-10.png).
+
+**Alternate Option:** instead of uploading the files manually, you use the below commands on your JumpHost EC2 instance. Connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.
 
 ```
 sudo su ec2-user
@@ -107,15 +110,24 @@ cd upload
 wget https://github.com/vasveena/amazon-emr-ttt-workshop/archive/refs/heads/main.zip
 unzip main.zip
 
+sed -i "s|youraccountID|$accountID|g" amazon-emr-ttt-workshop-main/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb
+sed -i "s|yourbootstrapbrokers|$bs|g" amazon-emr-ttt-workshop-main/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb
+sed -i "s|youraccountID|$accountID|g" amazon-emr-ttt-workshop-main/files/notebook/apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb
+sed -i "s|youraccountID|$accountID|g" amazon-emr-ttt-workshop-main/files/notebook/apache-hudi-on-amazon-emr-dml.ipynb
+sed -i "s|youraccountID|$accountID|g" amazon-emr-ttt-workshop-main/files/notebook/apache-iceberg-on-amazon-emr.ipynb
+sed -i "s|youraccountID|$accountID|g" amazon-emr-ttt-workshop-main/files/notebook/find_best_sellers.ipynb
+
 aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
 aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
 aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/apache-hudi-on-amazon-emr-dml.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
 aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/apache-iceberg-on-amazon-emr.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
 aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/find_best_sellers.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/amazon_reviews.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/smstudio-pyspark-hive-sentiment-analysis.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
 
 ```
 
-**Note:** If you ran the above commands, you can skip the below steps and go to [Notebook-scoped Libraries](#notebook-scoped-libraries) section. If you either uploaded the files manually or if your Git repository linking was successful, continue with the following instructions.
+**Note:** If you ran the above commands, you can skip the below steps and go to [Restart Studio Workspace](#restart-the-studio-workspace) section. If you either uploaded the files manually or if your Git repository linking was successful, continue with the following instructions.
 
 Once you either link the repository or upload the files successfully, go to workshop-repo -> files -> notebook folder and open find_best_sellers.ipynb file. Notice the OUTPUT_LOCATION S3 path in the first cell: *s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output/*.  
 
@@ -123,11 +135,7 @@ Once you either link the repository or upload the files successfully, go to work
 
 Before you start working with these notebooks, let's replace the string "youraccountID" in the S3 locations specified in all the notebooks to make it easy for you while executing the notebook instructions.
 
-For this purpose, close the Jupyter session in your browser. From your EMR Studio Console (logged in as studiouser), go to Workspaces. Click on your workspace and under Actions, click on "Stop".
-
-![Studio - 31](images/studio-31.png)
-
-Once the workspace status becomes "Idle" (it will take about 5 minutes), connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.
+For this purpose, close the EMR Studio Workshop Jupyter interface in your browser. Connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.
 
 ```
 sudo su ec2-user
@@ -166,11 +174,17 @@ aws s3 cp find_best_sellers.ipynb $studio_s3_location/$studio_notebook_id/worksh
 
 ```
 
-Once the files are uploaded successfully, go back to EMR Studio Console -> Workspaces -> Actions again and click on "Start". Wait for the status to go from "Starting" to "Attached".
+##### Restart the Studio Workspace
+
+Once the files are uploaded successfully, while logged in as studiouser, from your EMR Studio Console, go to Workspaces. Click on your workspace and under Actions, click on "Stop".
+
+![Studio - 31](images/studio-31.png)
+
+Once the workspace status becomes "Idle" (it will take about 2-3 minutes), while logged in as studiouser, go back to EMR Studio Console -> Workspaces -> Actions again and click on "Start".
 
 ![Studio - 32](images/studio-32.png)
 
-Once the workspace is in "Attached" state, go back to your EMR Studio Workspace Jupyter interface. Open the find_best_sellers.ipynb notebook (from workshop-repo -> files -> notebooks) and verify that the the account ID in the OUTPUT_LOCATION of the first cell is changed properly.
+Wait for the status to go from "Starting" to "Attached". Once the workspace is in "Attached" state, go back to your EMR Studio Workspace Jupyter interface. Open the find_best_sellers.ipynb notebook (from workshop-repo -> files -> notebooks) and verify that the the account ID in the OUTPUT_LOCATION of the first cell is changed properly.
 
 ![Studio - 35](images/studio-35.png)
 
@@ -198,7 +212,7 @@ You will use these installed dependencies to plot visualizations on top of Amazo
 
 You can have two notebooks within the same workspace with different dependencies. You can even reproduce these dependencies and run the same notebook after your cluster is terminated by attaching it to a different active cluster.
 
-When you are done, terminate the kernel by clicking on stop icon ![Studio - 30](images/studio-30.png).
+When you are done, terminate the kernel by clicking on stop icon ![Studio - 30](images/studio-30.png) and restart the kernel by clicking on the restart kernel icon ![Studio - 36](images/studio-36.png). This will ensure that the Spark session created from this notebook is killed and your EMR cluster's YARN resources will become free.
 
 #### Parameterized notebooks
 
@@ -208,13 +222,21 @@ Click on the first cell with comment "Default parameters". In the Right Sidebar,
 
 ![Studio - 17](images/studio-17.png)
 
-Replace OUTPUT_LOCATION "s3://mrworkshop-<accountID>-dayone/studio/best_sellers_output/" with your event engine AWS account ID. Check the S3 Web Console for the bucket name if required. Do not create any S3 prefix under the OUTPUT_LOCATION before running the notebook cells.
+Do not create any S3 prefix under the OUTPUT_LOCATION before running the notebook cells.
 
-Run all the cells in the notebook and make sure the outputs for categories "Apparel" and "Baby" are created under the S3 output location using AWS CLI or S3 Web Console.
+Run all the cells in the notebook. Once all the blocks are executed in the notebook, make sure the outputs for categories "Apparel" and "Baby" are created under the S3 output location using AWS CLI or [S3 Web Console](https://s3.console.aws.amazon.com/s3/home?region=us-east-1) (Right click -> Open Link in New Tab).
 
 ![Studio - 18](images/studio-18.png)
 
-Save the notebook. When you are done, terminate the kernel by clicking on stop icon ![Studio - 30](images/studio-30.png).
+OR run the following commands in EC2 JumpHost session.
+
+```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+aws s3 ls s3://mrworkshop-$accountID-dayone/studio/best_sellers_output/
+
+```
+
+Save the notebook. When you are done, terminate the kernel by clicking on the stop icon ![Studio - 30](images/studio-30.png) and the restart kernel icon ![Studio - 36](images/studio-36.png). This will ensure that the Spark session created from this notebook is killed and your EMR cluster's YARN resources will become free.
 
 #### Notebooks API
 
@@ -224,6 +246,7 @@ Run the below command with your JumpHost EC2 instance (connected with Session Ma
 
 ```
 aws s3 ls s3://amazon-reviews-pds/parquet/product_category
+
 ```
 
 ![Studio - 19](images/studio-19.png)
@@ -240,47 +263,49 @@ pip3 uninstall awscli -y
 pip3 install awscli --upgrade
 
 /home/ec2-user/.local/bin/aws --version
+
 ```
 
-Verify that the notebooks APIs are working
+Verify that the notebooks APIs are working (if not done already).
 
 ```
 /home/ec2-user/.local/bin/aws emr --region us-east-1 list-studios
-```
-
-Copy the editor-ID from notebook URL. For example: https://e-c9zy9cmd24ccf4f2b4uz7d7ma.emrnotebooks-prod.us-east-1.amazonaws.com/e-C9ZY9CMD24CCF4F2B4UZ7D7MA/lab/tree/workshop-repo/files/notebook/find_best_sellers.ipynb
-
-"e-C9ZY9CMD24CCF4F2B4UZ7D7MA" is the editor ID. In the following command, replace your editor-id with this value.
-Cluster ID in --execution-engine should be replaced with your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -> Amazon EMR Console -> Summary tab. Looks like j-XXXXXXXXX)
-Change "youraccountID" in the OUTPUT_LOCATION parameter with your account ID.
 
 ```
-/home/ec2-user/.local/bin/aws emr --region us-east-1 \
+
+Run the following commands to submit a job using EMR Notebooks API.
+
+```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+studio_id=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 list-studios --region us-east-1 --query Studios[*].{Studios:StudioId} --output text)
+studio_s3_location=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 describe-studio --studio-id $studio_id --query 'Studio.DefaultS3Location' --output text)
+studio_notebook_id=$(aws s3 ls $studio_s3_location/e- | sed 's|.*PRE ||g' | sed  's|/||g' | sed  's| ||g')
+cluster_id=$(aws emr list-clusters --region us-east-1 --query 'Clusters[?Name==`EMR-Spark-Hive-Presto` && Status.State!=`TERMINATED`]'.{Clusters:Id} --output text)
+
+notebookExecID=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 \
 start-notebook-execution \
---editor-id e-XXXXXXXXXXXXXXXXX \
---notebook-params '{"CATEGORIES":["Furniture","PC"], "FROM_DATE":"2015-08-27", "TO_DATE":"2015-08-31", "OUTPUT_LOCATION": "s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output_fromapi/"}' \
+--editor-id $studio_notebook_id \
+--notebook-params "{\"CATEGORIES\":[\"Furniture\",\"PC\"], \"FROM_DATE\":\"2015-08-27\", \"TO_DATE\":\"2015-08-31\", \"OUTPUT_LOCATION\": \"s3://mrworkshop-$accountID-dayone/studio/best_sellers_output_fromapi/\"}" \
 --relative-path workshop-repo/files/notebook/find_best_sellers.ipynb \
 --notebook-execution-name demo-execution \
---execution-engine '{"Id" : "j-XXXXXXXXXXXXX"}' \
---service-role emrStudioRole
+--execution-engine "{\"Id\" : \"${cluster_id}\"}" \
+--service-role emrStudioRole | jq -r .NotebookExecutionId)
+
+echo $notebookExecID
 
 ```
 
-{
-    "NotebookExecutionId": "ex-J02QDLG4TWXSNWLO4OGZ9NNX609MV"
-}
-
-You will get a NotebookExecutionId in return. Use this NotebookExecutionId in the following command to check for status.
+You will get a NotebookExecutionId in return. Run the following command to get the status of this notebook execution. No need to replace anything in the command.
 
 ```
-aws emr --region us-east-1 describe-notebook-execution --notebook-execution-id ex-J02QDLG4TWXSNWLO4OGZ9NNX609MV
+aws emr --region us-east-1 describe-notebook-execution --notebook-execution-id $notebookExecID
 
 ```
 
 After about 2-3 minutes, the Status will be FINISHED.
 
 ```
-aws emr --region us-east-1 describe-notebook-execution --notebook-execution-id ex-J02QDLG4TWXSNWLO4OGZ9NNX609MV
+aws emr --region us-east-1 describe-notebook-execution --notebook-execution-id $notebookExecID
 {
    "NotebookExecution": {
        "Status": "FINISHED",

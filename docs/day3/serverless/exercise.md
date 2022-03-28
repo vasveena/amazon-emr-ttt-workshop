@@ -10,7 +10,7 @@ You will need latest version of AWS CLI and jq installed to run these exercises.
 
 Let's first create an IAM role that we are going to use for job submission.
 
-Go to IAM Console -> Roles -> Create Role.
+Go to [IAM Web Console](https://us-east-1.console.aws.amazon.com/iamv2/home#/roles) (Right click -> Open Link in New Tab) -> Create Role.
 
 Under "Select Trusted Entity", choose "Custom Trust Policy" and paste the following:
 

@@ -4,7 +4,8 @@
 
 SSH to the leader node of the EMR cluster "EMR-Spark-Hive-Presto". The key pair you downloaded in the Setup can be used to SSH via terminal or using an SSH client like Putty. To make it easy, ssm-agent has been installed on all EMR nodes via a bootstrap action so that you can use AWS Systems Manager to login to your client EC2 instance and EMR leader node.
 
-Go to AWS Management Console on your browser -> Amazon EMR Console -> Hardware Tab. You will see MASTER and CORE fleets. Click on the MASTER instance fleet id (looks like if-XXXXXXXXXX).
+Go to the [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#)
+(Right click -> Open Link in New Tab) -> "EMR-Spark-Hive-Presto" -> Hardware tab. You will see MASTER and CORE fleets. Click on the MASTER instance fleet id (looks like if-XXXXXXXXXX).
 
 ![Spark - 1](images/spark-1.png)
 
@@ -89,7 +90,7 @@ echo $instance_id
 
 Now run the command to start the SSM session. The value of --target is replaced with the instance ID obtained using above commands.
 
-**Note:** If you are not able to run the above commands to obtain the instance ID, replace $instance_id in the below command with the leader node instance ID obtained from the EMR Web Console (EMR Web Console -> "EMR-Spark-Hive-Presto" -> Hardware tab -> click on Instance Fleet ID of the MASTER Node Type -> Copy the instance ID).
+**Note:** If you are not able to run the above commands to obtain the instance ID, replace $instance_id in the below command with the leader node instance ID obtained from the [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#) (Right click -> Open Link in New Tab) -> "EMR-Spark-Hive-Presto" -> Hardware tab -> click on Instance Fleet ID of the MASTER Node Type -> Copy the instance ID).
 
 ![Spark - 20](images/spark-20.png)
 
@@ -130,7 +131,8 @@ echo $leader_dns
 
 ```
 
-You can also obtain the value from EMR Web Console -> EMR-Spark-Hive-Presto -> Summary tab -> Master public DNS.
+You can also obtain the value from [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#)
+(Right click -> Open Link in New Tab) -> EMR-Spark-Hive-Presto -> Summary tab -> Master public DNS.
 
 Once you obtain leader node DNS using one of the two above methods, replace leaderNodePublicDNS in the below command with your leader node public DNS.
 
@@ -220,7 +222,8 @@ Check the Spark UI now. You will be able to see that BroadcastHashJoin is being 
 
 Let us submit Spark work to the cluster using EMR’s [AddSteps](https://docs.aws.amazon.com/cli/latest/reference/emr/add-steps.html) API.
 
-Copy the EMR Cluster ID in the Summary Tab of your EMR cluster "EMR-Spark-Hive-Presto" from EMR Web Console. It looks like ‘j-XXXXXXXXXX’.
+Copy the EMR Cluster ID in the Summary Tab of your EMR cluster "EMR-Spark-Hive-Presto" from [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#)
+(Right click -> Open Link in New Tab). It looks like ‘j-XXXXXXXXXX’.
 
 ![Spark - 13](images/spark-13.png)
 
@@ -245,7 +248,7 @@ aws emr add-steps --cluster-id j-XXXXXXXXXX --steps Name="Spark Pi Job",Jar=comm
 
 ```
 
-If you do not want to use AWS CLI in your local desktop, you can submit the below command directly on your Session Manager session created for EMR leader node. You will also find an EC2 instance called "JumpHost" in the EC2 Web Console.
+If you do not want to use AWS CLI in your local desktop, you can submit the below command directly on your Session Manager session created for EMR leader node. You will also find an EC2 instance called "JumpHost" in the [EC2 Web Console](https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost) (Right click -> Open Link in New Tab).
 
 ![Spark - 14](images/spark-14.png)
 

@@ -422,8 +422,8 @@ Resources:
               - s3:*
               Effect: Allow
               Resource:
-              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-blog-*/*"
-              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-blog-*"
+              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-*/*"
+              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-*"
             - Action:
               - s3:GetObject
               Effect: Allow

@@ -4,7 +4,7 @@ In this exercise, you will run Spark applications using EMR on EKS. For this exe
 
 ### Create the EMR on EKS virtual clusters
 
-Go to the CloudFormation Web Console (AWS Web Console -> Search for CloudFormation -> Right click -> Open in new tab) and see if you have the CloudFormation stack named "emr-on-eks" deployed in your AWS event engine accounts.
+Go to the [CloudFormation Web Console](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false) (Right click -> Open Link in New Tab) and see if you have the CloudFormation stack named "emr-on-eks" deployed in your AWS event engine accounts.
 
 ![ee - 1](images/ee-1.png)
 
@@ -39,7 +39,7 @@ It will take about 2 mins to complete. Once done, you will see the 3 nodes of th
 
 ![ee - 4](images/ee-4.png)
 
-Go to the EKS Web console (AWS Web Console -> Search for EKS -> Right click -> Open in new tab) and check the cluster myEKS.
+Go to the [EKS Web console](https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters) (Right click -> Open Link in New Tab) and check the cluster myEKS.
 
 ![ee - 15](images/ee-15.png)
 
@@ -66,13 +66,13 @@ sh /tmp/emroneks-fargate.sh fargate-vc
 
 ```
 
-You can now go to the EMR Web console. On the bottom left side pane, you will be able to see the "EMR on EKS" section. Click on Virtual clusters. You can see the two EMR on EKS virtual clusters created for EC2 and Fargate namespaces respectively. Virtual clusters do not run any resources.
+You can now go to the [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#) (Right click -> Open Link in New Tab). On the bottom left side pane, you will be able to see the "EMR on EKS" section. Click on Virtual clusters. You can see the two EMR on EKS virtual clusters created for EC2 and Fargate namespaces respectively. Virtual clusters do not run any resources.
 
 ![ee - 5](images/ee-5.png)
 
 ### Build the Cloud9 workspace
 
-We will use Cloud9 to observe Kubernetes dashboards. Go to the Cloud9 Web Console -> Create environment.
+We will use Cloud9 to observe Kubernetes dashboards. Go to the [Cloud9 Web Console](https://us-east-1.console.aws.amazon.com/cloud9/home/product) (Right click -> Open Link in New Tab) -> Create environment.
 
 ![ee - 6](images/ee-6.png)
 
@@ -227,7 +227,7 @@ Almost immediately you will see EMR virtual cluster will create driver and execu
 
 ![ee - 18](images/ee-18.png)
 
-Check the job in the EMR Web Console (EMR Web Console-> EMR on EKS -> Virtual Clusters -> ec2-vc). You will see that the job is completed.
+Check the job in the [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#virtual-cluster-list:) (Right click -> Open Link in New Tab) -> ec2-vc. You will see that the job is completed.
 
 ![ee - 19](images/ee-19.png)
 
@@ -235,7 +235,7 @@ Click on "View Logs" to open the persistent Spark history server.
 
 ![ee - 20](images/ee-20.png)
 
-You can also check the Spark job logs by going to CloudWatch Logs (AWS Web Console -> Search for Cloudwatch -> Open Cloudwatch console -> Log groups). You will see there is a log group called "emroneks".
+You can also check the Spark job logs by going to [CloudWatch Web Console](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#home:) (Right click -> Open Link in New Tab) and clicking on "Log groups". You will see there is a log group called "emroneks".
 
 ![ee - 21](images/ee-21.png)
 
@@ -349,7 +349,7 @@ You can find the Spark driver and executor pod logs in S3 for the above job.
 
 ![ee - 23](images/ee-23.png)
 
-You can also see the table "ny_taxi_parquet" in database "tripdata" created in AWS Glue data log. Go to Athena Web Console -> Explore the query editor and see the table under database "tripdata". Since this is the first time we are using Athena, in order to run queries, you need to go to the Settings -> Manage add an S3 location in your account to save your query results. For example: s3://mrworkshop-<accountID>-dayone/athena/.
+You can also see the table "ny_taxi_parquet" in database "tripdata" created in AWS Glue data log. Go to [Athena Web Console](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor) and see the table under database "tripdata". Since this is the first time we are using Athena, in order to run queries, you need to go to the Settings -> Manage add an S3 location in your account to save your query results. For example: s3://mrworkshop-<accountID>-dayone/athena/.
 
 ![ee - 24](images/ee-24.png)
 
@@ -402,7 +402,7 @@ aws emr-containers start-job-run --virtual-cluster-id ${ec2_vc} \
 
 ```
 
-Notice the jobs in EMR on EKS console. We are consolidating jobs from different versions in the same infrastructure on EKS.
+Notice the jobs in [EMR on EKS console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#virtual-cluster-list:) (Right click -> Open Link in New Tab). We are consolidating jobs from different versions in the same infrastructure on EKS.
 
 ### Submit serverless Spark jobs using Fargate
 
@@ -430,7 +430,7 @@ You will see the job being submitted to Fargate virtual cluster.
 
 ![ee - 31](images/ee-31.png)
 
-Now go to the EKS Web Console -> Overview. In about a minute, you will see that the fargate resource has come up to run this job. Fargate automatically scales up and down based on your processing requirements.
+Now go to the [EKS Web console](https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters) (Right click -> Open Link in New Tab) -> Overview. In about a minute, you will see that the fargate resource has come up to run this job. Fargate automatically scales up and down based on your processing requirements.
 
 ![ee - 32](images/ee-32.png)
 
@@ -531,7 +531,7 @@ Explore the dashboard.
 
 ### Orchestrate jobs on EMR on EKS using Amazon MWAA
 
-Let's submit (or orchestrate) jobs to EMR on EKS through Amazon MWAA. Go to the MWAA console. You will find a new environment starting with name "emr-on-eks-MWAAStack". Open the airflow UI.
+Let's submit (or orchestrate) jobs to EMR on EKS through Amazon MWAA. Go to the [MWAA Web Console](https://us-east-1.console.aws.amazon.com/mwaa/home?region=us-east-1#environments) (Right click -> Open Link in New Tab). You will find a new environment starting with name "emr-on-eks-MWAAStack". Open the airflow UI.
 
 You will see two DAGs. One for EC2 namespace and one for fargate namespace.
 
@@ -541,7 +541,7 @@ Toggle the DAGs ON and trigger the DAGs manually. This job copies, unzips and tr
 
 ![ee - 34](images/ee-34.png)
 
-This DAG takes about 10-12 mins end-to-end. You can check the status in EMR on EKS console.
+This DAG takes about 10-12 mins end-to-end. You can check the status in [EMR on EKS console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#virtual-cluster-list:) (Right click -> Open Link in New Tab).
 
 ![ee - 36](images/ee-36.png)
 

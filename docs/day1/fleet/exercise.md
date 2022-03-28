@@ -3,7 +3,8 @@
 This exercise is meant to show you different options and features available while trying to create an EMR cluster. EMR clusters required are already created in your event engine accounts which we will use for our exercises.
 
 ### Create EMR Cluster with Instance Fleets
-Go to the EMR Web Console from AWS Management Console
+Go to the [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#)
+(Right click -> Open Link in New Tab).
 ![Fleet - 1](images/fleet-1.png)
 Click on “Create cluster”
 ![Fleet - 2](images/fleet-2.png)

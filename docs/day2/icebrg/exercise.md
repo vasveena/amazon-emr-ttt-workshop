@@ -4,8 +4,8 @@ In this exercise you will build incremental data lakes on EMR using Apache Icebe
 
 ### Apache Iceberg Features
 
-From the EMR Studio workspace Jupyterlab session, go to workshop-repo -> files -> notebook -> apache-iceberg-on-amazon-emr.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.
+From the EMR Studio workspace Jupyterlab session, go to workshop-repo -> files -> notebook -> apache-iceberg-on-amazon-emr.ipynb. Run all the blocks of this notebook.
 
 Detailed instructions are within the notebook.
 
-Stop the session once you are done.
+Stop the session and restart kernel once you are done.

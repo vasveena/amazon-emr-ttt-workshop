@@ -8,7 +8,7 @@ If this cell is not tagged as "parameters", re-do the [parameterized notebooks](
 
 ![mwaa - 3](images/mwaa-3.png)
 
-Once you have confirmed that, login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" or EC2 JumpHost Session Manager session (EC2 Web console -> Click on JumpHost -> Connect -> Session Manager -> Connect), run the following commands. Replace youraccountID with your AWS account ID.
+Once you have confirmed that, login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" or EC2 JumpHost Session Manager session. Go to [EC2 Web Console](https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost) (Right click -> Open Link in New Tab) -> Click on JumpHost -> Connect -> Session Manager -> Connect. Run the following commands.
 
 ```
 sudo su ec2-user
@@ -20,11 +20,13 @@ instanceProfileRole=$(aws iam list-instance-profiles-for-role --role-name emrEc2
 
 sed -i "s|emrEc2InstanceProfileRole|$instanceProfileRole|g" test_dag.py
 
-aws s3 cp test_dag.py s3://airflow-youraccountID-dayone/dags/
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+aws s3 cp test_dag.py s3://airflow-$accountID-dayone/dags/
 
 ```
 
-Go to the Managed Apache Airflow Web Console. (AWS Web Console -> Search for MWAA -> Select Managed Apache Airflow).
+Go to the Managed [Apache Airflow Web Console](https://us-east-1.console.aws.amazon.com/mwaa/home?region=us-east-1#environments/mwaa) (Right click -> Open Link in New Tab).
 
 ![mwaa - 1](images/mwaa-1.png)
 
@@ -44,7 +46,7 @@ Create a file called "variables.json" like below using a notepad or a vi editor.
 
 {
     "REGION": "us-east-1",
-    "SUBNET_ID": "<subnet-id>",
+    "SUBNET_ID": "subnet-id",
     "EMR_LOG_URI": "s3://mrworkshop-youraccountID-dayone/",
     "NOTEBOOK_ID": "e-XXXXXXXXXXXXXXXXXXX",
     "NOTEBOOK_FILE_NAME": "workshop-repo/files/notebook/find_best_sellers.ipynb",
@@ -56,7 +58,7 @@ Create a file called "variables.json" like below using a notepad or a vi editor.
 
 ```
 
-Replace youraccountID with your AWS Event Engine account ID. For the subnet ID, choose the subnet of the cluster "EMR-Spark-Hive-Presto" (AWS Web Console -> EMR -> EMR-Spark-Hive-Presto -> Summary tab -> Network and hardware section).
+Replace youraccountID with your AWS Event Engine account ID. For the subnet ID, choose the subnet of the cluster "EMR-Spark-Hive-Presto" ([EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#) (Right click -> Open Link in New Tab) -> EMR-Spark-Hive-Presto -> Summary tab -> Network and hardware section).
 
 ![mwaa - 5](images/mwaa-5.png)
 
@@ -64,7 +66,39 @@ For the values of NOTEBOOK_ID and NOTEBOOK_FILE_NAME, use the same values you us
 
 For example: https://e-4ac2fwhw1liin22ezilly60j8.emrnotebooks-prod.us-east-1.amazonaws.com/e-4AC2FWHW1LIIN22EZILLY60J8/lab/tree/workshop-repo/files/notebook/find_best_sellers.ipynb
 
-An example variables.json file with values entered:
+**Alternate option:** Instead of manually replacing all the values in the API, run the following commands in EC2 JumpHost Session Manager session.
+
+```
+sudo su ec2-user
+cd ~
+
+cluster_id=$(aws emr list-clusters --region us-east-1 --query 'Clusters[?Name==`EMR-Spark-Hive-Presto` && Status.State!=`TERMINATED`]'.{Clusters:Id} --output text)
+leader_dns=$(aws emr describe-cluster --region us-east-1 --cluster-id $cluster_id --query 'Cluster.MasterPublicDnsName' --output text)
+subnet_id=$(aws ec2 describe-instances --region us-east-1 --filters "Name=dns-name,Values=$leader_dns" --query 'Reservations[*].Instances[*].SubnetId' --output text)
+studio_id=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 list-studios --region us-east-1 --query Studios[*].{Studios:StudioId} --output text)
+studio_s3_location=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 describe-studio --studio-id $studio_id --query 'Studio.DefaultS3Location' --output text)
+studio_notebook_id=$(aws s3 ls $studio_s3_location/e- | sed 's|.*PRE ||g' | sed  's|/||g' | sed  's| ||g')
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+sudo tee ./variables.json >/dev/null <<EOF
+{
+    "REGION": "us-east-1",
+    "SUBNET_ID": "$subnet_id",
+    "EMR_LOG_URI": "s3://mrworkshop-$accountID-dayone/",
+    "NOTEBOOK_ID": "$studio_notebook_id",
+    "NOTEBOOK_FILE_NAME": "workshop-repo/files/notebook/find_best_sellers.ipynb",
+    "CATEGORIES_CSV": "Apparel,Automotive,Baby,Beauty,Books",
+    "FROM_DATE": "2015-08-25",
+    "TO_DATE": "2015-08-31",
+    "OUTPUT_LOCATION": "s3://mrworkshop-$accountID-dayone/mwaa/"
+}
+EOF
+
+cat ./variables.json
+
+```
+
+You will get a JSON output with all values entered. Copy this JSON and create a file called "variables.json" in your local desktop. Paste the contents you copied. An example variables.json file with values entered:
 
 ```
 {
@@ -109,7 +143,7 @@ Also, analyze the DAG code by clicking on "Code".
 
 ![mwaa - 14](images/mwaa-14.png)
 
-Now, if you go to the EMR Web Console, you can see a new cluster called "Test-Cluster" being launched.
+Now, if you go to the [EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#) (Right click -> Open Link in New Tab), you can see a new cluster called "Test-Cluster" being launched.
 
 ![mwaa - 12](images/mwaa-12.png)
 
@@ -119,14 +153,15 @@ After 15 mins, check the DAG execution status.
 
 ![mwaa - 13](images/mwaa-13.png)
 
-Now, let's check the S3 location you provided as parameter "OUTPUT_LOCATION" in your variables.json. This is where your job output is going to be stored. Run the below command on EC2 JumpHost Session Manager session. Replace youraccountID with your AWS event engine account ID.
+Now, let's check the S3 location you provided as parameter "OUTPUT_LOCATION" in your variables.json. This is where your job output is going to be stored. Run the below command on EC2 JumpHost Session Manager session.
 
 ```
-aws s3 ls s3://mrworkshop-156321623241-dayone/mwaa/
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+aws s3 ls s3://mrworkshop-$accountID-dayone/mwaa/
 
 ```
 
-Alternatively, you can go to the S3 Web Console and check this location in the console as well.
+Alternatively, you can go to the [S3 Web Console](https://s3.console.aws.amazon.com/s3/home?region=us-east-1) (Right click -> Open Link in New Tab) and check this location from the console as well.
 
 ![mwaa - 15](images/mwaa-15.png)
 
@@ -138,8 +173,8 @@ After the job is finished, the cluster "Test-cluster" will be automatically term
 
 ![mwaa - 18](images/mwaa-18.png)
 
-This DAG will be executed once every hour automatically. You can play around by changing the notebook parameters or pipeline schedule. You can stop the DAG by using the toggle switch and turn it OFF.
+This DAG will be executed once every hour automatically. You can play around by changing the notebook parameters or pipeline schedule.
+
+Once you are done experimenting, you can stop the DAG by using the toggle switch to turn it OFF.
 
 ![mwaa - 16](images/mwaa-16.png)
-
-Another way to do this is by using AWS Step Functions. Next day's session, we will orchestrate Hive ETL pipelines using AWS Step Functions to demonstrate this capability.

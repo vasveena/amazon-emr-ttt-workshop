@@ -18,21 +18,25 @@ Download the file workshop-repo -> schema -> schema.avsc to your local desktop a
 
 ![Hudi - 2](images/hudi-2.png)
 
-Alternatively, you can run the following commands from the leader node of your EMR cluster. Replace "youraccountID" with your event engine AWS account ID. We will be using this schema AVRO file to run compaction on Merge-On-Read tables.
+Alternatively, you can run the following commands from the leader node of your EMR cluster. We will be using this schema AVRO file to run compaction on Merge-On-Read tables.
 
 ```
 sudo su hadoop
 cd ~
+
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
 curl -o schema.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/schema.avsc
-aws s3 cp schema.avsc s3://mrworkshop-youraccountID-dayone/schema/schema.avsc
+
+aws s3 cp schema.avsc s3://mrworkshop-$accountID-dayone/schema/schema.avsc
+
 ```
 
-Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb". Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.
+Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb".
 
 ### Apache Hudi with SparkSQL DMLs
 From EMR 6.5.0, you can write Hudi datasets using simple SQL statements. Let's look at an example.
 
-From the EMR Studio workspace Jupyterlab session, go to workshop-repo -> files -> notebook -> apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.
+From the EMR Studio workspace Jupyterlab session, go to workshop-repo -> files -> notebook -> apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook.
 
 Detailed instructions are within the notebook.
 
@@ -43,28 +47,38 @@ Hudi provides a utility called Deltastreamer for creating and manipulating Hudi 
 ```
 sudo su hadoop
 cd ~
+
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
 curl -o source-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/source-schema-json.avsc
 curl -o target-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/target-schema-json.avsc
 curl -o json-deltastreamer.properties https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/properties/json-deltastreamer.properties
 curl -o json-deltastreamer_upsert.properties https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/properties/json-deltastreamer_upsert.properties
 curl -o apache-hudi-on-amazon-emr-deltastreamer-python-demo.py https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
-```
-
-Replace youraccountID with event engine AWS account ID in the files json-deltastreamer.properties, json-deltastreamer_upsert.properties and apache-hudi-on-amazon-emr-deltastreamer-python-demo.py. You can do so using sed command below. Replace 707263692290 with your event engine account ID.
 
 ```
-sed -i 's|youraccountID|707263692290|g' json-deltastreamer.properties
-sed -i 's|youraccountID|707263692290|g' json-deltastreamer_upsert.properties
-sed -i 's|youraccountID|707263692290|g' apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
-```
 
-Now, copy the four files to your S3 location. Replace youraccountID with event engine AWS account ID.
+Replace event engine AWS account ID in the files json-deltastreamer.properties, json-deltastreamer_upsert.properties and apache-hudi-on-amazon-emr-deltastreamer-python-demo.py.
 
 ```
-aws s3 cp source-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
-aws s3 cp target-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
-aws s3 cp json-deltastreamer.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
-aws s3 cp json-deltastreamer_upsert.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
+
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+sed -i "s|youraccountID|$accountID|g" json-deltastreamer.properties
+sed -i "s|youraccountID|$accountID|g" json-deltastreamer_upsert.properties
+sed -i "s|youraccountID|$accountID|g" apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
+
+```
+
+Now, copy the four files to your S3 location.
+
+```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+aws s3 cp source-schema-json.avsc s3://mrworkshop-$accountID-dayone/hudi-ds/config/
+aws s3 cp target-schema-json.avsc s3://mrworkshop-$accountID-dayone/hudi-ds/config/
+aws s3 cp json-deltastreamer.properties s3://mrworkshop-$accountID-dayone/hudi-ds/config/
+aws s3 cp json-deltastreamer_upsert.properties s3://mrworkshop-$accountID-dayone/hudi-ds/config/
 
 ```
 
@@ -80,13 +94,16 @@ Run the Python program to generate Fake data under respective S3 locations. This
 
 ```
 python3 apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
-```
-
-Once done, make sure the inputdata and update prefixes are populated with JSON data files. You can copy one file using “aws s3 cp” on the EMR leader node session to inspect the data. Replace youraccountID with event engine AWS account ID.
 
 ```
-aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/inputdata
-aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
+
+Once done, make sure the inputdata and update prefixes are populated with JSON data files. You can copy one file using “aws s3 cp” on the EMR leader node session to inspect the data.
+
+```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+aws s3 ls s3://mrworkshop-$accountID-dayone/hudi-ds/inputdata
+aws s3 ls s3://mrworkshop-$accountID-dayone/hudi-ds/updates
 ```
 
 ![Hudi - 3](images/hudi-3.png)
@@ -98,29 +115,38 @@ hadoop fs -copyFromLocal /usr/lib/hudi/hudi-utilities-bundle.jar hdfs:///user/ha
 
 ```
 
-Let's submit DeltaStreamer step to the EMR cluster. You can submit this step on EC2 JumpHost or leader node of EMR cluster "EMR-Spark-Hive-Presto". Since we have the EMR leader node session active, let us use it to run the command.
+Let's submit DeltaStreamer step to the EMR cluster. You can submit this step on EC2 JumpHost or leader node of EMR cluster "EMR-Spark-Hive-Presto".
 
-Modify Add Steps Command for Bulk Insert Operation. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.
+Since we have the EMR leader node session active, let us use it to run the below scommand.
 
 ```
-aws emr add-steps --cluster-id j-XXXXXXXXX --steps Type=Spark,Name="Deltastreamer COW - Bulk Insert",ActionOnFailure=CONTINUE,Args=[--jars,hdfs:///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-707263692290-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,BULK_INSERT] --region us-east-1
+
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+cluster_id=$(aws emr list-clusters --region us-east-1 --query 'Clusters[?Name==`EMR-Spark-Hive-Presto` && Status.State!=`TERMINATED`]'.{Clusters:Id} --output text)
+
+aws emr add-steps --cluster-id $cluster_id --steps Type=Spark,Name="Deltastreamer COW - Bulk Insert",ActionOnFailure=CONTINUE,Args=[--jars,hdfs:///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-$accountID-dayone/hudi-ds/config/json-deltastreamer.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-$accountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,BULK_INSERT] --region us-east-1
+
 ```
 
 ![Hudi - 4](images/hudi-4.png)
 
-You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Steps). It will take about 2 minutes to complete.
+You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster ([EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#) (Right click -> Open Link in New Tab) -> EMR-Spark-Hive-Presto -> Steps). It will take about 2 minutes to complete.
 
 ![Hudi - 5](images/hudi-5.png)
 
-Check the S3 location for Hudi files. Replace youraccountID with event engine AWS account ID.
+Check the S3 location for Hudi files.
 
 ```
-aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1/
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+aws s3 ls s3://mrworkshop-$accountID-dayone/hudi-ds-output/person-profile-out1/
+
 ```
 
 ![Hudi - 6](images/hudi-6.png)
 
-Let's go to the hive CLI on EMR leader node by typing "hive". Let's run the following command to create a table. Replace youraccountID with event engine AWS account ID.
+Let's go to the hive CLI on EMR leader node by typing "hive". Let's run the following command to create a table. Replace "youraccountID" with event engine AWS account ID.
 
 ```
 CREATE EXTERNAL TABLE `profile_cow`(
@@ -146,12 +172,14 @@ OUTPUTFORMAT
   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
 LOCATION
   's3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1/';
+
 ```
 
 Select a record from this table and copy the value of hoodie_record_key and street_address to a notepad.
 
 ```
 select `_hoodie_commit_time`, `_hoodie_record_key`, street_address from profile_cow limit 1;
+
 ```
 
 ![Hudi - 7](images/hudi-7.png)
@@ -160,17 +188,23 @@ Exit from hive.
 
 ```
 exit;
-```
-
-Now, let's do upsert operation with Hudi Deltastreamer. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.
 
 ```
-aws emr add-steps --cluster-id j-XXXXXXXXX --steps Type=Spark,Name="Deltastreamer COW - Upsert",ActionOnFailure=CONTINUE,Args=[--jars,hdfs:///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer_upsert.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,UPSERT] --region us-east-1
+
+Now, let's do upsert operation with Hudi Deltastreamer by running the following command.
+
+```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+cluster_id=$(aws emr list-clusters --region us-east-1 --query 'Clusters[?Name==`EMR-Spark-Hive-Presto` && Status.State!=`TERMINATED`]'.{Clusters:Id} --output text)
+
+aws emr add-steps --cluster-id $cluster_id --steps Type=Spark,Name="Deltastreamer COW - Upsert",ActionOnFailure=CONTINUE,Args=[--jars,hdfs:///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-$accountID-dayone/hudi-ds/config/json-deltastreamer_upsert.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-$accountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,UPSERT] --region us-east-1
+
 ```
 
 ![Hudi - 9](images/hudi-9.png)
 
-You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -> Amazon EMR Console -> EMR-Spark-Hive-Presto -> Steps). Wait for the step to complete (~1 minute).
+You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster ([EMR Web Console](https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#) (Right click -> Open Link in New Tab) -> EMR-Spark-Hive-Presto -> Steps). Wait for the step to complete (~1 minute).
 
 ![Hudi - 8](images/hudi-8.png)
 
@@ -178,6 +212,7 @@ Let us check the street_address for the same _hoodie_record_key. Run the followi
 
 ```
 select `_hoodie_commit_time`, street_address from profile_cow where `_hoodie_record_key`='00000b94-1500-4f10-bd10-d6393ba24643';
+
 ```
 
 Notice the change in commit time and street_address.
@@ -186,15 +221,21 @@ Notice the change in commit time and street_address.
 
 ### Change Data Capture with Hudi Deltastreamer
 
-Go to RDS Web console and open the database that was created. Copy the endpoint of this database.
+Go to [Amazon RDS Web console](https://us-east-1.console.aws.amazon.com/rds/home?region=us-east-1#databases:) (Right click -> Open Link in New Tab) and open the database that was created. Copy the endpoint of this database.
 
 ![Hudi - 13](images/hudi-13.png)
 
-Login to your EC2 JumpHost using Session Manager or SSH and run the following command to connect to your DB. Replace "dbendpoint" value with the endpoint you copied from the RDS console.
+Login to your EC2 JumpHost using Session Manager or SSH and run the following command to connect to your DB.
 
 ```
+sudo su ec2-user
+cd ~
+
+dbendpoint=$(aws rds describe-db-instances --region us-east-1 | jq -r .'DBInstances[] | .Endpoint.Address')
 sudo yum install -y mysql
-mysql -h dbendpoint -uadmin -pTest123$
+
+mysql -h $dbendpoint -uadmin -pTest123$
+
 ```
 
 ![Hudi - 14](images/hudi-14.png)
@@ -238,7 +279,7 @@ commit;
 
 We will now use AWS DMS to start pushing this data to S3.
 
-Go to the DMS Web Console -> Endpoints -> hudidmsource. Check if the connection is successful. If not, test the connection again.
+Go to the [Amazon DMS Web Console](https://us-east-1.console.aws.amazon.com/dms/v2/home?region=us-east-1#dashboard) (Right click -> Open Link in New Tab) -> Endpoints -> hudidmsource. Check if the connection is successful. If not, test the connection again.
 
 ![Hudi - 16](images/hudi-16.png)
 
@@ -246,25 +287,34 @@ Start the Database migration task hudiload.
 
 ![Hudi - 15](images/hudi-15.png)
 
-Once the task state changes from Running to "Load complete, replication ongoing", check the below S3 location for deposited files. Replace youraccountID with AWS event engine account ID.
+Once the task state changes from Running to "Load complete, replication ongoing", check the below S3 location for deposited files.
 
 ```
-aws s3 ls s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+aws s3 ls s3://mrworkshop-dms-$accountID-dayone/dmsdata/dev/retail_transactions/
+
 ```
 
-Now login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" using Session Manager or SSH and run the following commands. Replace youraccountID with AWS event engine account ID.
+Now login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" using Session Manager or SSH and run the following commands.
 
 ```
 sudo su hadoop
 cd ~
-aws s3 mv s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/ s3://mrworkshop-dms-youraccountID-dayone/dmsdata/data-full/dev/retail_transactions/  --exclude "*" --include "LOAD*.parquet" --recursive
+
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
+aws s3 mv s3://mrworkshop-dms-$accountID-dayone/dmsdata/dev/retail_transactions/ s3://mrworkshop-dms-$accountID-dayone/dmsdata/data-full/dev/retail_transactions/  --exclude "*" --include "LOAD*.parquet" --recursive
+
 ```
 
 With the full table dump available in the data-full S3 folder, we will now use the Hudi Deltastreamer utility on the EMR cluster to populate the Hudi dataset on S3.
 
-Run the following command directly on leader node. Replace youraccountID with AWS event engine account ID.
+Run the following command directly on leader node.
 
 ```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
 spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer  \
   --jars hdfs:///user/hadoop/*.jar \
   --master yarn --deploy-mode client \
@@ -273,9 +323,9 @@ spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer
   /usr/lib/hudi/hudi-utilities-bundle.jar  \
   --table-type COPY_ON_WRITE \
   --source-ordering-field dms_received_ts \
-  --props s3://mrworkshop-dms-youraccountID-dayone/properties/dfs-source-retail-transactions-full.properties \
+  --props s3://mrworkshop-dms-$accountID-dayone/properties/dfs-source-retail-transactions-full.properties \
   --source-class org.apache.hudi.utilities.sources.ParquetDFSSource \
-  --target-base-path s3://mrworkshop-dms-youraccountID-dayone/hudi/retail_transactions --target-table hudiblogdb.retail_transactions \
+  --target-base-path s3://mrworkshop-dms-$accountID-dayone/hudi/retail_transactions --target-table hudiblogdb.retail_transactions \
   --transformer-class org.apache.hudi.utilities.transform.SqlQueryBasedTransformer \
   --payload-class org.apache.hudi.common.model.AWSDmsAvroPayload \
   --schemaprovider-class org.apache.hudi.utilities.schema.FilebasedSchemaProvider \
@@ -317,9 +367,11 @@ Exit from the MySQL session. In a few minutes, you see a new .parquet file creat
 
 ![Hudi - 18](images/hudi-18.png)
 
-Now, lets take the incremental changes we made to Hudi. Run the following command on EMR leader node. Replace youraccountID with your AWS event engine account ID.
+Now, lets take the incremental changes we made to Hudi. Run the following command on EMR leader node.
 
 ```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+
 spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer  \
   --jars hdfs:///user/hadoop/*.jar \
   --master yarn --deploy-mode client \
@@ -328,9 +380,9 @@ spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer
   /usr/lib/hudi/hudi-utilities-bundle.jar \
   --table-type COPY_ON_WRITE \
   --source-ordering-field dms_received_ts \
-  --props s3://mrworkshop-dms-youraccountID-dayone/properties/dfs-source-retail-transactions-incremental.properties \
+  --props s3://mrworkshop-dms-$accountID-dayone/properties/dfs-source-retail-transactions-incremental.properties \
   --source-class org.apache.hudi.utilities.sources.ParquetDFSSource \
-  --target-base-path s3://mrworkshop-dms-youraccountID-dayone/hudi/retail_transactions --target-table hudiblogdb.retail_transactions \
+  --target-base-path s3://mrworkshop-dms-$accountID-dayone/hudi/retail_transactions --target-table hudiblogdb.retail_transactions \
   --transformer-class org.apache.hudi.utilities.transform.SqlQueryBasedTransformer \
   --payload-class org.apache.hudi.common.model.AWSDmsAvroPayload\
   --schemaprovider-class org.apache.hudi.utilities.schema.FilebasedSchemaProvider \
@@ -359,7 +411,7 @@ You should see the changes you made in the MySQL table.
 
 This exercise will show how you can write real time Hudi data sets using Spark Structured Streaming. For this exercise, we will use real-time NYC Metro Subway data using [MTA API](https://api.mta.info/#/landing).
 
-Keep the EMR Session Manager or SSH session active. In a new browser tab, create a new SSM session for EC2 instance "JumpHost" (or SSH into EC2 instance "JumpHost"). i.e., under the [EC2 console](https://console.aws.amazon.com/ec2/home?region=us-east-1#Instances:) select the EC2 instance with name "JumpHost". Click on "Connect" -> Session Manager -> Connect.
+Keep the EMR Session Manager or SSH session active. In a new browser tab, create a new SSM session for EC2 instance "JumpHost" (or SSH into EC2 instance "JumpHost"). i.e., under the [EC2 Web Console](https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost) (Right click -> Open Link in New Tab), select the EC2 instance with name "JumpHost". Click on "Connect" -> Session Manager -> Connect.
 
 Switch to EC2 user and go to home directory
 
@@ -478,13 +530,22 @@ python3 train_arrival_producer.py
 
 Now, go to the EMR Studio's JupyterLab workspace and open workshop-repo/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb. Make sure that "Spark" kernel is selected.
 
-Replace the broker string with the value of bootstrap servers you copied to your notepad. Replace youraccountID with event engine AWS account ID. Instructions are in the notebook.
+Run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using Hive or Athena.
 
-Once you have made the changes, run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using hive or even Athena.
-
-Go to the AWS Web Console -> Athena -> Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -> Manage and add your Query result location like -> s3://mrworkshop-youraccountID-dayone/athena/.
+To set up Athena, go to the [Amazon Athena Web Console](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/landing-page) (Right click -> Open Link in New Tab) -> Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -> Manage and add your Query result location like -> s3://mrworkshop-youraccountID-dayone/athena/.
 
 ![Hudi - 11](images/hudi-11.png)
+
+OR you can run the following command to set up Athena Output location using EC2 JumpHost Session Manager session.
+
+```
+sudo su ec2-user
+cd ~
+
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+aws athena update-work-group --work-group primary --configuration-updates "{\"ResultConfigurationUpdates\": { \"OutputLocation\": \"s3://mrworkshop-$accountID-dayone/athena/\"}}" --region us-east-1
+
+```
 
 Now, you can run the following queries once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.
 
