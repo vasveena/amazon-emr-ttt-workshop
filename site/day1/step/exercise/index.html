@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.11">
     
     
       
-        <title>Introduction - Amazon EMR Train-The-Trainer Workshop</title>
+        <title>3 - Orchestrate EMR Steps using AWS Step Functions - Amazon EMR Train-The-Trainer Workshop</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.50e68009.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.50e68009.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
         
       
     
@@ -34,7 +34,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#amazon-emr-deployment-options" class="md-skip">
+        <a href="#orchestrating-emr-steps-using-aws-step-functions" class="md-skip">
           Skip to content
         </a>
       
@@ -72,7 +72,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Amazon EMR Train-The-Trainer Workshop" class="md-header__button md-logo" aria-label="Amazon EMR Train-The-Trainer Workshop" data-md-component="logo">
+    <a href="../../.." title="Amazon EMR Train-The-Trainer Workshop" class="md-header__button md-logo" aria-label="Amazon EMR Train-The-Trainer Workshop" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              3 - Orchestrate EMR Steps using AWS Step Functions
             
           </span>
         </div>
@@ -170,7 +170,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Amazon EMR Train-The-Trainer Workshop" class="md-nav__button md-logo" aria-label="Amazon EMR Train-The-Trainer Workshop" data-md-component="logo">
+    <a href="../../.." title="Amazon EMR Train-The-Trainer Workshop" class="md-nav__button md-logo" aria-label="Amazon EMR Train-The-Trainer Workshop" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -201,7 +201,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -216,7 +216,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../setup/" class="md-nav__link">
+      <a href="../../../setup/" class="md-nav__link">
         Setup
       </a>
     </li>
@@ -229,25 +229,27 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
       
       
       
         <label class="md-nav__link" for="__nav_3">
-          Part 1 Exercises
+          Part 1
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Part 1 Exercises" data-md-level="1">
+      <nav class="md-nav" aria-label="Part 1" data-md-level="1">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
-          Part 1 Exercises
+          Part 1
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -257,7 +259,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../day1/fleet/exercise/" class="md-nav__link">
+      <a href="../../fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
       </a>
     </li>
@@ -271,7 +273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../day1/spark/exercise/" class="md-nav__link">
+      <a href="../../spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
     </li>
@@ -283,11 +285,21 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../day1/studio/exercise/" class="md-nav__link">
-        3 - Amazon EMR Studio
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        3 - Orchestrate EMR Steps using AWS Step Functions
       </a>
+      
     </li>
   
 
@@ -316,14 +328,14 @@
       
       
         <label class="md-nav__link" for="__nav_4">
-          Part 2 Exercises
+          Part 2
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Part 2 Exercises" data-md-level="1">
+      <nav class="md-nav" aria-label="Part 2" data-md-level="1">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
-          Part 2 Exercises
+          Part 2
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -333,7 +345,109 @@
   
   
     <li class="md-nav__item">
-      <a href="../day1/hudi/exercise/" class="md-nav__link">
+      <a href="../../studio/exercise/" class="md-nav__link">
+        1 - Amazon EMR Studio
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mwaa/exercise/" class="md-nav__link">
+        2 - Orchestration Notebook Pipelines using Amazon MWAA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day2/smstudio/exercise/" class="md-nav__link">
+        3 - Sagemaker Studio Integration
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Part 3
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Part 3" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Part 3
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1">
+          Build Incremental Data Lakes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Build Incremental Data Lakes" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Build Incremental Data Lakes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day2/hudi/exercise/" class="md-nav__link">
         1 - Apache Hudi on Amazon EMR
       </a>
     </li>
@@ -347,7 +461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../day1/icebrg/exercise/" class="md-nav__link">
+      <a href="../../../day2/icebrg/exercise/" class="md-nav__link">
         2 - Apache Iceberg on Amazon EMR
       </a>
     </li>
@@ -355,15 +469,8 @@
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="mwaa/exercise/" class="md-nav__link">
-        3 - Orchestration using Amazon MWAA
-      </a>
+        </ul>
+      </nav>
     </li>
   
 
@@ -381,27 +488,25 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_5">
-          Part 3 Exercises
+        <label class="md-nav__link" for="__nav_6">
+          Part 4
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Part 3 Exercises" data-md-level="1">
-        <label class="md-nav__title" for="__nav_5">
+      <nav class="md-nav" aria-label="Part 4" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Part 3 Exercises
+          Part 4
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -409,25 +514,23 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_1" type="checkbox" id="__nav_6_1" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_5_1">
+        <label class="md-nav__link" for="__nav_6_1">
           Deployment Options
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Deployment Options" data-md-level="2">
-        <label class="md-nav__title" for="__nav_5_1">
+        <label class="md-nav__title" for="__nav_6_1">
           <span class="md-nav__icon md-icon"></span>
           Deployment Options
         </label>
@@ -437,21 +540,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../day3/" class="md-nav__link">
         Introduction
       </a>
-      
     </li>
   
 
@@ -463,8 +556,8 @@
   
   
     <li class="md-nav__item">
-      <a href="emroneks/exercise/" class="md-nav__link">
-        1.1 - Amazon EMR on EKS
+      <a href="../../../day3/emroneks/exercise/" class="md-nav__link">
+        1 - Amazon EMR on EKS
       </a>
     </li>
   
@@ -477,8 +570,8 @@
   
   
     <li class="md-nav__item">
-      <a href="serverless/exercise/" class="md-nav__link">
-        1.2 - Amazon EMR Serverless
+      <a href="../../../day3/serverless/exercise/" class="md-nav__link">
+        2 - Amazon EMR Serverless
       </a>
     </li>
   
@@ -487,20 +580,6 @@
           
         </ul>
       </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../day3/lf/exercise/" class="md-nav__link">
-        2 - LakeFormation Integration
-      </a>
     </li>
   
 
@@ -542,21 +621,12 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/vasveena/amazon-emr-ttt-workshop/edit/master/docs/day2/index.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/vasveena/amazon-emr-ttt-workshop/edit/master/docs/day1/step/exercise.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-<h1 id="amazon-emr-deployment-options"><strong> Amazon EMR Deployment Options </strong><a class="headerlink" href="#amazon-emr-deployment-options" title="Permanent link">&para;</a></h1>
-<p>Amazon EMR offers four deployment options to run your applications.</p>
-<ol>
-<li>Amazon EMR on EC2</li>
-<li>Amazon EMR on EKS</li>
-<li>Amazon EMR on Outposts</li>
-<li>Amazon EMR Serverless (Preview)</li>
-</ol>
-<p>So far we leveraged EMR on EC2 deployment. In the following exercises, we will run the same workloads using EMR on EKS and EMR Serverless deployment options.</p>
-<p>Note that all the deployment options offer the same optimized runtime Spark engine version for every EMR release label. This means you can build your application code only once and then use any of these deployment modes interchangeably to run your applications. </p>
+<h1 id="orchestrating-emr-steps-using-aws-step-functions"><strong>Orchestrating EMR Steps using AWS Step Functions</strong><a class="headerlink" href="#orchestrating-emr-steps-using-aws-step-functions" title="Permanent link">&para;</a></h1>
 
               
             </article>
@@ -570,7 +640,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="mwaa/exercise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3 - Orchestration using Amazon MWAA" rel="prev">
+        <a href="../../spark/exercise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2 - Apache Spark on Amazon EMR" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -579,20 +649,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              3 - Orchestration using Amazon MWAA
+              2 - Apache Spark on Amazon EMR
             </div>
           </div>
         </a>
       
       
         
-        <a href="emroneks/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 1.1 - Amazon EMR on EKS" rel="next">
+        <a href="../../studio/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 1 - Amazon EMR Studio" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              1.1 - Amazon EMR on EKS
+              1 - Amazon EMR Studio
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -622,10 +692,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.092fa1f6.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.092fa1f6.min.js"}</script>
     
     
-      <script src="../assets/javascripts/bundle.5a9542cf.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.5a9542cf.min.js"></script>
       
     
   </body>
