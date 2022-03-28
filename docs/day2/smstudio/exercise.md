@@ -1,4 +1,4 @@
-# ** Exercise 4 - Sagemaker Studio Integration with Amazon EMR **
+# **Sagemaker Studio Integration with Amazon EMR**
 
 Amazon Sagemaker provides native integration with Amazon EMR from Sagemaker Studio so that you can run data preparation tasks for your machine learning workloads using EMR from Sagemaker.
 

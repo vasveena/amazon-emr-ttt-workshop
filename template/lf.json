@@ -73,7 +73,6 @@
   "Parameters": {
     "EC2KeyPair": {
       "Description": "Amazon EC2 Key Pair (Optional, for debugging)",
-      "Default": "ee-default-keypair",
       "Type": "String",
       "MinLength" : "0"
     },
@@ -87,8 +86,7 @@
     },
     "userBucketName": {
       "Type": "String",
-      "Description": "Name of an existing S3 bucket (e.g s3://mrworkshop-475742350974-dayone) with no trailing /",
-      "Default": "s3://mrworkshop-replaceyouraccoutID-dayone",
+      "Description": "Name of an existing S3 bucket (e.g s3://lf-metadata-bucket-account-id) with no trailing /",
       "AllowedPattern": "s3:\/\/.*[^\/]"
     },
     "myIPCidr": {
@@ -111,9 +109,6 @@
     "ReleaseLabel": {
       "Type": "String",
       "Default": "emr-5.31.0",
-      "AllowedValues": [
-        "emr-5.31.0"
-      ],
       "Description": "EMR Version"
     },
     "VPCSubnet": {
@@ -142,8 +137,8 @@
          "m5.xlarge",
          "m4.xlarge",
          "c4.xlarge",
-         "r4.xlarge",
-         "c4.2xlarge"
+         "c4.2xlarge",
+         "r4.xlarge"
       ]
     }
   },
@@ -186,13 +181,13 @@
               "/Data/"]
             ]
           },
-	  "RoleArn": {
+          "RoleArn": {
                                         "Fn::GetAtt": [
                                                 "RootRole",
                                                 "Arn"
                                         ]
                                 },
-          "UseServiceLinkedRole": false
+          "UseServiceLinkedRole" : false
         }
     },
     "AthenaNamedQuery": {

@@ -1,0 +1,1454 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: "ee-default-keypair"
+    ConstraintDescription: Can contain only ASCII characters.
+  SSHLocation:
+    Description: The IP address range that can be used to SSH to the EC2 instances
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x
+Mappings:
+  SubnetConfig:
+    VPC:
+      CIDR: 80.0.0.0/16
+    PublicOne:
+      CIDR: 80.0.0.0/20
+    PublicTwo:
+      CIDR: 80.0.32.0/20
+    PublicThree:
+      CIDR: 80.0.48.0/20
+    PrivateOne:
+      CIDR: 80.0.64.0/20
+    PrivateTwo:
+      CIDR: 80.0.16.0/20
+    PrivateThree:
+      CIDR: 80.0.80.0/20
+  RegionAMI:
+    us-east-1:
+      HVM64: ami-0e1d30f2c40c4c701
+    us-west-2:
+      HVM64: ami-0359b3157f016ae46
+    us-east-2:
+      HVM64: ami-008e1e7f1fcbe9b80
+Resources:
+  GlueDB:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId:
+        Ref: AWS::AccountId
+      DatabaseInput:
+        Description: Database for the Hudi CDC
+        LocationUri:
+          Fn::Join:
+          - ''
+          - - s3://
+            - Ref: TempS3Bucket
+            - "/"
+        Name: hudiblogdb
+
+  NatGateway1EIP:
+    Type: AWS::EC2::EIP
+    DependsOn: GatewayAttachement
+    Properties:
+      Domain: vpc
+
+  NatGateway2EIP:
+    Type: AWS::EC2::EIP
+    DependsOn: GatewayAttachement
+    Properties:
+      Domain: vpc
+
+  NatGateway1:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatGateway1EIP.AllocationId
+      SubnetId: !Ref PublicSubnetOne
+
+  NatGateway2:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatGateway2EIP.AllocationId
+      SubnetId: !Ref PublicSubnetTwo
+
+  PrivateRouteTable1:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: Private Routes (AZ1)
+
+  DefaultPrivateRoute1:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway1
+
+  PrivateRouteTable2:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: Private Routes (AZ2)
+
+  DefaultPrivateRoute2:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable2
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway2
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      SubnetIds:
+        - !Ref PublicSubnetOne
+        - !Ref PublicSubnetTwo
+        - !Ref PublicSubnetThree
+      DBSubnetGroupDescription: DB Subnet Group from 2 AZs
+
+  DMSsubnetgroup:
+    Type: AWS::DMS::ReplicationSubnetGroup
+    Properties:
+      ReplicationSubnetGroupDescription: Subnet Group for DMS for Hudi
+      ReplicationSubnetGroupIdentifier: hudidmssubnetgroup
+      SubnetIds:
+        - !Ref PublicSubnetOne
+        - !Ref PublicSubnetTwo
+        - !Ref PublicSubnetThree
+
+  NoIngressSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "no-ingress-sg"
+      GroupDescription: "Security group with no ingress rule"
+      VpcId: !Ref VPC
+
+  NoIngressSecurityGroupIngresRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      SourceSecurityGroupId:
+       Fn::GetAtt:
+         - NoIngressSecurityGroup
+         - GroupId
+      GroupId:
+       Fn::GetAtt:
+         - NoIngressSecurityGroup
+         - GroupId
+      IpProtocol: -1
+      ToPort: -1
+      FromPort: -1
+
+  S3VPCEndpoint:
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      RouteTableIds:
+        - !Ref PrivateRouteTable1
+        - !Ref PrivateRouteTable2
+        - !Ref PublicRouteTable
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
+      VpcId: !Ref VPC
+
+  MwaaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - airflow-env.amazonaws.com
+            - airflow.amazonaws.com
+          Action:
+          - sts:AssumeRole
+
+  # Refer to Doc: https://docs.aws.amazon.com/mwaa/latest/userguide/mwaa-create-role.html#role-aws-key
+  MwaaExecutionRoleDefaultPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      Roles:
+        - !Ref "MwaaExecutionRole"
+      ManagedPolicyName: MwaaExecutionRoleDefaultPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - "airflow:PublishMetrics"
+          Resource:
+          - !Sub arn:aws:airflow:${AWS::Region}:${AWS::AccountId}:environment/*
+        - Effect: Deny
+          Action:
+          - "s3:ListAllMyBuckets"
+          Resource:
+          - !Sub arn:aws:s3:::${AirflowBucketName}
+          - !Sub arn:aws:s3:::${AirflowBucketName}/*
+        - Effect: Allow
+          Action:
+          - "s3:GetObject*"
+          - "s3:GetBucket*"
+          - "s3:List*"
+          - "s3:*"
+          Resource:
+          - !Sub arn:aws:s3:::${AirflowBucketName}
+          - !Sub arn:aws:s3:::${AirflowBucketName}/*
+          - !Sub arn:aws:s3:::*
+        - Effect: Allow
+          Action:
+          - "logs:CreateLogStream"
+          - "logs:CreateLogGroup"
+          - "logs:PutLogEvents"
+          - "logs:GetLogEvents"
+          - "logs:GetLogRecord"
+          - "logs:GetLogGroupFields"
+          - "logs:GetQueryResults"
+          - "logs:DescribeLogGroups"
+          Resource:
+            - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:airflow-*
+        - Effect: Allow
+          Action: "cloudwatch:PutMetricData"
+          Resource: "*"
+        - Effect: Allow
+          Action:
+          - "sqs:ChangeMessageVisibility"
+          - "sqs:DeleteMessage"
+          - "sqs:GetQueueAttributes"
+          - "sqs:GetQueueUrl"
+          - "sqs:ReceiveMessage"
+          - "sqs:SendMessage"
+          Resource:
+            - !Sub arn:aws:sqs:${AWS::Region}:*:airflow-celery-*
+        - Effect: Allow
+          Action:
+          - "kms:Decrypt"
+          - "kms:DescribeKey"
+          - "kms:GenerateDataKey*"
+          - "kms:Encrypt"
+          NotResource:
+          - !Sub arn:aws:kms:*:${AWS::AccountId}:key/*
+          Condition:
+            StringLike:
+              kms:ViaService:
+              - !Sub sqs.${AWS::Region}.amazonaws.com
+
+  EmrPermissionsForMwaaExecutionRole:
+    Type: "AWS::IAM::ManagedPolicy"
+    DependsOn:
+     - emrRole
+     - emrEc2Role
+     - EMRStudioServiceRole
+    Properties:
+      Roles:
+      - !Ref "MwaaExecutionRole"
+      ManagedPolicyName: EmrPermissionsForMwaaExecutionRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - "elasticmapreduce:StartNotebookExecution"
+          - "elasticmapreduce:DescribeStep"
+          - "elasticmapreduce:DescribeNotebookExecution"
+          - "elasticmapreduce:AddJobFlowSteps"
+          - "elasticmapreduce:DescribeCluster"
+          - "elasticmapreduce:RunJobFlow"
+          - "elasticmapreduce:TerminateJobFlows"
+          Resource:
+          - !Sub "arn:aws:elasticmapreduce:${AWS::Region}:${AWS::AccountId}:cluster/*"
+          - !Sub "arn:aws:elasticmapreduce:${AWS::Region}:${AWS::AccountId}:editor/*"
+          - !Sub "arn:aws:elasticmapreduce:${AWS::Region}:${AWS::AccountId}:notebook-execution/*"
+        - Effect: Allow
+          Action:
+          - "iam:PassRole"
+          Resource:
+          - !Sub arn:aws:iam::${AWS::AccountId}:role/emrServiceRole
+          - !Sub arn:aws:iam::${AWS::AccountId}:role/emrEc2InstanceProfileRole
+          - !Sub arn:aws:iam::${AWS::AccountId}:role/emrStudioRole
+  EMRMasterAddlSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Additional security group for master node in the Amazon EMR
+        cluster.
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - IpProtocol: -1
+        FromPort: -1
+        ToPort: -1
+        SourceSecurityGroupId:
+          Fn::GetAtt:
+          - KafkaClientInstanceSecurityGroup
+          - GroupId
+  DbSecurityByEMRMasterAddlSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Ingress for Amazon EMR Master security group
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '3306'
+        ToPort: '3306'
+        SourceSecurityGroupId:
+          Fn::GetAtt:
+          - EMRMasterAddlSecurityGroup
+          - GroupId
+      - IpProtocol: tcp
+        FromPort: '3306'
+        ToPort: '3306'
+        SourceSecurityGroupId:
+          Fn::GetAtt:
+          - KafkaClientInstanceSecurityGroup
+          - GroupId
+      - IpProtocol: tcp
+        FromPort: 3306
+        ToPort: 3306
+        SourceSecurityGroupId:
+          Fn::GetAtt:
+          - DMSSecurityGroup
+          - GroupId
+    DependsOn:
+      - EMRMasterAddlSecurityGroup
+      - KafkaClientInstanceSecurityGroup
+      - DMSSecurityGroup
+  DMSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group for the DMS instance for Hudi
+      VpcId: !Ref VPC
+  DMSSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref DMSSecurityGroup
+      IpProtocol: tcp
+      FromPort: '0'
+      ToPort: '65535'
+      SourceSecurityGroupId:
+        Ref: DMSSecurityGroup
+  DMSReplicationInstance:
+    Type: AWS::DMS::ReplicationInstance
+    Properties:
+      AllocatedStorage: 100
+      AllowMajorVersionUpgrade: true
+      AutoMinorVersionUpgrade: true
+      EngineVersion: 3.3.3
+      MultiAZ: false
+      PubliclyAccessible: true
+      ReplicationInstanceClass: dms.t2.large
+      ReplicationInstanceIdentifier: hudidms
+      ReplicationSubnetGroupIdentifier: !Ref DMSsubnetgroup
+      VpcSecurityGroupIds:
+      - !Ref DMSSecurityGroup
+  DMSmySQLSourceEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      DatabaseName: dev
+      EndpointIdentifier: hudidmssource
+      EndpointType: source
+      EngineName: mysql
+      Password: Test123$
+      Port: 3306
+      ServerName:
+        Fn::GetAtt:
+        - MySampleDB
+        - Endpoint.Address
+      Username: admin
+  DMSS3Policy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: VisualEditor0
+          Effect: Allow
+          Action:
+          - s3:*
+          Resource:
+            Fn::Join:
+            - ''
+            - - Fn::GetAtt:
+                - TempS3Bucket
+                - Arn
+              - "/*"
+        - Sid: VisualEditor1
+          Effect: Allow
+          Action:
+          - s3:*
+          Resource:
+            Fn::GetAtt:
+            - TempS3Bucket
+            - Arn
+      ManagedPolicyName: HudiDMSS3Policy
+      Roles:
+        - !Ref DMSS3IAMRole
+  DMSS3IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: HudiDMSS3IAMRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: dms.amazonaws.com
+          Action: sts:AssumeRole
+  DMSS3TargetEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EndpointIdentifier: hudidmss3target
+      EndpointType: target
+      EngineName: s3
+      ExtraConnectionAttributes: dataFormat=parquet;parquetTimestampInMillisecond=true;timestampColumnName=dms_received_ts;
+      S3Settings:
+        BucketFolder: dmsdata
+        BucketName: !Ref TempS3Bucket
+        ServiceAccessRoleArn:
+          Fn::GetAtt:
+          - DMSS3IAMRole
+          - Arn
+  DMSReplicationTask:
+    Type: AWS::DMS::ReplicationTask
+    Properties:
+      MigrationType: full-load-and-cdc
+      ReplicationInstanceArn: !Ref DMSReplicationInstance
+      ReplicationTaskIdentifier: Hudiload
+      SourceEndpointArn: !Ref DMSmySQLSourceEndpoint
+      TableMappings: '{"rules": [{"rule-type": "selection","rule-id": "1","rule-name":
+        "1","object-locator": {"schema-name": "dev","table-name": "%"},"rule-action":
+        "include","filters": []}]}'
+      TargetEndpointArn: !Ref DMSS3TargetEndpoint
+
+  MySampleDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: dev
+      AllocatedStorage: '5'
+      DBInstanceClass: db.t2.medium
+      DBParameterGroupName: !Ref mySQLDBParameterGroup
+      Engine: MySQL
+      EngineVersion: 5.7.33
+      MasterUsername: admin
+      MasterUserPassword: Test123$
+      VPCSecurityGroups:
+        - !GetAtt
+           - DbSecurityByEMRMasterAddlSecurityGroup
+           - GroupId
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      PubliclyAccessible: 'true'
+      StorageEncrypted: 'true'
+
+  mySQLDBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: Custom Parameter Group for mySQL 5.7 Hudi Blog Source DB
+      Family: mysql5.7
+      Parameters:
+        binlog_format: ROW
+        binlog_checksum: NONE
+
+  clusterone:
+      Type: AWS::EMR::Cluster
+      DependsOn:
+         - PrivateWaitCondition
+         - MySampleDB
+         - PublicSubnetOneRouteTableAssociation
+         - PublicSubnetTwoRouteTableAssociation
+         - PublicSubnetThreeRouteTableAssociation
+      Properties:
+        Applications:
+          - Name: 'Hadoop'
+          - Name: 'Hive'
+          - Name: 'JupyterEnterpriseGateway'
+          - Name: 'Livy'
+          - Name: 'Presto'
+          - Name: 'Spark'
+          - Name: 'Hue'
+          - Name: 'Ganglia'
+        EbsRootVolumeSize: 80
+        Instances:
+          Ec2KeyName: !Ref KeyName
+          AdditionalMasterSecurityGroups:
+            - !GetAtt
+               - KafkaClientInstanceSecurityGroup
+               - GroupId
+            - !GetAtt
+               - EMRMasterAddlSecurityGroup
+               - GroupId
+          AdditionalSlaveSecurityGroups:
+            - !GetAtt
+               - KafkaClientInstanceSecurityGroup
+               - GroupId
+            - !GetAtt
+               - EMRMasterAddlSecurityGroup
+               - GroupId
+          MasterInstanceFleet:
+            InstanceTypeConfigs:
+               - InstanceType: m5.4xlarge
+               - InstanceType: m4.4xlarge
+               - InstanceType: c5.4xlarge
+               - InstanceType: r5.4xlarge
+               - InstanceType: r4.4xlarge
+            Name: cfnMaster
+            TargetOnDemandCapacity: 1
+          CoreInstanceFleet:
+            InstanceTypeConfigs:
+               - InstanceType: m5.4xlarge
+               - InstanceType: r4.4xlarge
+               - InstanceType: c5.4xlarge
+               - InstanceType: m4.4xlarge
+               - InstanceType: r5.4xlarge
+            Name: cfnCore
+            TargetOnDemandCapacity: 2
+          TerminationProtected: 'false'
+          Ec2SubnetIds:
+                - !Ref PublicSubnetOne
+                - !Ref PublicSubnetTwo
+                - !Ref PublicSubnetThree
+        BootstrapActions:
+           - Name: 'Setup SSM Agent'
+             ScriptBootstrapAction:
+               Path: !Join [ '', [ 's3://', !Ref S3Bucket, '/bootstrap/ssm-agent.sh' ] ]
+               Args:
+                - !Ref S3Bucket
+           - Name: 'Install Python libs'
+             ScriptBootstrapAction:
+               Path: !Join [ '', [ 's3://', !Ref S3Bucket, '/bootstrap/installpylibs.sh' ] ]
+               Args:
+                - dummy
+                - parameter
+           - Name: Bootstrap1
+             ScriptBootstrapAction:
+               Path:
+                 Fn::Join:
+                 - ''
+                 - - s3://
+                   - Ref: AWS::Region
+                   - ".elasticmapreduce/bootstrap-actions/run-if"
+               Args:
+               - instance.isMaster=true
+               - aws
+               - s3
+               - cp
+               - s3://aws-bigdata-blog/artifacts/hudiblog/bootstrap/hudi-blog-bootstrap.sh
+               - "/home/hadoop/"
+           - Name: Bootstrap2
+             ScriptBootstrapAction:
+               Path:
+                 Fn::Join:
+                 - ''
+                 - - s3://
+                   - Ref: AWS::Region
+                   - ".elasticmapreduce/bootstrap-actions/run-if"
+               Args:
+               - instance.isMaster=true
+               - chmod
+               - a+rx
+               - "/home/hadoop/hudi-blog-bootstrap.sh"
+           - Name: Bootstrap3
+             ScriptBootstrapAction:
+               Path:
+                 Fn::Join:
+                 - ''
+                 - - s3://
+                   - Ref: AWS::Region
+                   - ".elasticmapreduce/bootstrap-actions/run-if"
+               Args:
+               - instance.isMaster=true
+               - "/home/hadoop/hudi-blog-bootstrap.sh"
+               - Ref: TempS3Bucket
+        Configurations:
+          - Classification: iceberg-defaults
+            ConfigurationProperties:
+               iceberg.enabled: true
+          - Classification: hive-site
+            ConfigurationProperties:
+               hive.metastore.client.factory.class: com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory
+          - Classification: spark-hive-site
+            ConfigurationProperties:
+               hive.metastore.client.factory.class: com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory
+          - Classification: presto-connector-hive
+            ConfigurationProperties:
+               hive.metastore.glue.datacatalog.enabled: true
+               hive.parquet.use-column-names: true
+        Name: EMR-Spark-Hive-Presto
+        JobFlowRole: !Ref emrEc2InstanceProfile
+        ServiceRole: !Ref emrRole
+        ReleaseLabel: emr-6.5.0
+        StepConcurrencyLevel: 10
+        VisibleToAllUsers: true
+        Steps:
+          - ActionOnFailure: CONTINUE
+            HadoopJarStep:
+              Args:
+                - !Join [ '', [ 's3://', !Ref S3Bucket, '/emrsteps/hdfs.sh' ] ]
+              Jar: !Sub 's3://${AWS::Region}.elasticmapreduce/libs/script-runner/script-runner.jar'
+              MainClass: ''
+            Name: HDFS load
+        LogUri: !Join [ '', [ 's3n://', !Ref S3Bucket, '/emr/logs/' ] ]
+        Tags:
+          - Key: Name
+            Value: Workshop
+  clustertwo:
+      Type: AWS::EMR::Cluster
+      DependsOn:
+        - PrivateWaitCondition
+        - MySampleDB
+        - PublicSubnetOneRouteTableAssociation
+        - PublicSubnetTwoRouteTableAssociation
+        - PublicSubnetThreeRouteTableAssociation
+      Properties:
+        Applications:
+          - Name: 'Hadoop'
+          - Name: 'Hive'
+          - Name: 'HBase'
+          - Name: 'Phoenix'
+          - Name: 'Hue'
+          - Name: 'Ganglia'
+          - Name: 'JupyterEnterpriseGateway'
+        EbsRootVolumeSize: 80
+        Instances:
+          Ec2KeyName: !Ref KeyName
+          AdditionalMasterSecurityGroups:
+            - !GetAtt
+               - KafkaClientInstanceSecurityGroup
+               - GroupId
+            - !GetAtt
+               - EMRMasterAddlSecurityGroup
+               - GroupId
+          AdditionalSlaveSecurityGroups:
+            - !GetAtt
+               - KafkaClientInstanceSecurityGroup
+               - GroupId
+            - !GetAtt
+               - EMRMasterAddlSecurityGroup
+               - GroupId
+          MasterInstanceFleet:
+            InstanceTypeConfigs:
+               - InstanceType: m5.2xlarge
+               - InstanceType: m4.2xlarge
+               - InstanceType: c5.2xlarge
+               - InstanceType: r5.2xlarge
+               - InstanceType: r4.2xlarge
+            Name: cfnMaster
+            TargetOnDemandCapacity: 1
+          CoreInstanceFleet:
+            InstanceTypeConfigs:
+               - InstanceType: m5.2xlarge
+               - InstanceType: r4.2xlarge
+               - InstanceType: c5.2xlarge
+               - InstanceType: m4.2xlarge
+               - InstanceType: r5.2xlarge
+            Name: cfnCore
+            TargetOnDemandCapacity: 2
+          TerminationProtected: 'false'
+          Ec2SubnetIds:
+                - !Ref PublicSubnetOne
+                - !Ref PublicSubnetTwo
+                - !Ref PublicSubnetThree
+        BootstrapActions:
+           - Name: 'Setup SSM Agent'
+             ScriptBootstrapAction:
+               Path: !Join [ '', [ 's3://', !Ref S3Bucket, '/bootstrap/ssm-agent.sh' ] ]
+               Args:
+                - !Ref S3Bucket
+        Configurations:
+          - Classification: hive-site
+            ConfigurationProperties:
+               hive.support.concurrency: true
+               hive.exec.dynamic.partition.mode: nonstrict
+               hive.txn.manager: org.apache.hadoop.hive.ql.lockmgr.DbTxnManager
+               javax.jdo.option.ConnectionPassword: Test123$
+               javax.jdo.option.ConnectionURL:
+                   Fn::Join:
+                     - ''
+                     - - jdbc:mysql://
+                       - Fn::GetAtt:
+                          - MySampleDB
+                          - Endpoint.Address
+                       - ':'
+                       - Fn::GetAtt:
+                          - MySampleDB
+                          - Endpoint.Port
+                       - /hivedb?createDatabaseIfNotExist=true
+               javax.jdo.option.ConnectionDriverName: org.mariadb.jdbc.Driver
+               javax.jdo.option.ConnectionUserName: admin
+          - Classification: hbase
+            ConfigurationProperties:
+               hbase.emr.storageMode: s3
+          - Classification: hbase-site
+            ConfigurationProperties:
+               hbase.rootdir: !Join [ '', [ 's3://', !Ref HBaseOnS3Bucket ] ]
+        Name: EMR-Hive-HBaseOnS3
+        JobFlowRole: !Ref emrEc2InstanceProfile
+        ServiceRole: !Ref emrRole
+        ReleaseLabel: emr-6.5.0
+        StepConcurrencyLevel: 10
+        VisibleToAllUsers: true
+        LogUri: !Join [ '', [ 's3n://', !Ref S3Bucket, '/emr/logs/' ] ]
+        Tags:
+          - Key: Name
+            Value: Workshop
+  emrStudio:
+    Type: AWS::EMR::Studio
+    Properties:
+      AuthMode: IAM
+      DefaultS3Location: !Join [ '', [ 's3://', !Ref EmrStudioStorageBucket, '/notebook' ] ]
+      Description: Workshop Studio
+      EngineSecurityGroupId: !GetAtt
+        - EngineSecurityGroup
+        - GroupId
+      Name: workshop-studio
+      ServiceRole: !GetAtt EMRStudioServiceRole.Arn
+      SubnetIds:
+        - !Ref PublicSubnetOne
+        - !Ref PrivateSubnetOne
+        - !Ref PrivateSubnetTwo
+      VpcId: !Ref VPC
+      WorkspaceSecurityGroupId: !GetAtt
+        - WorkspaceSecurityGroup
+        - GroupId
+  emrRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: emrServiceRole
+      AssumeRolePolicyDocument:
+        Version: 2008-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: elasticmapreduce.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole'
+  DmsVpcRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: dms-vpc-role
+      AssumeRolePolicyDocument:
+        Version: 2008-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: dms.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole'
+  emrEc2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: emrEc2InstanceProfileRole
+      AssumeRolePolicyDocument:
+        Version: 2008-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+  emrEc2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref emrEc2Role
+  EMRStudioServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: emrStudioRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - elasticmapreduce.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: "Service role for EMR Studio"
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+  EMRStudioServiceRolePolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: EMRStudioServiceRolePolicy
+      Roles:
+      - !Ref EMRStudioServiceRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowEMRReadOnlyActions
+            Effect: Allow
+            Action:
+              - elasticmapreduce:ListInstances
+              - elasticmapreduce:DescribeCluster
+              - elasticmapreduce:ListSteps
+            Resource: '*'
+
+          - Sid: AllowEC2ENIActionsWithEMRTags
+            Effect: Allow
+            Action:
+              - ec2:CreateNetworkInterfacePermission
+              - ec2:DeleteNetworkInterface
+            Resource: !Sub 'arn:${AWS::Partition}:ec2:*:*:network-interface/*'
+            Condition:
+              StringEquals:
+                "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true"
+
+          - Sid: AllowEC2ENIAttributeAction
+            Effect: Allow
+            Action:
+              - ec2:ModifyNetworkInterfaceAttribute
+            Resource:
+              - !Sub 'arn:${AWS::Partition}:ec2:*:*:instance/*'
+              - !Sub 'arn:${AWS::Partition}:ec2:*:*:network-interface/*'
+              - !Sub 'arn:${AWS::Partition}:ec2:*:*:security-group/*'
+
+          - Sid: AllowEC2SecurityGroupActionsWithEMRTags
+            Effect: Allow
+            Action:
+              - ec2:AuthorizeSecurityGroupEgress
+              - ec2:AuthorizeSecurityGroupIngress
+              - ec2:RevokeSecurityGroupEgress
+              - ec2:RevokeSecurityGroupIngress
+              - ec2:DeleteNetworkInterfacePermission
+            Resource: '*'
+            Condition:
+              StringEquals:
+                "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true"
+
+          - Sid: AllowDefaultEC2SecurityGroupsCreationWithEMRTags
+            Effect: Allow
+            Action:
+              - ec2:CreateSecurityGroup
+            Resource: !Sub 'arn:${AWS::Partition}:ec2:*:*:security-group/*'
+            Condition:
+              StringEquals:
+                "aws:RequestTag/for-use-with-amazon-emr-managed-policies": "true"
+
+          - Sid: AllowDefaultEC2SecurityGroupsCreationInVPCWithEMRTags
+            Effect: Allow
+            Action:
+              - ec2:CreateSecurityGroup
+            Resource: !Sub 'arn:${AWS::Partition}:ec2:*:*:vpc/*'
+            Condition:
+              StringEquals:
+                "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true"
+
+          - Sid: AllowAddingEMRTagsDuringDefaultSecurityGroupCreation
+            Effect: Allow
+            Action:
+              - ec2:CreateTags
+            Resource: !Sub 'arn:${AWS::Partition}:ec2:*:*:security-group/*'
+            Condition:
+              StringEquals:
+                "aws:RequestTag/for-use-with-amazon-emr-managed-policies": "true"
+                "ec2:CreateAction": "CreateSecurityGroup"
+
+          - Sid: AllowEC2ENICreationWithEMRTags
+            Effect: Allow
+            Action:
+              - ec2:CreateNetworkInterface
+            Resource: !Sub 'arn:${AWS::Partition}:ec2:*:*:network-interface/*'
+            Condition:
+              StringEquals:
+                "aws:RequestTag/for-use-with-amazon-emr-managed-policies": "true"
+
+          - Sid: AllowEC2ENICreationInSubnetAndSecurityGroupWithEMRTags
+            Effect: Allow
+            Action:
+              - ec2:CreateNetworkInterface
+            Resource:
+              - !Sub 'arn:${AWS::Partition}:ec2:*:*:subnet/*'
+              - !Sub 'arn:${AWS::Partition}:ec2:*:*:security-group/*'
+            Condition:
+              StringEquals:
+                "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true"
+
+          - Sid: AllowAddingTagsDuringEC2ENICreation
+            Effect: Allow
+            Action:
+              - ec2:CreateTags
+            Resource: !Sub 'arn:${AWS::Partition}:ec2:*:*:network-interface/*'
+            Condition:
+              StringEquals:
+                "ec2:CreateAction": "CreateNetworkInterface"
+
+          - Sid: AllowEC2ReadOnlyActions
+            Effect: Allow
+            Action:
+              - ec2:DescribeSecurityGroups
+              - ec2:DescribeNetworkInterfaces
+              - ec2:DescribeTags
+              - ec2:DescribeInstances
+              - ec2:DescribeSubnets
+              - ec2:DescribeVpcs
+            Resource: '*'
+
+          - Sid: AllowSecretsManagerReadOnlyActionsWithEMRTags
+            Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource: !Sub 'arn:${AWS::Partition}:secretsmanager:*:*:secret:*'
+            Condition:
+              StringEquals:
+                "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true"
+
+          - Sid: S3permission
+            Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObject
+              - s3:GetEncryptionConfiguration
+              - s3:ListBucket
+              - s3:DeleteObject
+            Resource:
+            - '*'
+  WorkspaceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Metadata: {Comment: 'Security group attached to workspace'}
+    Properties:
+      GroupName: WorkspaceSecurityGroup
+      GroupDescription: Security group attached to workspace to communicate with cluster
+      VpcId: !Ref VPC
+      # needed for git
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
+      Tags:
+      - Key: for-use-with-amazon-emr-managed-policies
+        Value: true
+  EngineSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Metadata: {Comment: 'Security group attached to cluster master instance'}
+    Properties:
+      GroupDescription: Security group attached to cluster master to communicate with workspace
+      GroupName: EngineSecurityGroup
+      VpcId: !Ref VPC
+      Tags:
+      - Key: for-use-with-amazon-emr-managed-policies
+        Value: true
+  EngineSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Allow inbound traffic to EngineSecurityGroup ( from notebook to cluster for port 18888 )
+      GroupId:
+        Ref: EngineSecurityGroup
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+        - WorkspaceSecurityGroup
+        - GroupId
+      IpProtocol: tcp
+      FromPort: 18888
+      ToPort: 18888
+  WorkspaceSecurityGroupEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      Description: Allow outbound traffic from WorkspaceSecurityGroup ( from notebook to cluster for port 18888 )
+      GroupId:
+        Ref: WorkspaceSecurityGroup
+      DestinationSecurityGroupId:
+        Ref: EngineSecurityGroup
+      IpProtocol: tcp
+      FromPort: 18888
+      ToPort: 18888
+  StudioUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: studiouser
+      LoginProfile:
+        Password: Test123$
+        PasswordResetRequired: false
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+  CollabUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: collabuser
+      LoginProfile:
+        Password: Test123$
+        PasswordResetRequired: false
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+
+  MwaaEnvironment:
+    Type: AWS::MWAA::Environment
+    DependsOn:
+      - PrivateSubnetOne
+      - PrivateSubnetTwo
+      - PublicSubnetOneRouteTableAssociation
+      - PublicSubnetTwoRouteTableAssociation
+      - PublicSubnetThreeRouteTableAssociation
+      - clusterone
+      - clustertwo
+    Properties:
+      Name: mwaa
+      NetworkConfiguration:
+        SubnetIds:
+        - !Ref PrivateSubnetOne
+        - !Ref PrivateSubnetTwo
+        SecurityGroupIds:
+        - !Ref NoIngressSecurityGroup
+      WebserverAccessMode: PUBLIC_ONLY
+      LoggingConfiguration:
+        DagProcessingLogs:
+          Enabled: false
+          LogLevel: INFO
+        SchedulerLogs:
+          Enabled: false
+          LogLevel: INFO
+        TaskLogs:
+          Enabled: true
+          LogLevel: INFO
+        WebserverLogs:
+          Enabled: false
+          LogLevel: INFO
+        WorkerLogs:
+          Enabled: false
+          LogLevel: INFO
+      SourceBucketArn: !Sub arn:aws:s3:::${AirflowBucketName}
+      ExecutionRoleArn: !GetAtt MwaaExecutionRole.Arn
+      MaxWorkers: 1
+      DagS3Path: "dags"
+      AirflowVersion: 1.10.12
+      EnvironmentClass: mw1.small
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'mrworkshop-${AWS::AccountId}-${AWS::StackName}'
+  TempS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'mrworkshop-dms-${AWS::AccountId}-${AWS::StackName}'
+  IcebergBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'mrworkshop-${AWS::AccountId}-${AWS::StackName}-iceberg'
+  HBaseOnS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'hbase-rootdir-${AWS::AccountId}-${AWS::StackName}'
+  EmrStudioStorageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'studio-${AWS::AccountId}-${AWS::StackName}'
+  AirflowBucketName:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: !Sub 'airflow-${AWS::AccountId}-${AWS::StackName}'
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+        VersioningConfiguration:
+          Status: Enabled
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls : true
+          BlockPublicPolicy : true
+          IgnorePublicAcls : true
+          RestrictPublicBuckets : true
+  VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      CidrBlock: !FindInMap
+        - SubnetConfig
+        - VPC
+        - CIDR
+      Tags:
+        - Key: Name
+          Value: MMVPC
+  PublicSubnetOne:
+    Type: 'AWS::EC2::Subnet'
+    DependsOn: GatewayAttachement
+    Properties:
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs
+          Ref: 'AWS::Region'
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap
+        - SubnetConfig
+        - PublicOne
+        - CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: MMPublicSubnetOne
+  PublicSubnetTwo:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select
+        - 1
+        - !GetAZs
+          Ref: 'AWS::Region'
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap
+        - SubnetConfig
+        - PublicTwo
+        - CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: MMPublicSubnetTwo
+  PublicSubnetThree:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select
+        - 2
+        - !GetAZs
+          Ref: 'AWS::Region'
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap
+        - SubnetConfig
+        - PublicThree
+        - CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: MMPublicSubnetThree
+  PrivateSubnetOne:
+    Type: 'AWS::EC2::Subnet'
+    DependsOn:
+      - NatGateway1EIP
+      - NatGateway1
+      - DefaultPrivateRoute1
+    Properties:
+      AvailabilityZone: !Select
+        - 3
+        - !GetAZs
+          Ref: 'AWS::Region'
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap
+        - SubnetConfig
+        - PrivateOne
+        - CIDR
+      Tags:
+        - Key: Name
+          Value: MMPrivateSubnetOne
+  PrivateSubnetTwo:
+    Type: 'AWS::EC2::Subnet'
+    DependsOn:
+      - NatGateway2EIP
+      - NatGateway2
+      - DefaultPrivateRoute2
+    Properties:
+      AvailabilityZone: !Select
+        - 4
+        - !GetAZs
+          Ref: 'AWS::Region'
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap
+        - SubnetConfig
+        - PrivateTwo
+        - CIDR
+      Tags:
+        - Key: Name
+          Value: MMPrivateSubnetTwo
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+  GatewayAttachement:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: GatewayAttachement
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  PublicSubnetOneRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnetOne
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnetTwoRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnetTwo
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnetThreeRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnetThree
+      RouteTableId: !Ref PublicRouteTable
+  PrivateSubnetOneRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      SubnetId: !Ref PrivateSubnetOne
+  PrivateSubnetTwoRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable2
+      SubnetId: !Ref PrivateSubnetTwo
+  KafkaClientInstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocation
+  MSKSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 2181
+          ToPort: 2181
+          SourceSecurityGroupId: !GetAtt
+            - KafkaClientInstanceSecurityGroup
+            - GroupId
+        - IpProtocol: tcp
+          FromPort: 9092
+          ToPort: 9092
+          SourceSecurityGroupId: !GetAtt
+            - KafkaClientInstanceSecurityGroup
+            - GroupId
+        - IpProtocol: tcp
+          FromPort: 9092
+          ToPort: 9092
+          SourceSecurityGroupId: !GetAtt
+            - KafkaClientInstanceSecurityGroup
+            - GroupId
+        - IpProtocol: tcp
+          FromPort: 9094
+          ToPort: 9094
+          SourceSecurityGroupId: !GetAtt
+            - KafkaClientInstanceSecurityGroup
+            - GroupId
+        - IpProtocol: tcp
+          FromPort: 9094
+          ToPort: 9094
+          SourceSecurityGroupId: !GetAtt
+            - KafkaClientInstanceSecurityGroup
+            - GroupId
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          SourceSecurityGroupId: !GetAtt
+            - EMRMasterAddlSecurityGroup
+            - GroupId
+  KafkaClientEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    DependsOn:
+      - S3Bucket
+      - EmrStudioStorageBucket
+      - AirflowBucketName
+    Properties:
+      InstanceType: m4.4xlarge
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs
+          Ref: 'AWS::Region'
+      SubnetId: !Ref PublicSubnetOne
+      SecurityGroupIds:
+        - !GetAtt
+          - KafkaClientInstanceSecurityGroup
+          - GroupId
+      ImageId: !FindInMap
+        - RegionAMI
+        - !Ref 'AWS::Region'
+        - HVM64
+      Tags:
+        - Key: Name
+          Value: JumpHost
+      UserData:
+        Fn::Base64: !Sub |
+              #!/bin/bash -x
+
+              yum update -y
+
+              yum install python3.7 -y
+
+              yum install java-1.8.0-openjdk-devel -y
+
+              yum install git -y
+
+              yum install jq -y
+
+              cd /home/ec2-user
+
+              curl -o test_dag.py https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/dags/test_dag.py
+
+              curl -o train_arrival_producer.py https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/train_arrival_producer.py
+
+              curl -o ssm-agent.sh https://raw.githubusercontent.com/vasveena/EMRMigrationWorkshop/main/bootstrap/ssm-agent.sh
+
+              curl -o installpylibs.sh https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/installpylibs.sh
+
+              curl -o hdfs.sh https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/hdfs.sh
+
+              bucketName=`aws s3api list-buckets --query "Buckets[].Name" | grep mrworkshop | sed 's/"//' | sed 's/,//' | sed 's/"//' | sed 's/    //' | sed 's/ //'`
+
+              aws s3 cp ssm-agent.sh s3://mrworkshop-${AWS::AccountId}-${AWS::StackName}/bootstrap/ssm-agent.sh
+
+              aws s3 cp installpylibs.sh s3://mrworkshop-${AWS::AccountId}-${AWS::StackName}/bootstrap/installpylibs.sh
+
+              aws s3 cp test_dag.py s3://airflow-${AWS::AccountId}-${AWS::StackName}/dags/
+
+              aws s3 cp hdfs.sh s3://mrworkshop-${AWS::AccountId}-${AWS::StackName}/emrsteps/hdfs.sh
+
+              echo "export PATH=.local/bin:$PATH" >> .bash_profile
+
+              mkdir kafka
+
+              mkdir mm
+
+              cd kafka
+
+              wget https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz
+
+              tar -xzf kafka_2.12-2.2.1.tgz
+
+              cd /home/ec2-user
+
+              wget https://bootstrap.pypa.io/get-pip.py
+
+              su -c "python3.7 get-pip.py --user" -s /bin/sh ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install boto3 --user" -s /bin/sh
+              ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install awscli --user" -s /bin/sh
+              ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install protobuf --user" -s /bin/sh
+              ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install requests --user" -s /bin/sh
+              ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install kafka-python --user" -s /bin/sh
+              ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install --upgrade gtfs-realtime-bindings --user" -s /bin/sh
+              ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install underground --user" -s /bin/sh
+              ec2-user
+
+              su -c "/home/ec2-user/.local/bin/pip3 install pathlib --user" -s /bin/sh
+              ec2-user
+
+              chown -R ec2-user ./kafka
+
+              chgrp -R ec2-user ./kafka
+
+              chown -R ec2-user ./mm
+
+              chgrp -R ec2-user ./mm
+
+              echo 'security.protocol=SSL' > /home/ec2-user/kafka.properties
+
+              /opt/aws/bin/cfn-signal -e $? -d "User Data" -r "Build Process Complete" '${PrivateWaitHandle}'
+  EC2Role:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+  EC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      InstanceProfileName: EC2MSKCFProfile
+      Roles:
+        - !Ref EC2Role
+  MSKCluster:
+    Type: 'AWS::MSK::Cluster'
+    Properties:
+      BrokerNodeGroupInfo:
+        ClientSubnets:
+          - !Ref PublicSubnetOne
+          - !Ref PublicSubnetTwo
+          - !Ref PublicSubnetThree
+        InstanceType: kafka.m5.4xlarge
+        SecurityGroups:
+          - !GetAtt
+            - MSKSecurityGroup
+            - GroupId
+        StorageInfo:
+          EBSStorageInfo:
+            VolumeSize: 2000
+      ClusterName: MSKCluster
+      EncryptionInfo:
+        EncryptionInTransit:
+          ClientBroker: TLS_PLAINTEXT
+          InCluster: false
+      KafkaVersion: 2.2.1
+      NumberOfBrokerNodes: 3
+  PrivateWaitHandle:
+      Type: AWS::CloudFormation::WaitConditionHandle
+  PrivateWaitCondition:
+      DependsOn: KafkaClientEC2Instance
+      Type: AWS::CloudFormation::WaitCondition
+      Properties:
+        Handle: !Ref PrivateWaitHandle
+        Timeout: '600'
+        Count: 1
+Outputs:
+  VPCId:
+    Description: The ID of the VPC created
+    Value: !Ref VPC
+  PublicSubnetOne:
+    Description: The name of the public subnet created
+    Value: !Ref PublicSubnetOne
+  PrivateSubnetOne:
+    Description: The ID of private subnet one created
+    Value: !Ref PrivateSubnetOne
+  PrivateSubnetTwo:
+    Description: The ID of private subnet two created
+    Value: !Ref PrivateSubnetTwo
+  MSKSecurityGroupID:
+    Description: The ID of the security group created for the MSK clusters
+    Value: !GetAtt
+      - MSKSecurityGroup
+      - GroupId
+  KafkaClientEC2InstancePublicDNS:
+    Description: The Public DNS for the MirrorMaker EC2 instance
+    Value: !GetAtt
+      - KafkaClientEC2Instance
+      - PublicDnsName
+  MSKClusterArn:
+    Description: The Arn for the MSKMMCluster1 MSK cluster
+    Value: !Ref MSKCluster
+  S3BucketName:
+    Description: The bucket name for S3
+    Value: !Ref S3Bucket
