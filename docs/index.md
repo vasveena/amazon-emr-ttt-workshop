@@ -2,7 +2,7 @@
 
 This workshop contains exercises for the 3-day Amazon EMR Workshop Training.
 
-# Exercises
+## Exercises
 
 #### Part 1
 1. Launch EMR cluster with Managed Scaling and Fleets
