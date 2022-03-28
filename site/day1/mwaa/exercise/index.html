@@ -256,6 +256,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Introduction to Amazon EMR and Spark on EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Introduction to Amazon EMR and Spark on EMR" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Introduction to Amazon EMR and Spark on EMR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
@@ -274,6 +300,27 @@
       <a href="../../spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../step/exercise/" class="md-nav__link">
+        3 - Orchestrate EMR Steps using AWS Step Functions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -312,6 +359,34 @@
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Part 2
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Notebook Offerings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebook Offerings" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Notebook Offerings
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -362,6 +437,13 @@
       <a href="../../../day2/smstudio/exercise/" class="md-nav__link">
         3 - Sagemaker Studio Integration
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -617,7 +699,7 @@
 <p>Go to your EMR Studio Workspace and make sure that you have "find_best_sellers.ipynb" under workspace-repo/files/notebook. If you uploaded the file manually, go to the path where you uploaded the file and make sure that the first cell in that notebook is tagged as parameters (View -&gt; Show Right Bar -&gt; Advanced Tools).</p>
 <p>If this cell is not tagged as "parameters", re-do the <a href="/day1/studio/exercise/#parameterized-notebooks">parameterized notebooks</a> section of Day 1 Exercises.</p>
 <p><img alt="mwaa - 3" src="../images/mwaa-3.png" /></p>
-<p>Once you have confirmed that, login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" or EC2 JumpHost Session Manager session (EC2 Web console -&gt; Click on JumpHost -&gt; Connect -&gt; Session Manager -&gt; Connect), run the following commands. Replace youraccountID with your AWS account ID.</p>
+<p>Once you have confirmed that, login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" or EC2 JumpHost Session Manager session. Go to <a href="https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost">EC2 Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; Click on JumpHost -&gt; Connect -&gt; Session Manager -&gt; Connect. Run the following commands.</p>
 <div class="codehilite"><pre><span></span><code><span class="nv">sudo</span> <span class="nv">su</span> <span class="nv">ec2</span><span class="o">-</span><span class="nv">user</span>
 <span class="nv">cd</span> <span class="o">~</span>
 
@@ -627,10 +709,12 @@
 
 <span class="nv">sed</span> <span class="o">-</span><span class="nv">i</span> <span class="s2">&quot;</span><span class="s">s|emrEc2InstanceProfileRole|$instanceProfileRole|g</span><span class="s2">&quot;</span> <span class="nv">test_dag</span>.<span class="nv">py</span>
 
-<span class="nv">aws</span> <span class="nv">s3</span> <span class="nv">cp</span> <span class="nv">test_dag</span>.<span class="nv">py</span> <span class="nv">s3</span>:<span class="o">//</span><span class="nv">airflow</span><span class="o">-</span><span class="nv">youraccountID</span><span class="o">-</span><span class="nv">dayone</span><span class="o">/</span><span class="nv">dags</span><span class="o">/</span>
+<span class="nv">accountID</span><span class="o">=</span>$<span class="ss">(</span><span class="nv">aws</span> <span class="nv">sts</span> <span class="nv">get</span><span class="o">-</span><span class="nv">caller</span><span class="o">-</span><span class="nv">identity</span> <span class="o">--</span><span class="nv">query</span> <span class="s2">&quot;</span><span class="s">Account</span><span class="s2">&quot;</span> <span class="o">--</span><span class="nv">output</span> <span class="nv">text</span><span class="ss">)</span>
+
+<span class="nv">aws</span> <span class="nv">s3</span> <span class="nv">cp</span> <span class="nv">test_dag</span>.<span class="nv">py</span> <span class="nv">s3</span>:<span class="o">//</span><span class="nv">airflow</span><span class="o">-</span><span class="mh">$acc</span><span class="nv">ountID</span><span class="o">-</span><span class="nv">dayone</span><span class="o">/</span><span class="nv">dags</span><span class="o">/</span>
 </code></pre></div>
 
-<p>Go to the Managed Apache Airflow Web Console. (AWS Web Console -&gt; Search for MWAA -&gt; Select Managed Apache Airflow).</p>
+<p>Go to the Managed <a href="https://us-east-1.console.aws.amazon.com/mwaa/home?region=us-east-1#environments/mwaa">Apache Airflow Web Console</a> (Right click -&gt; Open Link in New Tab).</p>
 <p><img alt="mwaa - 1" src="../images/mwaa-1.png" /></p>
 <p>You will be able to see an Managed Airflow environment named "mwaa".</p>
 <p><img alt="mwaa - 2" src="../images/mwaa-2.png" /></p>
@@ -640,7 +724,7 @@
 <p>Create a file called "variables.json" like below using a notepad or a vi editor.</p>
 <div class="codehilite"><pre><span></span><code>{
     &quot;REGION&quot;: &quot;us-east-1&quot;,
-    &quot;SUBNET_ID&quot;: &quot;&lt;subnet-id&gt;&quot;,
+    &quot;SUBNET_ID&quot;: &quot;subnet-id&quot;,
     &quot;EMR_LOG_URI&quot;: &quot;s3://mrworkshop-youraccountID-dayone/&quot;,
     &quot;NOTEBOOK_ID&quot;: &quot;e-XXXXXXXXXXXXXXXXXXX&quot;,
     &quot;NOTEBOOK_FILE_NAME&quot;: &quot;workshop-repo/files/notebook/find_best_sellers.ipynb&quot;,
@@ -651,11 +735,40 @@
 }
 </code></pre></div>
 
-<p>Replace youraccountID with your AWS Event Engine account ID. For the subnet ID, choose the subnet of the cluster "EMR-Spark-Hive-Presto" (AWS Web Console -&gt; EMR -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab -&gt; Network and hardware section).</p>
+<p>Replace youraccountID with your AWS Event Engine account ID. For the subnet ID, choose the subnet of the cluster "EMR-Spark-Hive-Presto" (<a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab -&gt; Network and hardware section).</p>
 <p><img alt="mwaa - 5" src="../images/mwaa-5.png" /></p>
 <p>For the values of NOTEBOOK_ID and NOTEBOOK_FILE_NAME, use the same values you used in the Parameterized Notebooks exercise. i.e., take these values from your workspace URL (or from the API command you ran if you have saved it somewhere).</p>
 <p>For example: https://e-4ac2fwhw1liin22ezilly60j8.emrnotebooks-prod.us-east-1.amazonaws.com/e-4AC2FWHW1LIIN22EZILLY60J8/lab/tree/workshop-repo/files/notebook/find_best_sellers.ipynb</p>
-<p>An example variables.json file with values entered:</p>
+<p><strong>Alternate option:</strong> Instead of manually replacing all the values in the API, run the following commands in EC2 JumpHost Session Manager session.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">su</span><span class="w"> </span><span class="n">ec2</span><span class="o">-</span><span class="k">user</span><span class="w"></span>
+<span class="n">cd</span><span class="w"> </span><span class="o">~</span><span class="w"></span>
+
+<span class="n">cluster_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Clusters[?Name==`EMR-Spark-Hive-Presto` &amp;&amp; Status.State!=`TERMINATED`]&#39;</span><span class="p">.</span><span class="err">{</span><span class="n">Clusters</span><span class="o">:</span><span class="n">Id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">leader_dns</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">cluster</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$cluster_id</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Cluster.MasterPublicDnsName&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">subnet_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">ec2</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">instances</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="n">filters</span><span class="w"> </span><span class="s2">&quot;Name=dns-name,Values=$leader_dns&quot;</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Reservations[*].Instances[*].SubnetId&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="k">user</span><span class="o">/</span><span class="p">.</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">studios</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="n">Studios</span><span class="err">[</span><span class="o">*</span><span class="err">]</span><span class="p">.</span><span class="err">{</span><span class="n">Studios</span><span class="o">:</span><span class="n">StudioId</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_s3_location</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="k">user</span><span class="o">/</span><span class="p">.</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">studio</span><span class="w"> </span><span class="o">--</span><span class="n">studio</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$studio_id</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Studio.DefaultS3Location&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_notebook_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">ls</span><span class="w"> </span><span class="n">$studio_s3_location</span><span class="o">/</span><span class="n">e</span><span class="o">-</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w"> </span><span class="s1">&#39;s|.*PRE ||g&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w">  </span><span class="s1">&#39;s|/||g&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w">  </span><span class="s1">&#39;s| ||g&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="n">accountID</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="k">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s2">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">sudo</span><span class="w"> </span><span class="n">tee</span><span class="w"> </span><span class="p">.</span><span class="o">/</span><span class="k">variables</span><span class="p">.</span><span class="kt">json</span><span class="w"> </span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="no">null</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="n">EOF</span><span class="w"></span>
+<span class="err">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;REGION&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;SUBNET_ID&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$subnet_id&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;EMR_LOG_URI&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;s3://mrworkshop-$accountID-dayone/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;NOTEBOOK_ID&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$studio_notebook_id&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;NOTEBOOK_FILE_NAME&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;workshop-repo/files/notebook/find_best_sellers.ipynb&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;CATEGORIES_CSV&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Apparel,Automotive,Baby,Beauty,Books&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;FROM_DATE&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2015-08-25&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;TO_DATE&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2015-08-31&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;OUTPUT_LOCATION&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;s3://mrworkshop-$accountID-dayone/mwaa/&quot;</span><span class="w"></span>
+<span class="err">}</span><span class="w"></span>
+<span class="n">EOF</span><span class="w"></span>
+
+<span class="n">cat</span><span class="w"> </span><span class="p">.</span><span class="o">/</span><span class="k">variables</span><span class="p">.</span><span class="kt">json</span><span class="w"></span>
+</code></pre></div>
+
+<p>You will get a JSON output with all values entered. Copy this JSON and create a file called "variables.json" in your local desktop. Paste the contents you copied. An example variables.json file with values entered:</p>
 <div class="codehilite"><pre><span></span><code>{
     &quot;REGION&quot;: &quot;us-east-1&quot;,
     &quot;SUBNET_ID&quot;: &quot;subnet-096759acf495c85df&quot;,
@@ -683,24 +796,25 @@
 <p><img alt="mwaa - 11" src="../images/mwaa-11.png" /></p>
 <p>Also, analyze the DAG code by clicking on "Code".</p>
 <p><img alt="mwaa - 14" src="../images/mwaa-14.png" /></p>
-<p>Now, if you go to the EMR Web Console, you can see a new cluster called "Test-Cluster" being launched.</p>
+<p>Now, if you go to the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab), you can see a new cluster called "Test-Cluster" being launched.</p>
 <p><img alt="mwaa - 12" src="../images/mwaa-12.png" /></p>
 <p>The DAG steps will create a new cluster, submit the notebook API as pipeline and terminate the cluster once the job is finished. From start to finish, this DAG will take about 15-20 mins to complete. Please note that it is not necessary to have your EMR Studio Workspace attached to an EMR cluster to be able to run this notebook pipeline since your notebooks will be persisted in the S3 location of your EMR Studio.</p>
 <p>After 15 mins, check the DAG execution status.</p>
 <p><img alt="mwaa - 13" src="../images/mwaa-13.png" /></p>
-<p>Now, let's check the S3 location you provided as parameter "OUTPUT_LOCATION" in your variables.json. This is where your job output is going to be stored. Run the below command on EC2 JumpHost Session Manager session. Replace youraccountID with your AWS event engine account ID.</p>
-<div class="codehilite"><pre><span></span><code>aws s3 ls s3://mrworkshop-156321623241-dayone/mwaa/
+<p>Now, let's check the S3 location you provided as parameter "OUTPUT_LOCATION" in your variables.json. This is where your job output is going to be stored. Run the below command on EC2 JumpHost Session Manager session.</p>
+<div class="codehilite"><pre><span></span><code>accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+aws s3 ls s3://mrworkshop-$accountID-dayone/mwaa/
 </code></pre></div>
 
-<p>Alternatively, you can go to the S3 Web Console and check this location in the console as well.</p>
+<p>Alternatively, you can go to the <a href="https://s3.console.aws.amazon.com/s3/home?region=us-east-1">S3 Web Console</a> (Right click -&gt; Open Link in New Tab) and check this location from the console as well.</p>
 <p><img alt="mwaa - 15" src="../images/mwaa-15.png" /></p>
 <p>You should be able to see the output files for the 5 categories we passed as parameter in variables.json: "Apparel,Automotive,Baby,Beauty,Books"</p>
 <p><img alt="mwaa - 17" src="../images/mwaa-17.png" /></p>
 <p>After the job is finished, the cluster "Test-cluster" will be automatically terminated.</p>
 <p><img alt="mwaa - 18" src="../images/mwaa-18.png" /></p>
-<p>This DAG will be executed once every hour automatically. You can play around by changing the notebook parameters or pipeline schedule. You can stop the DAG by using the toggle switch and turn it OFF.</p>
+<p>This DAG will be executed once every hour automatically. You can play around by changing the notebook parameters or pipeline schedule.</p>
+<p>Once you are done experimenting, you can stop the DAG by using the toggle switch to turn it OFF.</p>
 <p><img alt="mwaa - 16" src="../images/mwaa-16.png" /></p>
-<p>Another way to do this is by using AWS Step Functions. Next day's session, we will orchestrate Hive ETL pipelines using AWS Step Functions to demonstrate this capability.</p>
 
               
             </article>

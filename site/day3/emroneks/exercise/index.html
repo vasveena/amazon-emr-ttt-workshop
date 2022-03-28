@@ -256,6 +256,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Introduction to Amazon EMR and Spark on EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Introduction to Amazon EMR and Spark on EMR" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Introduction to Amazon EMR and Spark on EMR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../day1/fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
@@ -274,6 +300,27 @@
       <a href="../../../day1/spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/step/exercise/" class="md-nav__link">
+        3 - Orchestrate EMR Steps using AWS Step Functions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -318,6 +365,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Notebook Offerings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebook Offerings" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Notebook Offerings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../day1/studio/exercise/" class="md-nav__link">
         1 - Amazon EMR Studio
@@ -350,6 +423,13 @@
       <a href="../../../day2/smstudio/exercise/" class="md-nav__link">
         3 - Sagemaker Studio Integration
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -803,7 +883,7 @@
 <h1 id="amazon-emr-on-eks"><strong>Amazon EMR on EKS</strong><a class="headerlink" href="#amazon-emr-on-eks" title="Permanent link">&para;</a></h1>
 <p>In this exercise, you will run Spark applications using EMR on EKS. For this exercise, we are going to use an EKS cluster created using the CloudFormation template. If you are interested in building this environment end-to-end, you can do that following the first 10 steps (until line 131) in this <a href="https://github.com/vasveena/EMROnEKS/blob/main/emroneks-note">note</a>.</p>
 <h3 id="create-the-emr-on-eks-virtual-clusters">Create the EMR on EKS virtual clusters<a class="headerlink" href="#create-the-emr-on-eks-virtual-clusters" title="Permanent link">&para;</a></h3>
-<p>Go to the CloudFormation Web Console (AWS Web Console -&gt; Search for CloudFormation -&gt; Right click -&gt; Open in new tab) and see if you have the CloudFormation stack named "emr-on-eks" deployed in your AWS event engine accounts.</p>
+<p>Go to the <a href="https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks?filteringStatus=active&amp;filteringText=&amp;viewNested=true&amp;hideStacks=false">CloudFormation Web Console</a> (Right click -&gt; Open Link in New Tab) and see if you have the CloudFormation stack named "emr-on-eks" deployed in your AWS event engine accounts.</p>
 <p><img alt="ee - 1" src="../images/ee-1.png" /></p>
 <p>Now go to the EC2 and search for "jumphost". Choose the instance starting with the name "emr-on-eks-PrepStack". Connect to this instance using Session Manager.</p>
 <p><img alt="ee - 2" src="../images/ee-2.png" /></p>
@@ -824,7 +904,7 @@ sh /tmp/kubeconfig.sh
 <p><img alt="ee - 3" src="../images/ee-3.png" /></p>
 <p>It will take about 2 mins to complete. Once done, you will see the 3 nodes of the deployed EKS cluster in ready status.</p>
 <p><img alt="ee - 4" src="../images/ee-4.png" /></p>
-<p>Go to the EKS Web console (AWS Web Console -&gt; Search for EKS -&gt; Right click -&gt; Open in new tab) and check the cluster myEKS.</p>
+<p>Go to the <a href="https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters">EKS Web console</a> (Right click -&gt; Open Link in New Tab) and check the cluster myEKS.</p>
 <p><img alt="ee - 15" src="../images/ee-15.png" /></p>
 <p>Click on the cluster and look at the 3 EC2 nodes in the Overview section. These are the EC2 instances of the EKS cluster.</p>
 <p><img alt="ee - 16" src="../images/ee-16.png" /></p>
@@ -838,10 +918,10 @@ sh /tmp/kubeconfig.sh
 <div class="codehilite"><pre><span></span><code>sh /tmp/emroneks-fargate.sh fargate-vc
 </code></pre></div>
 
-<p>You can now go to the EMR Web console. On the bottom left side pane, you will be able to see the "EMR on EKS" section. Click on Virtual clusters. You can see the two EMR on EKS virtual clusters created for EC2 and Fargate namespaces respectively. Virtual clusters do not run any resources.</p>
+<p>You can now go to the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab). On the bottom left side pane, you will be able to see the "EMR on EKS" section. Click on Virtual clusters. You can see the two EMR on EKS virtual clusters created for EC2 and Fargate namespaces respectively. Virtual clusters do not run any resources.</p>
 <p><img alt="ee - 5" src="../images/ee-5.png" /></p>
 <h3 id="build-the-cloud9-workspace">Build the Cloud9 workspace<a class="headerlink" href="#build-the-cloud9-workspace" title="Permanent link">&para;</a></h3>
-<p>We will use Cloud9 to observe Kubernetes dashboards. Go to the Cloud9 Web Console -&gt; Create environment.</p>
+<p>We will use Cloud9 to observe Kubernetes dashboards. Go to the <a href="https://us-east-1.console.aws.amazon.com/cloud9/home/product">Cloud9 Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; Create environment.</p>
 <p><img alt="ee - 6" src="../images/ee-6.png" /></p>
 <p>In Step 1, name your environment like "emr-on-eks-platform".</p>
 <p>In Step 2, choose t3.small for instance type. Leave the values for Environment type, Instance type, Platform defaulted. Choose Network settings (advanced) and choose VPC. Select the VPC starting with the name "emr-on-eks-EksStack".</p>
@@ -942,11 +1022,11 @@ sh /tmp/kubeconfig.sh
 
 <p>Almost immediately you will see EMR virtual cluster will create driver and executor pods on the EC2 namespace of your EKS cluster.</p>
 <p><img alt="ee - 18" src="../images/ee-18.png" /></p>
-<p>Check the job in the EMR Web Console (EMR Web Console-&gt; EMR on EKS -&gt; Virtual Clusters -&gt; ec2-vc). You will see that the job is completed.</p>
+<p>Check the job in the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#virtual-cluster-list:">EMR Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; ec2-vc. You will see that the job is completed.</p>
 <p><img alt="ee - 19" src="../images/ee-19.png" /></p>
 <p>Click on "View Logs" to open the persistent Spark history server.</p>
 <p><img alt="ee - 20" src="../images/ee-20.png" /></p>
-<p>You can also check the Spark job logs by going to CloudWatch Logs (AWS Web Console -&gt; Search for Cloudwatch -&gt; Open Cloudwatch console -&gt; Log groups). You will see there is a log group called "emroneks".</p>
+<p>You can also check the Spark job logs by going to <a href="https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#home:">CloudWatch Web Console</a> (Right click -&gt; Open Link in New Tab) and clicking on "Log groups". You will see there is a log group called "emroneks".</p>
 <p><img alt="ee - 21" src="../images/ee-21.png" /></p>
 <p>You can see the driver and executor logs.</p>
 <p><img alt="ee - 22" src="../images/ee-22.png" /></p>
@@ -1043,7 +1123,7 @@ sh /tmp/kubeconfig.sh
 
 <p>You can find the Spark driver and executor pod logs in S3 for the above job.</p>
 <p><img alt="ee - 23" src="../images/ee-23.png" /></p>
-<p>You can also see the table "ny_taxi_parquet" in database "tripdata" created in AWS Glue data log. Go to Athena Web Console -&gt; Explore the query editor and see the table under database "tripdata". Since this is the first time we are using Athena, in order to run queries, you need to go to the Settings -&gt; Manage add an S3 location in your account to save your query results. For example: s3://mrworkshop-<accountID>-dayone/athena/.</p>
+<p>You can also see the table "ny_taxi_parquet" in database "tripdata" created in AWS Glue data log. Go to <a href="https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor">Athena Web Console</a> and see the table under database "tripdata". Since this is the first time we are using Athena, in order to run queries, you need to go to the Settings -&gt; Manage add an S3 location in your account to save your query results. For example: s3://mrworkshop-<accountID>-dayone/athena/.</p>
 <p><img alt="ee - 24" src="../images/ee-24.png" /></p>
 <p>You can query the table now.</p>
 <div class="codehilite"><pre><span></span><code>select * from tripdata.ny_taxi_parquet limit 10;
@@ -1082,7 +1162,7 @@ sh /tmp/kubeconfig.sh
 --region us-east-1
 </code></pre></div>
 
-<p>Notice the jobs in EMR on EKS console. We are consolidating jobs from different versions in the same infrastructure on EKS.</p>
+<p>Notice the jobs in <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#virtual-cluster-list:">EMR on EKS console</a> (Right click -&gt; Open Link in New Tab). We are consolidating jobs from different versions in the same infrastructure on EKS.</p>
 <h3 id="submit-serverless-spark-jobs-using-fargate">Submit serverless Spark jobs using Fargate<a class="headerlink" href="#submit-serverless-spark-jobs-using-fargate" title="Permanent link">&para;</a></h3>
 <p>So far we were using EC2 namespace to submit jobs. We have an EMR on EKS virtual cluster created for Fargate namespace as well. Let's submit serverless Spark jobs using Fargate.</p>
 <p>Run the below command. Notice that for --virtual-cluster-id we are passing the EMR on EKS cluster mapped to Fargate namespace.</p>
@@ -1102,7 +1182,7 @@ sh /tmp/kubeconfig.sh
 
 <p>You will see the job being submitted to Fargate virtual cluster.</p>
 <p><img alt="ee - 31" src="images/ee-31.png" /></p>
-<p>Now go to the EKS Web Console -&gt; Overview. In about a minute, you will see that the fargate resource has come up to run this job. Fargate automatically scales up and down based on your processing requirements.</p>
+<p>Now go to the <a href="https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters">EKS Web console</a> (Right click -&gt; Open Link in New Tab) -&gt; Overview. In about a minute, you will see that the fargate resource has come up to run this job. Fargate automatically scales up and down based on your processing requirements.</p>
 <p><img alt="ee - 32" src="../images/ee-32.png" /></p>
 <h3 id="deploy-kubernetes-dashboard">Deploy Kubernetes Dashboard<a class="headerlink" href="#deploy-kubernetes-dashboard" title="Permanent link">&para;</a></h3>
 <p>Kubernetes Dashboard is a web-based user interface. You can use Dashboard to get an overview of applications running on your cluster. In this lab we will deploy the official Kubernetes Dashboard. Check the documentation <a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/">here</a>.</p>
@@ -1172,12 +1252,12 @@ kubectl apply -f eks-admin-service-account.yaml
 
 <p>Explore the dashboard.</p>
 <h3 id="orchestrate-jobs-on-emr-on-eks-using-amazon-mwaa">Orchestrate jobs on EMR on EKS using Amazon MWAA<a class="headerlink" href="#orchestrate-jobs-on-emr-on-eks-using-amazon-mwaa" title="Permanent link">&para;</a></h3>
-<p>Let's submit (or orchestrate) jobs to EMR on EKS through Amazon MWAA. Go to the MWAA console. You will find a new environment starting with name "emr-on-eks-MWAAStack". Open the airflow UI.</p>
+<p>Let's submit (or orchestrate) jobs to EMR on EKS through Amazon MWAA. Go to the <a href="https://us-east-1.console.aws.amazon.com/mwaa/home?region=us-east-1#environments">MWAA Web Console</a> (Right click -&gt; Open Link in New Tab). You will find a new environment starting with name "emr-on-eks-MWAAStack". Open the airflow UI.</p>
 <p>You will see two DAGs. One for EC2 namespace and one for fargate namespace.</p>
 <p><img alt="ee - 33" src="../images/ee-33.png" /></p>
 <p>Toggle the DAGs ON and trigger the DAGs manually. This job copies, unzips and transforms files from S3 and then runs some analytics on top of this transformed data.</p>
 <p><img alt="ee - 34" src="../images/ee-34.png" /></p>
-<p>This DAG takes about 10-12 mins end-to-end. You can check the status in EMR on EKS console.</p>
+<p>This DAG takes about 10-12 mins end-to-end. You can check the status in <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#virtual-cluster-list:">EMR on EKS console</a> (Right click -&gt; Open Link in New Tab).</p>
 <p><img alt="ee - 36" src="../images/ee-36.png" /></p>
 <h3 id="single-az-placement">Single AZ placement<a class="headerlink" href="#single-az-placement" title="Permanent link">&para;</a></h3>
 <p>Our EMR on EKS cluster uses two AZs: us-east-1a and us-east-1b. Go to the Nodes section in Kubernetes dashboard to see which EC2 nodes belong to which AZ. This provides resiliency when compared to EMR on EC2 which runs on a single AZ. However, cross-AZ communication may impact performance and cost. You can define topology for your jobs and instruct all pods to launch in a single AZ. Let's see an example.</p>

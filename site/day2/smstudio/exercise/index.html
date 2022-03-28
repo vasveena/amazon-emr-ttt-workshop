@@ -256,6 +256,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Introduction to Amazon EMR and Spark on EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Introduction to Amazon EMR and Spark on EMR" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Introduction to Amazon EMR and Spark on EMR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../day1/fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
@@ -274,6 +300,27 @@
       <a href="../../../day1/spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/step/exercise/" class="md-nav__link">
+        3 - Orchestrate EMR Steps using AWS Step Functions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -312,6 +359,34 @@
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Part 2
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Notebook Offerings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebook Offerings" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Notebook Offerings
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -390,8 +465,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-emr-clusters-in-sagemaker-studio" class="md-nav__link">
-    Explore EMR clusters in Sagemaker Studio
+  <a href="#create-emr-cluster-from-sagemaker-studio" class="md-nav__link">
+    Create EMR Cluster from Sagemaker Studio
   </a>
   
 </li>
@@ -407,6 +482,13 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -656,8 +738,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-emr-clusters-in-sagemaker-studio" class="md-nav__link">
-    Explore EMR clusters in Sagemaker Studio
+  <a href="#create-emr-cluster-from-sagemaker-studio" class="md-nav__link">
+    Create EMR Cluster from Sagemaker Studio
   </a>
   
 </li>
@@ -689,7 +771,7 @@
 <h1 id="sagemaker-studio-integration-with-amazon-emr"><strong>Sagemaker Studio Integration with Amazon EMR</strong><a class="headerlink" href="#sagemaker-studio-integration-with-amazon-emr" title="Permanent link">&para;</a></h1>
 <p>Amazon Sagemaker provides native integration with Amazon EMR from Sagemaker Studio so that you can run data preparation tasks for your machine learning workloads using EMR from Sagemaker.</p>
 <h3 id="login-to-the-sagemaker-studio">Login to the Sagemaker Studio<a class="headerlink" href="#login-to-the-sagemaker-studio" title="Permanent link">&para;</a></h3>
-<p>Go to the Amazon Sagemaker Web Console -&gt; Get started -&gt; Sagemaker Studio</p>
+<p>Go to the <a href="https://us-east-1.console.aws.amazon.com/sagemaker/home?region=us-east-1#">Amazon Sagemaker Web Console</a> -&gt; Get started -&gt; Sagemaker Studio</p>
 <p><img alt="sm - 7" src="../images/sm-7.png" /></p>
 <p>You should see the Sagemaker domain ready status. Launch the Sagemaker Studio from Launch app -&gt; Studio.</p>
 <p><img alt="sm - 8" src="../images/sm-8.png" /></p>
@@ -697,14 +779,23 @@
 <p><img alt="sm - 11" src="../images/sm-11.png" /></p>
 <p>Once you are in, carry on with rest of the steps.</p>
 <p><img alt="sm - 12" src="../images/sm-12.png" /></p>
-<h3 id="explore-emr-clusters-in-sagemaker-studio">Explore EMR clusters in Sagemaker Studio<a class="headerlink" href="#explore-emr-clusters-in-sagemaker-studio" title="Permanent link">&para;</a></h3>
-<p>Click on the <img alt="sm - 1" src="../images/sm-1.png" /> icon and choose Clusters from the Sagemaker resources drop down. You will be able to see the EMR clusters.</p>
+<h3 id="create-emr-cluster-from-sagemaker-studio">Create EMR Cluster from Sagemaker Studio<a class="headerlink" href="#create-emr-cluster-from-sagemaker-studio" title="Permanent link">&para;</a></h3>
+<p>Click on the <img alt="sm - 1" src="../images/sm-1.png" /> icon and choose Clusters from the Sagemaker resources drop down. You will be able to see the EMR clusters. You can filter the EMR clusters.</p>
 <p><img alt="sm - 2" src="../images/sm-2.png" /></p>
-<p>You can filter the EMR clusters and also create a new one with a cluster template created from AWS Service Catalog. Go to Clusters -&gt; Create cluster. You will be able to see a template.</p>
+<p>Now, create a new EMR cluster with a cluster template created from AWS Service Catalog.</p>
+<p>Go to Clusters -&gt; Create cluster. You will be able to see a template.</p>
 <p><img alt="sm - 9" src="../images/sm-9.png" /></p>
-<p>When you select the template, it will show you the blueprint for your EMR cluster creation.</p>
+<p>When you click on the template and click "Select Template", it will show you the blueprint for your EMR cluster creation.</p>
 <p><img alt="sm - 10" src="../images/sm-10.png" /></p>
-<p>For now, let's use our existing cluster.</p>
+<p>Enter a cluster name (for eg: "Sagemaker Studio Cluster"). You can keep everything else as default. Click on "Create Cluster".</p>
+<p><img alt="sm - 15" src="../images/sm-15.png" /></p>
+<p>You can go to the <a href="https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks?filteringStatus=active&amp;filteringText=&amp;viewNested=true&amp;hideStacks=false&amp;stackId=">AWS CloudFormation Web Console</a> (Right click -&gt; Open Link in New Tab). You will be able to see the stack launched by AWS Service Catalog from our Create Cluster action.</p>
+<p><img alt="sm - 16" src="../images/sm-16.png" /></p>
+<p>Wait for the stack to complete and for the cluster "Sagemaker Studio Cluster" to get created. It will take about 15 mins. Once its complete, you will see the below message in your Sagemaker Studio.</p>
+<p><img alt="sm - 17" src="../images/sm-17.png" /></p>
+<p>You will also see that an EMR cluster called "Sagemaker Studio Cluster" is created in the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab)</p>
+<p><img alt="sm - 18" src="../images/sm-18.png" /></p>
+<p>Please note we are not using one of the existing EMR clusters because this Studio was created in a different VPC and we have not established peering between the two VPCs.</p>
 <h3 id="connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs">Connect to EMR cluster from Sagemaker Studio and run data processing jobs<a class="headerlink" href="#connect-to-emr-cluster-from-sagemaker-studio-and-run-data-processing-jobs" title="Permanent link">&para;</a></h3>
 <p>Go to Git repository section and click on Clone the repository.</p>
 <p><img alt="sm - 3" src="../images/sm-3.png" /></p>
@@ -713,11 +804,15 @@
 <p><img alt="sm - 4" src="../images/sm-4.png" /></p>
 <p>Go to Files section (folder icon on the left hand side pane).</p>
 <p><img alt="sm - 5" src="../images/sm-5.png" /></p>
-<p>Go to the directory files -&gt; notebook -&gt; smstudio-pyspark-hive-sentiment-analysis.ipynb. Choose the SparkMagic Kernel when prompted and click "Select".</p>
+<p>Go to the directory files -&gt; notebook -&gt; smstudio-pyspark-hive-sentiment-analysis.ipynb. PySpark Kernel should be chosen automatically for this notebook. If promoted, choose the SparkMagic Kernel and click "Select".</p>
 <p><img alt="sm - 6" src="../images/sm-6.png" /></p>
-<p>It will take a few minutes for the kernel to initialize. Once the kernel starts, go to Cluster on the top right corner and choose the EMR cluster "EMR-Spark-Hive-Presto". When it asks for credential type, choose "No credential" and Connect. Now, a Spark application will be created.</p>
+<p>It will take a few minutes for the kernel to initialize. Once the kernel starts, go to Cluster on the top right corner and choose the EMR cluster "Sagemaker Studio Cluster".</p>
+<p><img alt="sm - 19" src="../images/sm-19.png" /></p>
+<p>When it prompts for credential type, choose "No credential" and Connect.</p>
+<p><img alt="sm - 20" src="../images/sm-20.png" /></p>
+<p>Once you connect, a Spark application will be created automatically.</p>
 <p><img alt="sm - 14" src="../images/sm-14.png" /></p>
-<p>Now, you can run the remaining code blocks of the notebook which will perform data transformations and explorations using the EMR cluster and create and host an ML model using Sagemaker.</p>
+<p>After the Spark application is created successfully and you have the YARN application ID for the Spark session like in the above screenshot, you can run the remaining code blocks of the notebook which will perform data transformations and explorations using the EMR cluster and create and host an ML model using Sagemaker.</p>
 
               
             </article>

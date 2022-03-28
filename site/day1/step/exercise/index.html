@@ -13,7 +13,7 @@
     
     
       
-        <title>**Orchestrating EMR Steps using AWS Step Functions** - Amazon EMR Train-The-Trainer Workshop</title>
+        <title>3 - Orchestrate EMR Steps using AWS Step Functions - Amazon EMR Train-The-Trainer Workshop</title>
       
     
     
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              **Orchestrating EMR Steps using AWS Step Functions**
+              3 - Orchestrate EMR Steps using AWS Step Functions
             
           </span>
         </div>
@@ -229,12 +229,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
       
       
@@ -248,6 +250,34 @@
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           Part 1
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Introduction to Amazon EMR and Spark on EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Introduction to Amazon EMR and Spark on EMR" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Introduction to Amazon EMR and Spark on EMR
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -274,6 +304,82 @@
       <a href="../../spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          3 - Orchestrate EMR Steps using AWS Step Functions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        3 - Orchestrate EMR Steps using AWS Step Functions
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-state-machine" class="md-nav__link">
+    Create State Machine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execute-state-machine" class="md-nav__link">
+    Execute State Machine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schedule-aws-step-functions-with-amazon-event-bridge" class="md-nav__link">
+    Schedule AWS Step Functions with Amazon Event Bridge
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -318,6 +424,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Notebook Offerings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebook Offerings" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Notebook Offerings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../studio/exercise/" class="md-nav__link">
         1 - Amazon EMR Studio
@@ -350,6 +482,13 @@
       <a href="../../../day2/smstudio/exercise/" class="md-nav__link">
         3 - Sagemaker Studio Integration
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -585,6 +724,35 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-state-machine" class="md-nav__link">
+    Create State Machine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execute-state-machine" class="md-nav__link">
+    Execute State Machine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schedule-aws-step-functions-with-amazon-event-bridge" class="md-nav__link">
+    Schedule AWS Step Functions with Amazon Event Bridge
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -601,6 +769,332 @@
 
 
 <h1 id="orchestrating-emr-steps-using-aws-step-functions"><strong>Orchestrating EMR Steps using AWS Step Functions</strong><a class="headerlink" href="#orchestrating-emr-steps-using-aws-step-functions" title="Permanent link">&para;</a></h1>
+<p>In the previous section, we saw how you can leverage EMR AddSteps API to submit a Spark work to the cluster. You can submit any type of work to the EMR cluster (Hive, Presto, Bash etc.).</p>
+<p>In this section, we will see how you can orchestrate EMR jobs using EMR Step API and AWS Steps Functions. For a variation, let's orchestrate Hive EMR Steps. But you can choose any EMR step of your choice.</p>
+<h3 id="create-state-machine">Create State Machine<a class="headerlink" href="#create-state-machine" title="Permanent link">&para;</a></h3>
+<p>Go to <a href="https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/roles/create?commonUseCase=EC2&amp;step=addPermission&amp;trustedEntityType=AWS_SERVICE">IAM Web Console</a> to create a role for executing AWS Step Functions.</p>
+<p>Under "Use cases for other AWS services", type and select "Step Functions". Click on the Step Functions and click Next.</p>
+<p><img alt="step - 11" src="../images/step-11.png" /></p>
+<p>In the next page "Add permissions", under the "Set permissions boundary - optional" -&gt; Use a permissions boundary to control the maximum role permissions -&gt; Permission policies -&gt; search and choose "AdministratorAccess". Please note we are doing this only for convenience. In production scenario, you should only allow necessary and restrictive permissions to this IAM role.</p>
+<p><img alt="step - 8" src="../images/step-8.png" /></p>
+<p>Click on Next.</p>
+<p>For role name, type "emr-stepfunc-role".</p>
+<p><img alt="step - 9" src="../images/step-9.png" /></p>
+<p>Create the IAM Role.</p>
+<p>Go to <a href="https://us-east-1.console.aws.amazon.com/states/home?region=us-east-1#/statemachines?helloWorld">AWS Step Functions console</a> (Right click -&gt; Open Link in New Tab).</p>
+<p><img alt="step - 1" src="../images/step-1.png" /></p>
+<p>Click on "Create State Machine". In Step 1 (Define state machine), choose "Write your workflow in code". Let Type be "Standard".</p>
+<p><img alt="step - 2" src="../images/step-2.png" /></p>
+<p>Copy the entire blurb below and paste into a notepad or any text editor in your local desktop.</p>
+<div class="codehilite"><pre><span></span><code>{
+  <span class="s2">&quot;</span><span class="s">StartAt</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Should_Create_Cluster</span><span class="s2">&quot;</span>,
+  <span class="s2">&quot;</span><span class="s">States</span><span class="s2">&quot;</span>: {
+    <span class="s2">&quot;</span><span class="s">Should_Create_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Choice</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Choices</span><span class="s2">&quot;</span>: [
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Create_A_Cluster</span><span class="s2">&quot;</span>
+        },
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">false</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Enable_Termination_Protection</span><span class="s2">&quot;</span>
+        }
+      ],
+      <span class="s2">&quot;</span><span class="s">Default</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Create_A_Cluster</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Create_A_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:createCluster.sync</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">WorkflowCluster</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">VisibleToAllUsers</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+        <span class="s2">&quot;</span><span class="s">ReleaseLabel</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">emr-5.28.0</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">Applications</span><span class="s2">&quot;</span>: [{ <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Hive</span><span class="s2">&quot;</span> }],
+        <span class="s2">&quot;</span><span class="s">ServiceRole</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">emrServiceRole</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">JobFlowRole</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">emrEc2InstanceProfile</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">Instances</span><span class="s2">&quot;</span>: {
+          <span class="s2">&quot;</span><span class="s">KeepJobFlowAliveWhenNoSteps</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+          <span class="s2">&quot;</span><span class="s">InstanceFleets</span><span class="s2">&quot;</span>: [
+            {
+              <span class="s2">&quot;</span><span class="s">InstanceFleetType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">MASTER</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">TargetOnDemandCapacity</span><span class="s2">&quot;</span>: <span class="mi">1</span>,
+              <span class="s2">&quot;</span><span class="s">InstanceTypeConfigs</span><span class="s2">&quot;</span>: [
+                {
+                  <span class="s2">&quot;</span><span class="s">InstanceType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">m4.xlarge</span><span class="s2">&quot;</span>
+                }
+              ]
+            },
+            {
+              <span class="s2">&quot;</span><span class="s">InstanceFleetType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CORE</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">TargetOnDemandCapacity</span><span class="s2">&quot;</span>: <span class="mi">1</span>,
+              <span class="s2">&quot;</span><span class="s">InstanceTypeConfigs</span><span class="s2">&quot;</span>: [
+                {
+                  <span class="s2">&quot;</span><span class="s">InstanceType</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">m4.xlarge</span><span class="s2">&quot;</span>
+                }
+              ]
+            }
+          ]
+        }
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateClusterResult</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Merge_Results</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Merge_Results</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Pass</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">CreateCluster.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateCluster</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">TerminateCluster.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.TerminateCluster</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.CreateClusterResult.ClusterId</span><span class="s2">&quot;</span>
+      },
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Enable_Termination_Protection</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Enable_Termination_Protection</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:setClusterTerminationProtection</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">TerminationProtected</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Add_Steps_Parallel</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Add_Steps_Parallel</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Parallel</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Branches</span><span class="s2">&quot;</span>: [
+        {
+          <span class="s2">&quot;</span><span class="s">StartAt</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Step_One</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">States</span><span class="s2">&quot;</span>: {
+            <span class="s2">&quot;</span><span class="s">Step_One</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:addStep.sync</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+                <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+                <span class="s2">&quot;</span><span class="s">Step</span><span class="s2">&quot;</span>: {
+                  <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">The first step</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">ActionOnFailure</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CONTINUE</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">HadoopJarStep</span><span class="s2">&quot;</span>: {
+                    <span class="s2">&quot;</span><span class="s">Jar</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">command-runner.jar</span><span class="s2">&quot;</span>,
+                    <span class="s2">&quot;</span><span class="s">Args</span><span class="s2">&quot;</span>: [
+                      <span class="s2">&quot;</span><span class="s">hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--run-hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--args</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-f</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">INPUT=s3://eu-west-1.elasticmapreduce.samples</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">OUTPUT=s3://mrworkshop-youraccountID-dayone/StepFunc/MyHiveQueryResults/</span><span class="s2">&quot;</span>
+                    ]
+                  }
+                }
+              },
+              <span class="s2">&quot;</span><span class="s">End</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+            }
+          }
+        },
+        {
+          <span class="s2">&quot;</span><span class="s">StartAt</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait_10_Seconds</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">States</span><span class="s2">&quot;</span>: {
+            <span class="s2">&quot;</span><span class="s">Wait_10_Seconds</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Seconds</span><span class="s2">&quot;</span>: <span class="mi">10</span>,
+              <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Step_Two (async)</span><span class="s2">&quot;</span>
+            },
+            <span class="s2">&quot;</span><span class="s">Step_Two (async)</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:addStep</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+                <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+                <span class="s2">&quot;</span><span class="s">Step</span><span class="s2">&quot;</span>: {
+                  <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">The second step</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">ActionOnFailure</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CONTINUE</span><span class="s2">&quot;</span>,
+                  <span class="s2">&quot;</span><span class="s">HadoopJarStep</span><span class="s2">&quot;</span>: {
+                    <span class="s2">&quot;</span><span class="s">Jar</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">command-runner.jar</span><span class="s2">&quot;</span>,
+                    <span class="s2">&quot;</span><span class="s">Args</span><span class="s2">&quot;</span>: [
+                      <span class="s2">&quot;</span><span class="s">hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--run-hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--args</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-f</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">INPUT=s3://eu-west-1.elasticmapreduce.samples</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">OUTPUT=s3://mrworkshop-youraccountID-dayone/StepFunc/MyHiveQueryResults/</span><span class="s2">&quot;</span>
+                    ]                  
+                  }
+                }
+              },
+              <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.AddStepsResult</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait_Another_10_Seconds</span><span class="s2">&quot;</span>
+            },
+            <span class="s2">&quot;</span><span class="s">Wait_Another_10_Seconds</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wait</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Seconds</span><span class="s2">&quot;</span>: <span class="mi">10</span>,
+              <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Cancel_Step_Two</span><span class="s2">&quot;</span>
+            },
+            <span class="s2">&quot;</span><span class="s">Cancel_Step_Two</span><span class="s2">&quot;</span>: {
+              <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:cancelStep</span><span class="s2">&quot;</span>,
+              <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+                <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+                <span class="s2">&quot;</span><span class="s">StepId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.AddStepsResult.StepId</span><span class="s2">&quot;</span>
+              },
+              <span class="s2">&quot;</span><span class="s">End</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+            }
+          }
+        }
+      ],
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Step_Three</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Step_Three</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:addStep.sync</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">Step</span><span class="s2">&quot;</span>: {
+          <span class="s2">&quot;</span><span class="s">Name</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">The third step</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">ActionOnFailure</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">CONTINUE</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">HadoopJarStep</span><span class="s2">&quot;</span>: {
+            <span class="s2">&quot;</span><span class="s">Jar</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">command-runner.jar</span><span class="s2">&quot;</span>,
+            <span class="s2">&quot;</span><span class="s">Args</span><span class="s2">&quot;</span>: [
+                      <span class="s2">&quot;</span><span class="s">hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--run-hive-script</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">--args</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-f</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">s3://eu-west-1.elasticmapreduce.samples/cloudfront/code/Hive_CloudFront.q</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">INPUT=s3://eu-west-1.elasticmapreduce.samples</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">-d</span><span class="s2">&quot;</span>,
+                      <span class="s2">&quot;</span><span class="s">OUTPUT=s3://mrworkshop-youraccountID-dayone/StepFunc/MyHiveQueryResults/</span><span class="s2">&quot;</span>
+             ]
+          }
+        }
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Disable_Termination_Protection</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Disable_Termination_Protection</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:setClusterTerminationProtection</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">TerminationProtected</span><span class="s2">&quot;</span>: <span class="nv">false</span>
+      },
+      <span class="s2">&quot;</span><span class="s">ResultPath</span><span class="s2">&quot;</span>: <span class="nv">null</span>,
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Should_Terminate_Cluster</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Should_Terminate_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Choice</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Choices</span><span class="s2">&quot;</span>: [
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.TerminateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">true</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Terminate_Cluster</span><span class="s2">&quot;</span>
+        },
+        {
+          <span class="s2">&quot;</span><span class="s">Variable</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.TerminateCluster</span><span class="s2">&quot;</span>,
+          <span class="s2">&quot;</span><span class="s">BooleanEquals</span><span class="s2">&quot;</span>: <span class="nv">false</span>,
+          <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>
+        }
+      ],
+      <span class="s2">&quot;</span><span class="s">Default</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Terminate_Cluster</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Task</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Resource</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">arn:aws:states:::elasticmapreduce:terminateCluster.sync</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">Parameters</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">ClusterId.$</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">$.ClusterId</span><span class="s2">&quot;</span>
+      },
+      <span class="s2">&quot;</span><span class="s">Next</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>
+    },
+    <span class="s2">&quot;</span><span class="s">Wrapping_Up</span><span class="s2">&quot;</span>: {
+      <span class="s2">&quot;</span><span class="s">Type</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">Pass</span><span class="s2">&quot;</span>,
+      <span class="s2">&quot;</span><span class="s">End</span><span class="s2">&quot;</span>: <span class="nv">true</span>
+    }
+  }
+}
+</code></pre></div>
+
+<p>You can run the below commands on EC2 Jump Host Session Manager session to get the values you have to replace.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">sudo</span> <span class="nv">su</span> <span class="nv">ec2</span><span class="o">-</span><span class="nv">user</span>
+<span class="nv">cd</span> <span class="o">~</span>
+
+<span class="nv">accountID</span><span class="o">=</span>`<span class="nv">aws</span> <span class="nv">sts</span> <span class="nv">get</span><span class="o">-</span><span class="nv">caller</span><span class="o">-</span><span class="nv">identity</span> <span class="o">--</span><span class="nv">query</span> <span class="s2">&quot;</span><span class="s">Account</span><span class="s2">&quot;</span> <span class="o">--</span><span class="nv">output</span> <span class="nv">text</span>`
+
+<span class="nv">instProfRole</span><span class="o">=</span>`<span class="nv">aws</span> <span class="nv">iam</span> <span class="nv">list</span><span class="o">-</span><span class="nv">instance</span><span class="o">-</span><span class="nv">profiles</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">role</span> <span class="o">--</span><span class="nv">role</span><span class="o">-</span><span class="nv">name</span> <span class="nv">emrEc2InstanceProfileRole</span> <span class="o">|</span> <span class="nv">jq</span> .<span class="s1">&#39;</span><span class="s">InstanceProfiles[].InstanceProfileName</span><span class="s1">&#39;</span> <span class="o">|</span> <span class="nv">sed</span> <span class="s2">&quot;</span><span class="s">s|\</span><span class="s2">&quot;</span><span class="o">||</span><span class="nv">g</span><span class="s2">&quot;</span><span class="s">`</span>
+
+<span class="nv">printf</span> <span class="s2">&quot;</span><span class="se">\n\n\n\n</span><span class="s">Replace the following values in your State Machine definition....</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<p>Get the output account ID and EMR Instance Profile Role.</p>
+<div class="codehilite"><pre><span></span><code>echo $accountID
+echo $instProfRole
+</code></pre></div>
+
+<p>Replace the string "youraccountID" (in 3 places) with your AWS event engine account ID obtained from the AWS Web Console. Also, replace the EMR Instance Profile Role "emrEc2InstanceProfileRole" (in one place). Make sure there are no control characters.</p>
+<p>Once you have updated, copy the entire content from your notepad or text editor and paste it onto the "Definition" section in the AWS Step Functions console.</p>
+<p><img alt="step - 4" src="../images/step-4.png" /></p>
+<p>You will see the state machine DAG being generated automatically.  </p>
+<p><img alt="step - 5" src="../images/step-5.png" /></p>
+<p>Click on "Next". Name your State Machine as "EMR-Steps-State-Machine". Under "Permissions", select "Choose an existing role" and from the drop down, choose the IAM role we created "emr-stepfunc-role".</p>
+<p>Leave everything else as default. Click on "Create State Machine".</p>
+<p><img alt="step - 6" src="../images/step-6.png" /></p>
+<h3 id="execute-state-machine">Execute State Machine<a class="headerlink" href="#execute-state-machine" title="Permanent link">&para;</a></h3>
+<p>Once the State Machine is created, click on Start Execution.</p>
+<p><img alt="step - 7" src="../images/step-7.png" /></p>
+<p>Enter the below JSON in the "Input - optional" section (replace any existing string). Click on "Start Execution".</p>
+<div class="codehilite"><pre><span></span><code>{
+  &quot;CreateCluster&quot;: true,
+  &quot;TerminateCluster&quot;: true
+}
+</code></pre></div>
+
+<p><img alt="step - 10" src="../images/step-10.png" /></p>
+<p>You will see the State Machine executing. It should start creating an EMR cluster called "WorkflowCluster" if you check the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab).</p>
+<p><img alt="step - 13" src="../images/step-13.png" /></p>
+<p>It will take about 15 minutes for the State Machine to finish executing. Once State Machine is done with the execution, it will look like below. Execution Status should be "Succeeded".</p>
+<p><img alt="step - 14" src="../images/step-14.png" /></p>
+<p>Go to the EMR cluster "WorkflowCluster" from <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab). Go to the "Steps" tab. You can see the three EMR Steps submitted and executed by the AWS Step Functions.</p>
+<p><img alt="step - 15" src="../images/step-15.png" /></p>
+<p>The EMR cluster will be automatically terminated once the State Machine completes its execution.</p>
+<p>You can also start State Machine execution by entering the below JSON in the "Input - optional" section (replace any existing string). i.e., you can specify an existing EMR cluster ID instead of having AWS Step Functions create a new EMR cluster. You will need to replace j-XXXXXXXXXX with an existing EMR cluster ID in your AWS event engine account.</p>
+<div class="codehilite"><pre><span></span><code>{
+  &quot;CreateCluster&quot;: false,
+  &quot;TerminateCluster&quot;: false,
+  &quot;ClusterId&quot;: &quot;j-XXXXXXXXXX&quot;
+}
+</code></pre></div>
+
+<h3 id="schedule-aws-step-functions-with-amazon-event-bridge">Schedule AWS Step Functions with Amazon Event Bridge<a class="headerlink" href="#schedule-aws-step-functions-with-amazon-event-bridge" title="Permanent link">&para;</a></h3>
+<p>We triggered the execution on-demand. We can also leverage Event Bridge</p>
+<p>Go to <a href="https://us-east-1.console.aws.amazon.com/states/home?region=us-east-1#/statemachines">AWS Step Functions Console</a> (Right click -&gt; Open Link in New Tab). Click on the state machine we created "EMR-Steps-State-Machine".</p>
+<p>On the right hand side, from Actions drop down, choose "Create Event Bridge (CloudWatch Events) rule".</p>
+<p><img alt="step - 16" src="../images/step-16.png" /></p>
+<p>It will take you to a new tab to create Amazon Event Bridge Rule.</p>
+<p>Specify rule name "emr-stepfunc-rule". Under "Rule type", select "Schedule". Click Next.</p>
+<p><img alt="step - 17" src="../images/step-17.png" /></p>
+<p>In Step 2 (Define schedule), under "Schedule pattern", choose "A schedule that runs at a regular rate, such as every 10 minutes.". Under "Rate expression", choose 60 minutes. Click Next.</p>
+<p><img alt="step - 18" src="../images/step-18.png" /></p>
+<p>In Step 3 (Select targets), for "Target types", choose AWS service. In "Select a target", type and choose "Step Functions state machine". Under "State machine", choose the State Machine we created "EMR-Steps-State-Machine". Under "Execution role", choose "Create a new role for this specific resource".</p>
+<p>Expand the "Additional settings" section. Under "Configure target input", choose "Constant (JSON Text)" and enter the following input JSON. Leave everything else as default.</p>
+<div class="codehilite"><pre><span></span><code>{
+  &quot;CreateCluster&quot;: true,
+  &quot;TerminateCluster&quot;: true
+}
+</code></pre></div>
+
+<p><img alt="step - 19" src="../images/step-19.png" /></p>
+<p>Click Next. In Step 4 (Configure tags), just click Next.</p>
+<p>In Step 5 (Review and Create), review the details and click on "Create rule". The Event Bridge rule will be created.</p>
+<p><img alt="step - 20" src="../images/step-20.png" /></p>
+<p>This rule will execute the AWS Step Functions every 60 mins and will take effect immediately. In your AWS Step Functions, you will see the state machine getting executed.</p>
+<p><img alt="step - 21" src="../images/step-21.png" /></p>
+<p>Once you are done experimenting, you can disable the Amazon EventBridge rule to avoid cluttering the EMR Web Console. Go to <a href="https://us-east-1.console.aws.amazon.com/events/home?region=us-east-1#/rules">Amazon Event Bridge Console</a> (Right click -&gt; Open Link in New Tab) -&gt; click on "emr-stepfunc-rule" -&gt; Disable.</p>
+<p><img alt="step - 22" src="../images/step-22.png" /></p>
 
               
             </article>
@@ -610,6 +1104,41 @@
       </main>
       
         <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../spark/exercise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2 - Apache Spark on Amazon EMR" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              2 - Apache Spark on Amazon EMR
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../studio/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 1 - Amazon EMR Studio" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              1 - Amazon EMR Studio
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

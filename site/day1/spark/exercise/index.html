@@ -257,6 +257,34 @@
               
   
   
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Introduction to Amazon EMR and Spark on EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Introduction to Amazon EMR and Spark on EMR" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Introduction to Amazon EMR and Spark on EMR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
   
     <li class="md-nav__item">
       <a href="../../fleet/exercise/" class="md-nav__link">
@@ -363,6 +391,27 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../step/exercise/" class="md-nav__link">
+        3 - Orchestrate EMR Steps using AWS Step Functions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -394,6 +443,32 @@
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Part 2
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Notebook Offerings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebook Offerings" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Notebook Offerings
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -434,6 +509,13 @@
       <a href="../../../day2/smstudio/exercise/" class="md-nav__link">
         3 - Sagemaker Studio Integration
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -743,7 +825,8 @@
 <h1 id="apache-spark-on-amazon-emr"><strong>Apache Spark on Amazon EMR</strong><a class="headerlink" href="#apache-spark-on-amazon-emr" title="Permanent link">&para;</a></h1>
 <h3 id="initial-setup">Initial Setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h3>
 <p>SSH to the leader node of the EMR cluster "EMR-Spark-Hive-Presto". The key pair you downloaded in the Setup can be used to SSH via terminal or using an SSH client like Putty. To make it easy, ssm-agent has been installed on all EMR nodes via a bootstrap action so that you can use AWS Systems Manager to login to your client EC2 instance and EMR leader node.</p>
-<p>Go to AWS Management Console on your browser -&gt; Amazon EMR Console -&gt; Hardware Tab. You will see MASTER and CORE fleets. Click on the MASTER instance fleet id (looks like if-XXXXXXXXXX).</p>
+<p>Go to the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a>
+(Right click -&gt; Open Link in New Tab) -&gt; "EMR-Spark-Hive-Presto" -&gt; Hardware tab. You will see MASTER and CORE fleets. Click on the MASTER instance fleet id (looks like if-XXXXXXXXXX).</p>
 <p><img alt="Spark - 1" src="../images/spark-1.png" /></p>
 <p>Click on the EC2 instance ID (looks like i-xxxxxxxxxxx). It should take you to the EC2 management console.</p>
 <p><img alt="Spark - 2" src="../images/spark-2.png" /></p>
@@ -786,8 +869,20 @@ cd ~
 <span class="k">export</span><span class="w"> </span><span class="n">AWS_SESSION_TOKEN</span><span class="o">=&lt;</span><span class="n">redacted</span><span class="o">&gt;</span><span class="w"></span>
 </code></pre></div>
 
-<p>Run the below command. Replace target with your leader node instance ID</p>
-<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">ssm</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">session</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="w"> </span><span class="n">i</span><span class="o">-</span><span class="mf">00785e8946</span><span class="n">b4ff636</span><span class="w"> </span><span class="o">--</span><span class="n">document</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">AWS</span><span class="o">-</span><span class="n">StartPortForwardingSession</span><span class="w"> </span><span class="o">--</span><span class="n">parameters</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;portNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;18080&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;localPortNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;8158&quot;</span><span class="p">]}&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
+<p>You can run the below commands on the terminal of your local desktop to get the leader node instance ID.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cluster_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Clusters[?Name==`EMR-Spark-Hive-Presto` &amp;&amp; Status.State!=`TERMINATED`]&#39;</span><span class="p">.</span><span class="err">{</span><span class="n">Clusters</span><span class="o">:</span><span class="n">Id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">leader_dns</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">cluster</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$cluster_id</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Cluster.MasterPublicDnsName&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">instance_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">ec2</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">instances</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="n">filters</span><span class="w"> </span><span class="s2">&quot;Name=dns-name,Values=$leader_dns&quot;</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Reservations[*].Instances[*].InstanceId&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">echo</span><span class="w"> </span><span class="n">$instance_id</span><span class="w"></span>
+</code></pre></div>
+
+<p>Now run the command to start the SSM session. The value of --target is replaced with the instance ID obtained using above commands.</p>
+<p><strong>Note:</strong> If you are not able to run the above commands to obtain the instance ID, replace $instance_id in the below command with the leader node instance ID obtained from the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; "EMR-Spark-Hive-Presto" -&gt; Hardware tab -&gt; click on Instance Fleet ID of the MASTER Node Type -&gt; Copy the instance ID).</p>
+<p><img alt="Spark - 20" src="../images/spark-20.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">ssm</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">session</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="w"> </span><span class="n">$instance_id</span><span class="w"> </span><span class="o">--</span><span class="n">document</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">AWS</span><span class="o">-</span><span class="n">StartPortForwardingSession</span><span class="w"> </span><span class="o">--</span><span class="n">parameters</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;portNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;18080&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;localPortNumber&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;8158&quot;</span><span class="p">]}&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
 </code></pre></div>
 
 <p>Following image shows the commands run in macOS terminal. <em>18080</em> is the Spark History Server Port and <em>8157</em> is the local port.</p>
@@ -799,7 +894,18 @@ cd ~
 <p>Click on "show" (Spark action) in the SQL tab to see the query plan.</p>
 <p><img alt="Spark - 12" src="../images/spark-12.png" /></p>
 <h4 id="alternative-approach-local-ssh-tunneling">Alternative approach - Local SSH tunneling<a class="headerlink" href="#alternative-approach-local-ssh-tunneling" title="Permanent link">&para;</a></h4>
-<p>Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html">local port forwarding</a> by running the following command in your local desktop's terminal or using Putty for Windows. Replace leaderNodePublicDNS with your leader node public DNS (obtained from EMR Web Console -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab -&gt; Master public DNS).</p>
+<p>Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html">local port forwarding</a> by running the following command in your local desktop's terminal or using Putty for Windows.</p>
+<p>You can obtain the leader node public DNS by running the below commands on the EMR leader node Session Manager session.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cluster_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Clusters[?Name==`EMR-Spark-Hive-Presto` &amp;&amp; Status.State!=`TERMINATED`]&#39;</span><span class="p">.</span><span class="err">{</span><span class="n">Clusters</span><span class="o">:</span><span class="n">Id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">leader_dns</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">cluster</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$cluster_id</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Cluster.MasterPublicDnsName&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">echo</span><span class="w"> </span><span class="n">$leader_dns</span><span class="w"></span>
+</code></pre></div>
+
+<p>You can also obtain the value from <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a>
+(Right click -&gt; Open Link in New Tab) -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab -&gt; Master public DNS.</p>
+<p>Once you obtain leader node DNS using one of the two above methods, replace leaderNodePublicDNS in the below command with your leader node public DNS.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">ssh</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="o">~/</span><span class="n">ee</span><span class="o">-</span><span class="k">default</span><span class="o">-</span><span class="n">keypair</span><span class="p">.</span><span class="n">pem</span><span class="w"> </span><span class="o">-</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="n">L</span><span class="w"> </span><span class="mi">8157</span><span class="err">:</span><span class="nl">leaderNodePublicDNS</span><span class="p">:</span><span class="mi">8088</span><span class="w"> </span><span class="n">hadoop</span><span class="nv">@leaderNodePublicDNS</span><span class="w"></span>
 </code></pre></div>
 
@@ -866,7 +972,8 @@ cd ~
 <p><img alt="Spark - 19" src="../images/spark-19.png" /></p>
 <h3 id="submit-spark-work-to-emr-using-addsteps-api">Submit Spark Work to EMR using AddSteps API<a class="headerlink" href="#submit-spark-work-to-emr-using-addsteps-api" title="Permanent link">&para;</a></h3>
 <p>Let us submit Spark work to the cluster using EMR’s <a href="https://docs.aws.amazon.com/cli/latest/reference/emr/add-steps.html">AddSteps</a> API.</p>
-<p>Copy the EMR Cluster ID in the Summary Tab of your EMR cluster "EMR-Spark-Hive-Presto" from EMR Web Console. It looks like ‘j-XXXXXXXXXX’.</p>
+<p>Copy the EMR Cluster ID in the Summary Tab of your EMR cluster "EMR-Spark-Hive-Presto" from <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a>
+(Right click -&gt; Open Link in New Tab). It looks like ‘j-XXXXXXXXXX’.</p>
 <p><img alt="Spark - 13" src="../images/spark-13.png" /></p>
 <p>You can submit steps to your EMR from your local desktop after exporting the AWS credentials in your Team Dashboard page.</p>
 <p>For windows, use set instead of export.</p>
@@ -880,15 +987,17 @@ cd ~
 <div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="n">XXXXXXXXXX</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Name</span><span class="o">=</span><span class="s">&quot;Spark Pi Job&quot;</span><span class="p">,</span><span class="n">Jar</span><span class="o">=</span><span class="n">command</span><span class="o">-</span><span class="n">runner</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="p">,</span><span class="o">--</span><span class="n">master</span><span class="p">,</span><span class="n">yarn</span><span class="p">,</span><span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">executors</span><span class="p">,</span><span class="mh">2</span><span class="p">,</span><span class="o">--</span><span class="n">class</span><span class="p">,</span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">spark</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">SparkPi</span><span class="p">,</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">jars</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">examples</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="mh">10</span><span class="p">,</span><span class="o">-</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
 </code></pre></div>
 
-<p>If you cannot use AWS CLI for some reason, you will find an EC2 instance called "JumpHost" in the EC2 Web Console. In real life scenario, you can run this command from any machine as long as your IAM user or role has IAM access to invoke EMR AddSteps API.</p>
+<p>If you do not want to use AWS CLI in your local desktop, you can submit the below command directly on your Session Manager session created for EMR leader node. You will also find an EC2 instance called "JumpHost" in the <a href="https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost">EC2 Web Console</a> (Right click -&gt; Open Link in New Tab).</p>
 <p><img alt="Spark - 14" src="../images/spark-14.png" /></p>
-<p>You can connect to that instance using Session Manager and submit step to EMR cluster from that session. Once connected, enter following commands to login as ec2-user (default OS user for EC2 instances).</p>
+<p>You can connect to that instance using Session Manager and submit step to EMR cluster from that session. You may find another jump instance starting with the name "emr-on-eks". Do not login to that. Once connected, enter following commands to login as ec2-user (default OS user for EC2 instances).</p>
 <div class="codehilite"><pre><span></span><code>sudo su ec2-user
 cd ~
 </code></pre></div>
 
-<p>Now, run the AddSteps CLI command below. Replace cluster-id value with your cluster ID. You do not need to export any credentials since the IAM role attached to this JumpHost has all accesses required.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="mh">142</span><span class="n">PVKGDZTTXS</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Name</span><span class="o">=</span><span class="s">&quot;Spark Pi Job&quot;</span><span class="p">,</span><span class="n">Jar</span><span class="o">=</span><span class="n">command</span><span class="o">-</span><span class="n">runner</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="p">,</span><span class="o">--</span><span class="n">master</span><span class="p">,</span><span class="n">yarn</span><span class="p">,</span><span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">executors</span><span class="p">,</span><span class="mh">2</span><span class="p">,</span><span class="o">--</span><span class="n">class</span><span class="p">,</span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">spark</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">SparkPi</span><span class="p">,</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">jars</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">examples</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="mh">10</span><span class="p">,</span><span class="o">-</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
+<p>Now, run the commands below. You do not need to change anything and you do not need to export any credentials since the IAM role attached to this JumpHost has all accesses required.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cluster_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Clusters[?Name==`EMR-Spark-Hive-Presto` &amp;&amp; Status.State!=`TERMINATED`]&#39;</span><span class="p">.</span><span class="err">{</span><span class="n">Clusters</span><span class="o">:</span><span class="n">Id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$</span><span class="err">{</span><span class="n">cluster_id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="k">Name</span><span class="o">=</span><span class="s2">&quot;Spark Pi Job&quot;</span><span class="p">,</span><span class="n">Jar</span><span class="o">=</span><span class="n">command</span><span class="o">-</span><span class="n">runner</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="err">[</span><span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="p">,</span><span class="o">--</span><span class="k">master</span><span class="p">,</span><span class="n">yarn</span><span class="p">,</span><span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">executors</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">--</span><span class="n">class</span><span class="p">,</span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">spark</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">SparkPi</span><span class="p">,</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">jars</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">examples</span><span class="p">.</span><span class="n">jar</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="n">v</span><span class="err">]</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
 </code></pre></div>
 
 <p><img alt="Spark - 15" src="../images/spark-15.png" /></p>
@@ -896,6 +1005,7 @@ cd ~
 <p><img alt="Spark - 16" src="../images/spark-16.png" /></p>
 <p>You can look into the stdout logs to see the output.</p>
 <p><img alt="Spark - 17" src="../images/spark-17.png" /></p>
+<p>Please note in real life scenario, you can submit EMR Steps from anywhere as long as your IAM user or role has IAM access to invoke EMR AddSteps API.</p>
 
               
             </article>
@@ -925,13 +1035,13 @@ cd ~
       
       
         
-        <a href="../../studio/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 1 - Amazon EMR Studio" rel="next">
+        <a href="../../step/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: 3 - Orchestrate EMR Steps using AWS Step Functions" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              1 - Amazon EMR Studio
+              3 - Orchestrate EMR Steps using AWS Step Functions
             </div>
           </div>
           <div class="md-footer__button md-icon">

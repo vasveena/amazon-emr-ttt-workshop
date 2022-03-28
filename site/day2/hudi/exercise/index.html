@@ -256,6 +256,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Introduction to Amazon EMR and Spark on EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Introduction to Amazon EMR and Spark on EMR" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Introduction to Amazon EMR and Spark on EMR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../day1/fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
@@ -274,6 +300,27 @@
       <a href="../../../day1/spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../day1/step/exercise/" class="md-nav__link">
+        3 - Orchestrate EMR Steps using AWS Step Functions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -318,6 +365,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Notebook Offerings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebook Offerings" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Notebook Offerings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../day1/studio/exercise/" class="md-nav__link">
         1 - Amazon EMR Studio
@@ -350,6 +423,13 @@
       <a href="../../smstudio/exercise/" class="md-nav__link">
         3 - Sagemaker Studio Integration
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -726,22 +806,28 @@
 <p>All the instructions required to run the notebook are within the notebook itself.</p>
 <p>Download the file workshop-repo -&gt; schema -&gt; schema.avsc to your local desktop and upload this file into the following S3 location (replace "youraccountID" with your event engine AWS account ID): <em>s3://mrworkshop-youraccountID-dayone/schema/schema.avsc</em></p>
 <p><img alt="Hudi - 2" src="../images/hudi-2.png" /></p>
-<p>Alternatively, you can run the following commands from the leader node of your EMR cluster. Replace "youraccountID" with your event engine AWS account ID. We will be using this schema AVRO file to run compaction on Merge-On-Read tables.</p>
+<p>Alternatively, you can run the following commands from the leader node of your EMR cluster. We will be using this schema AVRO file to run compaction on Merge-On-Read tables.</p>
 <div class="codehilite"><pre><span></span><code>sudo su hadoop
 cd ~
+
+accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
 curl -o schema.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/schema.avsc
-aws s3 cp schema.avsc s3://mrworkshop-youraccountID-dayone/schema/schema.avsc
+
+aws s3 cp schema.avsc s3://mrworkshop-$accountID-dayone/schema/schema.avsc
 </code></pre></div>
 
-<p>Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb". Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
+<p>Run the blocks of the notebook "apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb".</p>
 <h3 id="apache-hudi-with-sparksql-dmls">Apache Hudi with SparkSQL DMLs<a class="headerlink" href="#apache-hudi-with-sparksql-dmls" title="Permanent link">&para;</a></h3>
 <p>From EMR 6.5.0, you can write Hudi datasets using simple SQL statements. Let's look at an example.</p>
-<p>From the EMR Studio workspace Jupyterlab session, go to workshop-repo -&gt; files -&gt; notebook -&gt; apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook. Replace "youraccountID" in the S3 paths within the notebook with your AWS event engine account ID.</p>
+<p>From the EMR Studio workspace Jupyterlab session, go to workshop-repo -&gt; files -&gt; notebook -&gt; apache-hudi-on-amazon-emr-dml.ipynb. Run all the blocks of this notebook.</p>
 <p>Detailed instructions are within the notebook.</p>
 <h3 id="apache-hudi-with-spark-deltastreamer">Apache Hudi with Spark Deltastreamer<a class="headerlink" href="#apache-hudi-with-spark-deltastreamer" title="Permanent link">&para;</a></h3>
 <p>Hudi provides a utility called Deltastreamer for creating and manipulating Hudi datasets without the need to write any Spark code. For this activity, let us copy a few files to the S3 location. Run the following commands in your EMR leader node session created using Session Manager or SSH.</p>
 <div class="codehilite"><pre><span></span><code>sudo su hadoop
 cd ~
+
+accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+
 curl -o source-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/source-schema-json.avsc
 curl -o target-schema-json.avsc https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/schema/target-schema-json.avsc
 curl -o json-deltastreamer.properties https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/properties/json-deltastreamer.properties
@@ -749,17 +835,21 @@ curl -o json-deltastreamer_upsert.properties https://raw.githubusercontent.com/v
 curl -o apache-hudi-on-amazon-emr-deltastreamer-python-demo.py https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/script/apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
 </code></pre></div>
 
-<p>Replace youraccountID with event engine AWS account ID in the files json-deltastreamer.properties, json-deltastreamer_upsert.properties and apache-hudi-on-amazon-emr-deltastreamer-python-demo.py. You can do so using sed command below. Replace 707263692290 with your event engine account ID.</p>
-<div class="codehilite"><pre><span></span><code>sed -i &#39;s|youraccountID|707263692290|g&#39; json-deltastreamer.properties
-sed -i &#39;s|youraccountID|707263692290|g&#39; json-deltastreamer_upsert.properties
-sed -i &#39;s|youraccountID|707263692290|g&#39; apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
+<p>Replace event engine AWS account ID in the files json-deltastreamer.properties, json-deltastreamer_upsert.properties and apache-hudi-on-amazon-emr-deltastreamer-python-demo.py.</p>
+<div class="codehilite"><pre><span></span><code>accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+
+sed -i &quot;s|youraccountID|$accountID|g&quot; json-deltastreamer.properties
+sed -i &quot;s|youraccountID|$accountID|g&quot; json-deltastreamer_upsert.properties
+sed -i &quot;s|youraccountID|$accountID|g&quot; apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
 </code></pre></div>
 
-<p>Now, copy the four files to your S3 location. Replace youraccountID with event engine AWS account ID.</p>
-<div class="codehilite"><pre><span></span><code>aws s3 cp source-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
-aws s3 cp target-schema-json.avsc s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
-aws s3 cp json-deltastreamer.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
-aws s3 cp json-deltastreamer_upsert.properties s3://mrworkshop-youraccountID-dayone/hudi-ds/config/
+<p>Now, copy the four files to your S3 location.</p>
+<div class="codehilite"><pre><span></span><code>accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+
+aws s3 cp source-schema-json.avsc s3://mrworkshop-$accountID-dayone/hudi-ds/config/
+aws s3 cp target-schema-json.avsc s3://mrworkshop-$accountID-dayone/hudi-ds/config/
+aws s3 cp json-deltastreamer.properties s3://mrworkshop-$accountID-dayone/hudi-ds/config/
+aws s3 cp json-deltastreamer_upsert.properties s3://mrworkshop-$accountID-dayone/hudi-ds/config/
 </code></pre></div>
 
 <p>Now let's generate some Fake data for the purpose of this workshop. We will use <a href="https://faker.readthedocs.io/en/master/">Faker</a> library for that. Install Faker with the below command.</p>
@@ -771,9 +861,11 @@ pip3 install boto3
 <div class="codehilite"><pre><span></span><code>python3 apache-hudi-on-amazon-emr-deltastreamer-python-demo.py
 </code></pre></div>
 
-<p>Once done, make sure the inputdata and update prefixes are populated with JSON data files. You can copy one file using “aws s3 cp” on the EMR leader node session to inspect the data. Replace youraccountID with event engine AWS account ID.</p>
-<div class="codehilite"><pre><span></span><code>aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/inputdata
-aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
+<p>Once done, make sure the inputdata and update prefixes are populated with JSON data files. You can copy one file using “aws s3 cp” on the EMR leader node session to inspect the data.</p>
+<div class="codehilite"><pre><span></span><code>accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+
+aws s3 ls s3://mrworkshop-$accountID-dayone/hudi-ds/inputdata
+aws s3 ls s3://mrworkshop-$accountID-dayone/hudi-ds/updates
 </code></pre></div>
 
 <p><img alt="Hudi - 3" src="../images/hudi-3.png" /></p>
@@ -781,20 +873,26 @@ aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
 <div class="codehilite"><pre><span></span><code>hadoop fs -copyFromLocal /usr/lib/hudi/hudi-utilities-bundle.jar hdfs:///user/hadoop/
 </code></pre></div>
 
-<p>Let's submit DeltaStreamer step to the EMR cluster. You can submit this step on EC2 JumpHost or leader node of EMR cluster "EMR-Spark-Hive-Presto". Since we have the EMR leader node session active, let us use it to run the command.</p>
-<p>Modify Add Steps Command for Bulk Insert Operation. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="n">XXXXXXXXX</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Type</span><span class="o">=</span><span class="n">Spark</span><span class="p">,</span><span class="n">Name</span><span class="o">=</span><span class="s">&quot;Deltastreamer COW - Bulk Insert&quot;</span><span class="p">,</span><span class="n">ActionOnFailure</span><span class="o">=</span><span class="n">CONTINUE</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="o">--</span><span class="n">jars</span><span class="p">,</span><span class="nl">hdfs:</span><span class="c1">///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-707263692290-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,BULK_INSERT] --region us-east-1</span>
+<p>Let's submit DeltaStreamer step to the EMR cluster. You can submit this step on EC2 JumpHost or leader node of EMR cluster "EMR-Spark-Hive-Presto".</p>
+<p>Since we have the EMR leader node session active, let us use it to run the below scommand.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">accountID</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="k">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s2">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">cluster_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Clusters[?Name==`EMR-Spark-Hive-Presto` &amp;&amp; Status.State!=`TERMINATED`]&#39;</span><span class="p">.</span><span class="err">{</span><span class="n">Clusters</span><span class="o">:</span><span class="n">Id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$cluster_id</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="k">Type</span><span class="o">=</span><span class="n">Spark</span><span class="p">,</span><span class="k">Name</span><span class="o">=</span><span class="s2">&quot;Deltastreamer COW - Bulk Insert&quot;</span><span class="p">,</span><span class="n">ActionOnFailure</span><span class="o">=</span><span class="k">CONTINUE</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="err">[</span><span class="o">--</span><span class="n">jars</span><span class="p">,</span><span class="n">hdfs</span><span class="o">:///</span><span class="k">user</span><span class="o">/</span><span class="n">hadoop</span><span class="cm">/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-$accountID-dayone/hudi-ds/config/json-deltastreamer.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-$accountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,BULK_INSERT] --region us-east-1</span>
 </code></pre></div>
 
 <p><img alt="Hudi - 4" src="../images/hudi-4.png" /></p>
-<p>You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Steps). It will take about 2 minutes to complete.</p>
+<p>You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (<a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; EMR-Spark-Hive-Presto -&gt; Steps). It will take about 2 minutes to complete.</p>
 <p><img alt="Hudi - 5" src="../images/hudi-5.png" /></p>
-<p>Check the S3 location for Hudi files. Replace youraccountID with event engine AWS account ID.</p>
-<div class="codehilite"><pre><span></span><code>aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1/
+<p>Check the S3 location for Hudi files.</p>
+<div class="codehilite"><pre><span></span><code>accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+
+aws s3 ls s3://mrworkshop-$accountID-dayone/hudi-ds-output/person-profile-out1/
 </code></pre></div>
 
 <p><img alt="Hudi - 6" src="../images/hudi-6.png" /></p>
-<p>Let's go to the hive CLI on EMR leader node by typing "hive". Let's run the following command to create a table. Replace youraccountID with event engine AWS account ID.</p>
+<p>Let's go to the hive CLI on EMR leader node by typing "hive". Let's run the following command to create a table. Replace "youraccountID" with event engine AWS account ID.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n n-Quoted">`profile_cow`</span><span class="p">(</span><span class="w"></span>
 <span class="w">  </span><span class="n n-Quoted">`_hoodie_commit_time`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="n n-Quoted">`_hoodie_commit_seqno`</span><span class="w"> </span><span class="k">string</span><span class="p">,</span><span class="w"></span>
@@ -829,12 +927,16 @@ aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
 <div class="codehilite"><pre><span></span><code><span class="k">exit</span><span class="c1">;</span>
 </code></pre></div>
 
-<p>Now, let's do upsert operation with Hudi Deltastreamer. Change the --cluster-id's value to your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Summary tab. Looks like j-XXXXXXXXX). Replace youraccountID with event engine AWS account ID.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="n">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="n">XXXXXXXXX</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="n">Type</span><span class="o">=</span><span class="n">Spark</span><span class="p">,</span><span class="n">Name</span><span class="o">=</span><span class="s">&quot;Deltastreamer COW - Upsert&quot;</span><span class="p">,</span><span class="n">ActionOnFailure</span><span class="o">=</span><span class="n">CONTINUE</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="p">[</span><span class="o">--</span><span class="n">jars</span><span class="p">,</span><span class="nl">hdfs:</span><span class="c1">///user/hadoop/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-youraccountID-dayone/hudi-ds/config/json-deltastreamer_upsert.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-youraccountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,UPSERT] --region us-east-1</span>
+<p>Now, let's do upsert operation with Hudi Deltastreamer by running the following command.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">accountID</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="k">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s2">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">cluster_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Clusters[?Name==`EMR-Spark-Hive-Presto` &amp;&amp; Status.State!=`TERMINATED`]&#39;</span><span class="p">.</span><span class="err">{</span><span class="n">Clusters</span><span class="o">:</span><span class="n">Id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">add</span><span class="o">-</span><span class="n">steps</span><span class="w"> </span><span class="o">--</span><span class="n">cluster</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$cluster_id</span><span class="w"> </span><span class="o">--</span><span class="n">steps</span><span class="w"> </span><span class="k">Type</span><span class="o">=</span><span class="n">Spark</span><span class="p">,</span><span class="k">Name</span><span class="o">=</span><span class="s2">&quot;Deltastreamer COW - Upsert&quot;</span><span class="p">,</span><span class="n">ActionOnFailure</span><span class="o">=</span><span class="k">CONTINUE</span><span class="p">,</span><span class="n">Args</span><span class="o">=</span><span class="err">[</span><span class="o">--</span><span class="n">jars</span><span class="p">,</span><span class="n">hdfs</span><span class="o">:///</span><span class="k">user</span><span class="o">/</span><span class="n">hadoop</span><span class="cm">/*.jar,--class,org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer,hdfs:///user/hadoop/hudi-utilities-bundle.jar,--props,s3://mrworkshop-$accountID-dayone/hudi-ds/config/json-deltastreamer_upsert.properties,--table-type,COPY_ON_WRITE,--source-class,org.apache.hudi.utilities.sources.JsonDFSSource,--source-ordering-field,ts,--target-base-path,s3://mrworkshop-$accountID-dayone/hudi-ds-output/person-profile-out1,--target-table,person_profile_cow,--schemaprovider-class,org.apache.hudi.utilities.schema.FilebasedSchemaProvider,--op,UPSERT] --region us-east-1</span>
 </code></pre></div>
 
 <p><img alt="Hudi - 9" src="../images/hudi-9.png" /></p>
-<p>You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (AWS Management Console -&gt; Amazon EMR Console -&gt; EMR-Spark-Hive-Presto -&gt; Steps). Wait for the step to complete (~1 minute).</p>
+<p>You will get an EMR Step ID in return. You will see the corresponding Hudi Deltastreamer step being submitted to your cluster (<a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; EMR-Spark-Hive-Presto -&gt; Steps). Wait for the step to complete (~1 minute).</p>
 <p><img alt="Hudi - 8" src="../images/hudi-8.png" /></p>
 <p>Let us check the street_address for the same _hoodie_record_key. Run the following query in hive CLI on the EMR leader node. Replace value of "_hoodie_record_key" in the where clause with the one you obtained from previous select query.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_commit_time`</span><span class="p">,</span><span class="w"> </span><span class="n">street_address</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">profile_cow</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n n-Quoted">`_hoodie_record_key`</span><span class="o">=</span><span class="s1">&#39;00000b94-1500-4f10-bd10-d6393ba24643&#39;</span><span class="p">;</span><span class="w"></span>
@@ -843,11 +945,16 @@ aws s3 ls s3://mrworkshop-youraccountID-dayone/hudi-ds/updates
 <p>Notice the change in commit time and street_address.</p>
 <p><img alt="Hudi - 10" src="../images/hudi-10.png" /></p>
 <h3 id="change-data-capture-with-hudi-deltastreamer">Change Data Capture with Hudi Deltastreamer<a class="headerlink" href="#change-data-capture-with-hudi-deltastreamer" title="Permanent link">&para;</a></h3>
-<p>Go to RDS Web console and open the database that was created. Copy the endpoint of this database.</p>
+<p>Go to <a href="https://us-east-1.console.aws.amazon.com/rds/home?region=us-east-1#databases:">Amazon RDS Web console</a> (Right click -&gt; Open Link in New Tab) and open the database that was created. Copy the endpoint of this database.</p>
 <p><img alt="Hudi - 13" src="../images/hudi-13.png" /></p>
-<p>Login to your EC2 JumpHost using Session Manager or SSH and run the following command to connect to your DB. Replace "dbendpoint" value with the endpoint you copied from the RDS console.</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">sudo</span><span class="w"> </span><span class="nv">yum</span><span class="w"> </span><span class="nv">install</span><span class="w"> </span><span class="o">-</span><span class="nv">y</span><span class="w"> </span><span class="nv">mysql</span><span class="w"></span>
-<span class="nv">mysql</span><span class="w"> </span><span class="o">-</span><span class="nv">h</span><span class="w"> </span><span class="nv">dbendpoint</span><span class="w"> </span><span class="o">-</span><span class="nv">uadmin</span><span class="w"> </span><span class="o">-</span><span class="nv">pTest123</span><span class="p">$</span><span class="w"></span>
+<p>Login to your EC2 JumpHost using Session Manager or SSH and run the following command to connect to your DB.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">su</span><span class="w"> </span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="w"></span>
+<span class="n">cd</span><span class="w"> </span><span class="o">~</span><span class="w"></span>
+
+<span class="n">dbendpoint</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">rds</span><span class="w"> </span><span class="n">describe</span><span class="o">-</span><span class="n">db</span><span class="o">-</span><span class="n">instances</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">jq</span><span class="w"> </span><span class="o">-</span><span class="n">r</span><span class="w"> </span><span class="p">.&#39;</span><span class="n">DBInstances</span><span class="p">[]</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">.</span><span class="n">Endpoint</span><span class="p">.</span><span class="n">Address</span><span class="p">&#39;)</span><span class="w"></span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">yum</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="o">-</span><span class="n">y</span><span class="w"> </span><span class="n">mysql</span><span class="w"></span>
+
+<span class="n">mysql</span><span class="w"> </span><span class="o">-</span><span class="n">h</span><span class="w"> </span><span class="n">$dbendpoint</span><span class="w"> </span><span class="o">-</span><span class="n">uadmin</span><span class="w"> </span><span class="o">-</span><span class="n">pTest123</span><span class="err">$</span><span class="w"></span>
 </code></pre></div>
 
 <p><img alt="Hudi - 14" src="../images/hudi-14.png" /></p>
@@ -884,23 +991,30 @@ commit;
 </code></pre></div>
 
 <p>We will now use AWS DMS to start pushing this data to S3.</p>
-<p>Go to the DMS Web Console -&gt; Endpoints -&gt; hudidmsource. Check if the connection is successful. If not, test the connection again.</p>
+<p>Go to the <a href="https://us-east-1.console.aws.amazon.com/dms/v2/home?region=us-east-1#dashboard">Amazon DMS Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; Endpoints -&gt; hudidmsource. Check if the connection is successful. If not, test the connection again.</p>
 <p><img alt="Hudi - 16" src="../images/hudi-16.png" /></p>
 <p>Start the Database migration task hudiload.</p>
 <p><img alt="Hudi - 15" src="../images/hudi-15.png" /></p>
-<p>Once the task state changes from Running to "Load complete, replication ongoing", check the below S3 location for deposited files. Replace youraccountID with AWS event engine account ID.</p>
-<div class="codehilite"><pre><span></span><code>aws s3 ls s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/
+<p>Once the task state changes from Running to "Load complete, replication ongoing", check the below S3 location for deposited files.</p>
+<div class="codehilite"><pre><span></span><code>accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+
+aws s3 ls s3://mrworkshop-dms-$accountID-dayone/dmsdata/dev/retail_transactions/
 </code></pre></div>
 
-<p>Now login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" using Session Manager or SSH and run the following commands. Replace youraccountID with AWS event engine account ID.</p>
+<p>Now login to the EMR leader node of the cluster "EMR-Spark-Hive-Presto" using Session Manager or SSH and run the following commands.</p>
 <div class="codehilite"><pre><span></span><code><span class="nv">sudo</span> <span class="nv">su</span> <span class="nv">hadoop</span>
 <span class="nv">cd</span> <span class="o">~</span>
-<span class="nv">aws</span> <span class="nv">s3</span> <span class="nv">mv</span> <span class="nv">s3</span>:<span class="o">//</span><span class="nv">mrworkshop</span><span class="o">-</span><span class="nv">dms</span><span class="o">-</span><span class="nv">youraccountID</span><span class="o">-</span><span class="nv">dayone</span><span class="o">/</span><span class="nv">dmsdata</span><span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">retail_transactions</span><span class="o">/</span> <span class="nv">s3</span>:<span class="o">//</span><span class="nv">mrworkshop</span><span class="o">-</span><span class="nv">dms</span><span class="o">-</span><span class="nv">youraccountID</span><span class="o">-</span><span class="nv">dayone</span><span class="o">/</span><span class="nv">dmsdata</span><span class="o">/</span><span class="nv">data</span><span class="o">-</span><span class="nv">full</span><span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">retail_transactions</span><span class="o">/</span>  <span class="o">--</span><span class="nv">exclude</span> <span class="s2">&quot;</span><span class="s">*</span><span class="s2">&quot;</span> <span class="o">--</span><span class="k">include</span> <span class="s2">&quot;</span><span class="s">LOAD*.parquet</span><span class="s2">&quot;</span> <span class="o">--</span><span class="nv">recursive</span>
+
+<span class="nv">accountID</span><span class="o">=</span>$<span class="ss">(</span><span class="nv">aws</span> <span class="nv">sts</span> <span class="nv">get</span><span class="o">-</span><span class="nv">caller</span><span class="o">-</span><span class="nv">identity</span> <span class="o">--</span><span class="nv">query</span> <span class="s2">&quot;</span><span class="s">Account</span><span class="s2">&quot;</span> <span class="o">--</span><span class="nv">output</span> <span class="nv">text</span><span class="ss">)</span>
+
+<span class="nv">aws</span> <span class="nv">s3</span> <span class="nv">mv</span> <span class="nv">s3</span>:<span class="o">//</span><span class="nv">mrworkshop</span><span class="o">-</span><span class="nv">dms</span><span class="o">-</span><span class="mh">$acc</span><span class="nv">ountID</span><span class="o">-</span><span class="nv">dayone</span><span class="o">/</span><span class="nv">dmsdata</span><span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">retail_transactions</span><span class="o">/</span> <span class="nv">s3</span>:<span class="o">//</span><span class="nv">mrworkshop</span><span class="o">-</span><span class="nv">dms</span><span class="o">-</span><span class="mh">$acc</span><span class="nv">ountID</span><span class="o">-</span><span class="nv">dayone</span><span class="o">/</span><span class="nv">dmsdata</span><span class="o">/</span><span class="nv">data</span><span class="o">-</span><span class="nv">full</span><span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">retail_transactions</span><span class="o">/</span>  <span class="o">--</span><span class="nv">exclude</span> <span class="s2">&quot;</span><span class="s">*</span><span class="s2">&quot;</span> <span class="o">--</span><span class="k">include</span> <span class="s2">&quot;</span><span class="s">LOAD*.parquet</span><span class="s2">&quot;</span> <span class="o">--</span><span class="nv">recursive</span>
 </code></pre></div>
 
 <p>With the full table dump available in the data-full S3 folder, we will now use the Hudi Deltastreamer utility on the EMR cluster to populate the Hudi dataset on S3.</p>
-<p>Run the following command directly on leader node. Replace youraccountID with AWS event engine account ID.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="w"> </span><span class="o">--</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">deltastreamer</span><span class="o">.</span><span class="n">HoodieDeltaStreamer</span><span class="w">  </span>\<span class="w"></span>
+<p>Run the following command directly on leader node.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">accountID</span><span class="o">=$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="n">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s2">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="w"> </span><span class="o">--</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">deltastreamer</span><span class="o">.</span><span class="n">HoodieDeltaStreamer</span><span class="w">  </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">jars</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/*.</span><span class="n">jar</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="k">master</span><span class="w"> </span><span class="n">yarn</span><span class="w"> </span><span class="o">--</span><span class="n">deploy</span><span class="o">-</span><span class="n">mode</span><span class="w"> </span><span class="n">client</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">conf</span><span class="w"> </span><span class="n">spark</span><span class="o">.</span><span class="n">serializer</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">KryoSerializer</span><span class="w"> </span>\<span class="w"></span>
@@ -908,9 +1022,9 @@ commit;
 <span class="w">  </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">hudi</span><span class="o">/</span><span class="n">hudi</span><span class="o">-</span><span class="n">utilities</span><span class="o">-</span><span class="n">bundle</span><span class="o">.</span><span class="n">jar</span><span class="w">  </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">table</span><span class="o">-</span><span class="n">type</span><span class="w"> </span><span class="n">COPY_ON_WRITE</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">source</span><span class="o">-</span><span class="n">ordering</span><span class="o">-</span><span class="n">field</span><span class="w"> </span><span class="n">dms_received_ts</span><span class="w"> </span>\<span class="w"></span>
-<span class="w">  </span><span class="o">--</span><span class="n">props</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-</span><span class="n">youraccountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">properties</span><span class="o">/</span><span class="n">dfs</span><span class="o">-</span><span class="n">source</span><span class="o">-</span><span class="n">retail</span><span class="o">-</span><span class="n">transactions</span><span class="o">-</span><span class="n">full</span><span class="o">.</span><span class="n">properties</span><span class="w"> </span>\<span class="w"></span>
+<span class="w">  </span><span class="o">--</span><span class="n">props</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-$</span><span class="n">accountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">properties</span><span class="o">/</span><span class="n">dfs</span><span class="o">-</span><span class="n">source</span><span class="o">-</span><span class="n">retail</span><span class="o">-</span><span class="n">transactions</span><span class="o">-</span><span class="n">full</span><span class="o">.</span><span class="n">properties</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">source</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">ParquetDFSSource</span><span class="w"> </span>\<span class="w"></span>
-<span class="w">  </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">path</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-</span><span class="n">youraccountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">hudi</span><span class="o">/</span><span class="n">retail_transactions</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">table</span><span class="w"> </span><span class="n">hudiblogdb</span><span class="o">.</span><span class="n">retail_transactions</span><span class="w"> </span>\<span class="w"></span>
+<span class="w">  </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">path</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-$</span><span class="n">accountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">hudi</span><span class="o">/</span><span class="n">retail_transactions</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">table</span><span class="w"> </span><span class="n">hudiblogdb</span><span class="o">.</span><span class="n">retail_transactions</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">transformer</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">SqlQueryBasedTransformer</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">payload</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">AWSDmsAvroPayload</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">schemaprovider</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">FilebasedSchemaProvider</span><span class="w"> </span>\<span class="w"></span>
@@ -936,8 +1050,10 @@ commit;
 
 <p>Exit from the MySQL session. In a few minutes, you see a new .parquet file created under s3://mrworkshop-dms-youraccountID-dayone/dmsdata/dev/retail_transactions/ folder in the S3 bucket. CDC data is being captured by our DMS replication task. You can see the changes in the DMS replication task under "Table statistics".</p>
 <p><img alt="Hudi - 18" src="../images/hudi-18.png" /></p>
-<p>Now, lets take the incremental changes we made to Hudi. Run the following command on EMR leader node. Replace youraccountID with your AWS event engine account ID.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="w"> </span><span class="o">--</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">deltastreamer</span><span class="o">.</span><span class="n">HoodieDeltaStreamer</span><span class="w">  </span>\<span class="w"></span>
+<p>Now, lets take the incremental changes we made to Hudi. Run the following command on EMR leader node.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">accountID</span><span class="o">=$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="n">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s2">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">spark</span><span class="o">-</span><span class="n">submit</span><span class="w"> </span><span class="o">--</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">deltastreamer</span><span class="o">.</span><span class="n">HoodieDeltaStreamer</span><span class="w">  </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">jars</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/*.</span><span class="n">jar</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="k">master</span><span class="w"> </span><span class="n">yarn</span><span class="w"> </span><span class="o">--</span><span class="n">deploy</span><span class="o">-</span><span class="n">mode</span><span class="w"> </span><span class="n">client</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">conf</span><span class="w"> </span><span class="n">spark</span><span class="o">.</span><span class="n">serializer</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">KryoSerializer</span><span class="w"> </span>\<span class="w"></span>
@@ -945,9 +1061,9 @@ commit;
 <span class="w">  </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">hudi</span><span class="o">/</span><span class="n">hudi</span><span class="o">-</span><span class="n">utilities</span><span class="o">-</span><span class="n">bundle</span><span class="o">.</span><span class="n">jar</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">table</span><span class="o">-</span><span class="n">type</span><span class="w"> </span><span class="n">COPY_ON_WRITE</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">source</span><span class="o">-</span><span class="n">ordering</span><span class="o">-</span><span class="n">field</span><span class="w"> </span><span class="n">dms_received_ts</span><span class="w"> </span>\<span class="w"></span>
-<span class="w">  </span><span class="o">--</span><span class="n">props</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-</span><span class="n">youraccountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">properties</span><span class="o">/</span><span class="n">dfs</span><span class="o">-</span><span class="n">source</span><span class="o">-</span><span class="n">retail</span><span class="o">-</span><span class="n">transactions</span><span class="o">-</span><span class="n">incremental</span><span class="o">.</span><span class="n">properties</span><span class="w"> </span>\<span class="w"></span>
+<span class="w">  </span><span class="o">--</span><span class="n">props</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-$</span><span class="n">accountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">properties</span><span class="o">/</span><span class="n">dfs</span><span class="o">-</span><span class="n">source</span><span class="o">-</span><span class="n">retail</span><span class="o">-</span><span class="n">transactions</span><span class="o">-</span><span class="n">incremental</span><span class="o">.</span><span class="n">properties</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">source</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">ParquetDFSSource</span><span class="w"> </span>\<span class="w"></span>
-<span class="w">  </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">path</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-</span><span class="n">youraccountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">hudi</span><span class="o">/</span><span class="n">retail_transactions</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">table</span><span class="w"> </span><span class="n">hudiblogdb</span><span class="o">.</span><span class="n">retail_transactions</span><span class="w"> </span>\<span class="w"></span>
+<span class="w">  </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">path</span><span class="w"> </span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">mrworkshop</span><span class="o">-</span><span class="n">dms</span><span class="o">-$</span><span class="n">accountID</span><span class="o">-</span><span class="n">dayone</span><span class="o">/</span><span class="n">hudi</span><span class="o">/</span><span class="n">retail_transactions</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">table</span><span class="w"> </span><span class="n">hudiblogdb</span><span class="o">.</span><span class="n">retail_transactions</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">transformer</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">SqlQueryBasedTransformer</span><span class="w"> </span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">payload</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">AWSDmsAvroPayload</span>\<span class="w"></span>
 <span class="w">  </span><span class="o">--</span><span class="n">schemaprovider</span><span class="o">-</span><span class="k">class</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hudi</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">FilebasedSchemaProvider</span><span class="w"> </span>\<span class="w"></span>
@@ -966,7 +1082,7 @@ commit;
 <p>You should see the changes you made in the MySQL table.</p>
 <h3 id="apache-hudi-with-spark-structured-streaming">Apache Hudi with Spark Structured Streaming<a class="headerlink" href="#apache-hudi-with-spark-structured-streaming" title="Permanent link">&para;</a></h3>
 <p>This exercise will show how you can write real time Hudi data sets using Spark Structured Streaming. For this exercise, we will use real-time NYC Metro Subway data using <a href="https://api.mta.info/#/landing">MTA API</a>.</p>
-<p>Keep the EMR Session Manager or SSH session active. In a new browser tab, create a new SSM session for EC2 instance "JumpHost" (or SSH into EC2 instance "JumpHost"). i.e., under the <a href="https://console.aws.amazon.com/ec2/home?region=us-east-1#Instances:">EC2 console</a> select the EC2 instance with name "JumpHost". Click on "Connect" -&gt; Session Manager -&gt; Connect.</p>
+<p>Keep the EMR Session Manager or SSH session active. In a new browser tab, create a new SSM session for EC2 instance "JumpHost" (or SSH into EC2 instance "JumpHost"). i.e., under the <a href="https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost">EC2 Web Console</a> (Right click -&gt; Open Link in New Tab), select the EC2 instance with name "JumpHost". Click on "Connect" -&gt; Session Manager -&gt; Connect.</p>
 <p>Switch to EC2 user and go to home directory</p>
 <div class="codehilite"><pre><span></span><code>sudo su ec2-user
 cd ~
@@ -1044,10 +1160,17 @@ sudo wget https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.11.1
 </code></pre></div>
 
 <p>Now, go to the EMR Studio's JupyterLab workspace and open workshop-repo/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb. Make sure that "Spark" kernel is selected.</p>
-<p>Replace the broker string with the value of bootstrap servers you copied to your notepad. Replace youraccountID with event engine AWS account ID. Instructions are in the notebook.</p>
-<p>Once you have made the changes, run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using hive or even Athena.</p>
-<p>Go to the AWS Web Console -&gt; Athena -&gt; Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -&gt; Manage and add your Query result location like -&gt; s3://mrworkshop-youraccountID-dayone/athena/.</p>
+<p>Run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using Hive or Athena.</p>
+<p>To set up Athena, go to the <a href="https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/landing-page">Amazon Athena Web Console</a> (Right click -&gt; Open Link in New Tab) -&gt; Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -&gt; Manage and add your Query result location like -&gt; s3://mrworkshop-youraccountID-dayone/athena/.</p>
 <p><img alt="Hudi - 11" src="../images/hudi-11.png" /></p>
+<p>OR you can run the following command to set up Athena Output location using EC2 JumpHost Session Manager session.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">su</span><span class="w"> </span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="w"></span>
+<span class="n">cd</span><span class="w"> </span><span class="o">~</span><span class="w"></span>
+
+<span class="n">accountID</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="n">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="k">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">athena</span><span class="w"> </span><span class="n">update</span><span class="o">-</span><span class="n">work</span><span class="o">-</span><span class="n">group</span><span class="w"> </span><span class="o">--</span><span class="n">work</span><span class="o">-</span><span class="n">group</span><span class="w"> </span><span class="n">primary</span><span class="w"> </span><span class="o">--</span><span class="n">configuration</span><span class="o">-</span><span class="n">updates</span><span class="w"> </span><span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">ResultConfigurationUpdates</span><span class="se">\&quot;</span><span class="s">: { </span><span class="se">\&quot;</span><span class="s">OutputLocation</span><span class="se">\&quot;</span><span class="s">: </span><span class="se">\&quot;</span><span class="s">s3://mrworkshop-$accountID-dayone/athena/</span><span class="se">\&quot;</span><span class="s">}}&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"></span>
+</code></pre></div>
+
 <p>Now, you can run the following queries once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.</p>
 <div class="codehilite"><pre><span></span><code>select count(*) from hudi_trips_streaming_table;
 

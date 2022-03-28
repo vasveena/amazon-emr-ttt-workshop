@@ -256,6 +256,32 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Introduction to Amazon EMR and Spark on EMR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Introduction to Amazon EMR and Spark on EMR" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Introduction to Amazon EMR and Spark on EMR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../fleet/exercise/" class="md-nav__link">
         1 - Launching EMR cluster with Instance Fleets
@@ -274,6 +300,27 @@
       <a href="../../spark/exercise/" class="md-nav__link">
         2 - Apache Spark on Amazon EMR
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../step/exercise/" class="md-nav__link">
+        3 - Orchestrate EMR Steps using AWS Step Functions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -312,6 +359,34 @@
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Part 2
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Notebook Offerings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebook Offerings" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Notebook Offerings
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -395,6 +470,19 @@
     Git repository
   </a>
   
+    <nav class="md-nav" aria-label="Git repository">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restart-the-studio-workspace" class="md-nav__link">
+    Restart the Studio Workspace
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -469,6 +557,13 @@
       <a href="../../../day2/smstudio/exercise/" class="md-nav__link">
         3 - Sagemaker Studio Integration
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -751,6 +846,19 @@
     Git repository
   </a>
   
+    <nav class="md-nav" aria-label="Git repository">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restart-the-studio-workspace" class="md-nav__link">
+    Restart the Studio Workspace
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -813,7 +921,8 @@
 <h1 id="amazon-emr-studio"><strong>Amazon EMR Studio</strong><a class="headerlink" href="#amazon-emr-studio" title="Permanent link">&para;</a></h1>
 <h3 id="log-in-to-emr-studio">Log in to EMR Studio<a class="headerlink" href="#log-in-to-emr-studio" title="Permanent link">&para;</a></h3>
 <p>In this exercise we will run Spark workflows using EMR Studio with managed Jupyter-based notebooks. We will also cover the most standout features of Amazon EMR Studio.</p>
-<p>Go to the EMR Web Console and navigate to "EMR Studio" on the right hand side. Click on "Get Started".</p>
+<p>Go to the <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a>
+(Right click -&gt; Open Link in New Tab) and navigate to "EMR Studio" on the right hand side. Click on "Get Started".</p>
 <p><img alt="Studio - 1" src="../images/studio-1.png" /></p>
 <p>You will be able to see an EMR Studio created called "workshop-studio". Click on it and in the following page, copy the Studio URL.</p>
 <p><img alt="Studio - 2" src="../images/studio-2.png" /></p>
@@ -847,13 +956,99 @@
 <p>Branch: main</p>
 <p>Git credentials: Use a public repository without credentials</p>
 <p><img alt="Studio - 12" src="../images/studio-12.png" /></p>
-<p>Once the repository is added, select it from the "Git repositories" drop down. You will see that the Git repository will be linked successfully.
-<img alt="Studio - 13" src="../images/studio-13.png" /></p>
+<p>Once the repository is added, select it from the "Git repositories" drop down. You will see that the Git repository will be linked successfully.</p>
+<p><img alt="Studio - 13" src="../images/studio-13.png" /></p>
 <p>Once its linked, you can go back to the workspace folder. You will find a folder called "workshop-repo".</p>
 <p><img alt="Studio - 14" src="../images/studio-14.png" /></p>
 <p>Go to workshop-repo -&gt; files -&gt; notebook to see the notebooks.</p>
 <p><img alt="Studio - 29" src="../images/studio-29.png" /></p>
-<p>If you are not able to link repository successfully, download <a href="https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/amazon_reviews.ipynb">amazon_reviews.ipynb</a> and <a href="https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/find_best_sellers.ipynb">find_best_sellers.ipynb</a> files to your local desktop (Right click -&gt; Save Link As). Upload these two files from your local desktop to the JupyterLab. Upload icon looks like <img alt="Studio - 10" src="../images/studio-10.png" />.</p>
+<p>If you are not able to link repository successfully, create 3 nested folders under your workspace root folder: workshop-repo/files/notebook. Create Folder Icon looks like <img alt="Studio - 33" src="../images/studio-33.png" />. Download all the .ipynb files from <a href="https://github.com/vasveena/amazon-emr-ttt-workshop">here</a> to your local desktop. You can download the entire project <a href="https://github.com/vasveena/amazon-emr-ttt-workshop/archive/refs/heads/main.zip">Zip File</a>. Unzip the zip file and go to amazon-emr-ttt-workshop-main/files/notebook. Upload these .ipynb files from your local desktop to the Jupyter interface under the nested folders created (workshop-repo/files/notebook). Upload icon looks like <img alt="Studio - 10" src="../images/studio-10.png" />.</p>
+<p><strong>Alternate Option:</strong> instead of uploading the files manually, you use the below commands on your JumpHost EC2 instance. Connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">su</span><span class="w"> </span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="w"></span>
+<span class="n">cd</span><span class="w"> </span><span class="o">~</span><span class="w"></span>
+
+<span class="n">pip3</span><span class="w"> </span><span class="n">uninstall</span><span class="w"> </span><span class="n">awscli</span><span class="w"> </span><span class="o">-</span><span class="n">y</span><span class="w"></span>
+<span class="n">pip3</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">awscli</span><span class="w"> </span><span class="o">--</span><span class="n">upgrade</span><span class="w"></span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="o">/.</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="o">--</span><span class="n">version</span><span class="w"></span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">yum</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="o">-</span><span class="n">y</span><span class="w"> </span><span class="n">jq</span><span class="w"></span>
+
+<span class="n">studio_id</span><span class="o">=$</span><span class="p">(</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="o">/.</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="n">list</span><span class="o">-</span><span class="n">studios</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="n">Studios</span><span class="p">[</span><span class="o">*</span><span class="p">]</span><span class="o">.</span><span class="p">{</span><span class="n">Studios</span><span class="p">:</span><span class="n">StudioId</span><span class="p">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_s3_location</span><span class="o">=$</span><span class="p">(</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="o">/.</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="n">describe</span><span class="o">-</span><span class="n">studio</span><span class="w"> </span><span class="o">--</span><span class="n">studio</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="o">$</span><span class="n">studio_id</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s1">&#39;Studio.DefaultS3Location&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_notebook_id</span><span class="o">=$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">ls</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/</span><span class="n">e</span><span class="o">-</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w"> </span><span class="s1">&#39;s|.*PRE ||g&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w">  </span><span class="s1">&#39;s|/||g&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w">  </span><span class="s1">&#39;s| ||g&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="n">accountID</span><span class="o">=$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="n">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s2">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">clusterArn</span><span class="o">=</span><span class="err">`</span><span class="n">aws</span><span class="w"> </span><span class="n">kafka</span><span class="w"> </span><span class="n">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">jq</span><span class="w"> </span><span class="s1">&#39;.ClusterInfoList[0].ClusterArn&#39;</span><span class="err">`</span><span class="w"></span>
+<span class="n">echo</span><span class="w"> </span><span class="o">$</span><span class="n">clusterArn</span><span class="w"></span>
+<span class="n">bs</span><span class="o">=$</span><span class="p">(</span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;aws kafka get-bootstrap-brokers --cluster-arn ${clusterArn} --region us-east-1&quot;</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">bash</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">jq</span><span class="w"> </span><span class="s1">&#39;.BootstrapBrokerString&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w"> </span><span class="s1">&#39;s|&quot;||g&#39;</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">mkdir</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="n">upload</span><span class="w"></span>
+<span class="n">cd</span><span class="w"> </span><span class="n">upload</span><span class="w"></span>
+
+<span class="n">wget</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">vasveena</span><span class="o">/</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">refs</span><span class="o">/</span><span class="n">heads</span><span class="o">/</span><span class="n">main</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+<span class="n">unzip</span><span class="w"> </span><span class="n">main</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+
+<span class="n">sed</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="s2">&quot;s|youraccountID|$accountID|g&quot;</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">streaming</span><span class="o">-</span><span class="n">apache</span><span class="o">-</span><span class="n">hudi</span><span class="o">-</span><span class="n">demo</span><span class="o">.</span><span class="n">ipynb</span><span class="w"></span>
+<span class="n">sed</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="s2">&quot;s|yourbootstrapbrokers|$bs|g&quot;</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">streaming</span><span class="o">-</span><span class="n">apache</span><span class="o">-</span><span class="n">hudi</span><span class="o">-</span><span class="n">demo</span><span class="o">.</span><span class="n">ipynb</span><span class="w"></span>
+<span class="n">sed</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="s2">&quot;s|youraccountID|$accountID|g&quot;</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">hudi</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">datasource</span><span class="o">-</span><span class="n">pyspark</span><span class="o">-</span><span class="n">demo</span><span class="o">.</span><span class="n">ipynb</span><span class="w"></span>
+<span class="n">sed</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="s2">&quot;s|youraccountID|$accountID|g&quot;</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">hudi</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">dml</span><span class="o">.</span><span class="n">ipynb</span><span class="w"></span>
+<span class="n">sed</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="s2">&quot;s|youraccountID|$accountID|g&quot;</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">iceberg</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">.</span><span class="n">ipynb</span><span class="w"></span>
+<span class="n">sed</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="s2">&quot;s|youraccountID|$accountID|g&quot;</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">find_best_sellers</span><span class="o">.</span><span class="n">ipynb</span><span class="w"></span>
+
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">streaming</span><span class="o">-</span><span class="n">apache</span><span class="o">-</span><span class="n">hudi</span><span class="o">-</span><span class="n">demo</span><span class="o">.</span><span class="n">ipynb</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/$</span><span class="n">studio_notebook_id</span><span class="o">/</span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">hudi</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">datasource</span><span class="o">-</span><span class="n">pyspark</span><span class="o">-</span><span class="n">demo</span><span class="o">.</span><span class="n">ipynb</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/$</span><span class="n">studio_notebook_id</span><span class="o">/</span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">hudi</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">dml</span><span class="o">.</span><span class="n">ipynb</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/$</span><span class="n">studio_notebook_id</span><span class="o">/</span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">iceberg</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">.</span><span class="n">ipynb</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/$</span><span class="n">studio_notebook_id</span><span class="o">/</span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">find_best_sellers</span><span class="o">.</span><span class="n">ipynb</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/$</span><span class="n">studio_notebook_id</span><span class="o">/</span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">amazon_reviews</span><span class="o">.</span><span class="n">ipynb</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/$</span><span class="n">studio_notebook_id</span><span class="o">/</span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">ttt</span><span class="o">-</span><span class="n">workshop</span><span class="o">-</span><span class="n">main</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">smstudio</span><span class="o">-</span><span class="n">pyspark</span><span class="o">-</span><span class="n">hive</span><span class="o">-</span><span class="n">sentiment</span><span class="o">-</span><span class="n">analysis</span><span class="o">.</span><span class="n">ipynb</span><span class="w"> </span><span class="o">$</span><span class="n">studio_s3_location</span><span class="o">/$</span><span class="n">studio_notebook_id</span><span class="o">/</span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="w"></span>
+</code></pre></div>
+
+<p><strong>Note:</strong> If you ran the above commands, you can skip the below steps and go to <a href="#restart-the-studio-workspace">Restart Studio Workspace</a> section. If you either uploaded the files manually or if your Git repository linking was successful, continue with the following instructions.</p>
+<p>Once you either link the repository or upload the files successfully, go to workshop-repo -&gt; files -&gt; notebook folder and open find_best_sellers.ipynb file. Notice the OUTPUT_LOCATION S3 path in the first cell: <em>s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output/</em>.  </p>
+<p><img alt="Studio - 34" src="../images/studio-34.png" /></p>
+<p>Before you start working with these notebooks, let's replace the string "youraccountID" in the S3 locations specified in all the notebooks to make it easy for you while executing the notebook instructions.</p>
+<p>For this purpose, close the EMR Studio Workshop Jupyter interface in your browser. Connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.</p>
+<div class="codehilite"><pre><span></span><code>sudo su ec2-user
+cd ~
+
+pip3 uninstall awscli -y
+pip3 install awscli --upgrade
+/home/ec2-user/.local/bin/aws --version
+sudo yum install upgrade -y jq
+
+studio_id=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 list-studios --region us-east-1 --query Studios[*].{Studios:StudioId} --output text)
+studio_s3_location=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 describe-studio --studio-id <span class="nv">$studio_id</span> --query &#39;Studio.DefaultS3Location&#39; --output text)
+studio_notebook_id=$(aws s3 ls <span class="nv">$studio_s3_location</span>/e- | sed &#39;s|.*PRE ||g&#39; | sed  &#39;s|/||g&#39; | sed  &#39;s| ||g&#39;)
+accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+clusterArn=`aws kafka list-clusters --region us-east-1 | jq &#39;.ClusterInfoList[0].ClusterArn&#39;`
+echo <span class="nv">$clusterArn</span>
+bs=$(echo &quot;aws kafka get-bootstrap-brokers --cluster-arn <span class="cp">${</span><span class="n">clusterArn</span><span class="cp">}</span> --region us-east-1&quot;  | bash | jq &#39;.BootstrapBrokerString&#39; | sed &#39;s|&quot;||g&#39;)
+
+mkdir -p studio
+cd studio
+
+aws s3 cp <span class="nv">$studio_s3_location</span>/<span class="nv">$studio_notebook_id</span>/workshop-repo/files/notebook/ . --recursive
+
+sed -i &quot;s|youraccountID|<span class="nv">$accountID</span>|g&quot; amazon-emr-spark-streaming-apache-hudi-demo.ipynb
+sed -i &quot;s|yourbootstrapbrokers|<span class="nv">$bs</span>|g&quot; amazon-emr-spark-streaming-apache-hudi-demo.ipynb
+sed -i &quot;s|youraccountID|<span class="nv">$accountID</span>|g&quot; apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb
+sed -i &quot;s|youraccountID|<span class="nv">$accountID</span>|g&quot; apache-hudi-on-amazon-emr-dml.ipynb
+sed -i &quot;s|youraccountID|<span class="nv">$accountID</span>|g&quot; apache-iceberg-on-amazon-emr.ipynb
+sed -i &quot;s|youraccountID|<span class="nv">$accountID</span>|g&quot; find_best_sellers.ipynb
+
+aws s3 cp amazon-emr-spark-streaming-apache-hudi-demo.ipynb <span class="nv">$studio_s3_location</span>/<span class="nv">$studio_notebook_id</span>/workshop-repo/files/notebook/
+aws s3 cp apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb <span class="nv">$studio_s3_location</span>/<span class="nv">$studio_notebook_id</span>/workshop-repo/files/notebook/
+aws s3 cp apache-hudi-on-amazon-emr-dml.ipynb <span class="nv">$studio_s3_location</span>/<span class="nv">$studio_notebook_id</span>/workshop-repo/files/notebook/
+aws s3 cp apache-iceberg-on-amazon-emr.ipynb <span class="nv">$studio_s3_location</span>/<span class="nv">$studio_notebook_id</span>/workshop-repo/files/notebook/
+aws s3 cp find_best_sellers.ipynb <span class="nv">$studio_s3_location</span>/<span class="nv">$studio_notebook_id</span>/workshop-repo/files/notebook/
+</code></pre></div>
+
+<h5 id="restart-the-studio-workspace">Restart the Studio Workspace<a class="headerlink" href="#restart-the-studio-workspace" title="Permanent link">&para;</a></h5>
+<p>Once the files are uploaded successfully, while logged in as studiouser, from your EMR Studio Console, go to Workspaces. Click on your workspace and under Actions, click on "Stop".</p>
+<p><img alt="Studio - 31" src="../images/studio-31.png" /></p>
+<p>Once the workspace status becomes "Idle" (it will take about 2-3 minutes), while logged in as studiouser, go back to EMR Studio Console -&gt; Workspaces -&gt; Actions again and click on "Start".</p>
+<p><img alt="Studio - 32" src="../images/studio-32.png" /></p>
+<p>Wait for the status to go from "Starting" to "Attached". Once the workspace is in "Attached" state, go back to your EMR Studio Workspace Jupyter interface. Open the find_best_sellers.ipynb notebook (from workshop-repo -&gt; files -&gt; notebooks) and verify that the the account ID in the OUTPUT_LOCATION of the first cell is changed properly.</p>
+<p><img alt="Studio - 35" src="../images/studio-35.png" /></p>
 <h4 id="notebook-scoped-libraries">Notebook-scoped libraries<a class="headerlink" href="#notebook-scoped-libraries" title="Permanent link">&para;</a></h4>
 <p>Run all the cells in amazon-reviews.ipynb notebook. Make sure Pyspark kernel is selected.</p>
 <p>Notice the notebook scoped libraries installed on SparkContext sc.</p>
@@ -870,15 +1065,20 @@ sc.list_packages()
 <p>You will use these installed dependencies to plot visualizations on top of Amazon Reviews data.</p>
 <p><img alt="Studio - 16" src="../images/studio-16.png" /></p>
 <p>You can have two notebooks within the same workspace with different dependencies. You can even reproduce these dependencies and run the same notebook after your cluster is terminated by attaching it to a different active cluster.</p>
-<p>When you are done, terminate the kernel by clicking on stop icon <img alt="Studio - 30" src="../images/studio-30.png" />.</p>
+<p>When you are done, terminate the kernel by clicking on stop icon <img alt="Studio - 30" src="../images/studio-30.png" /> and restart the kernel by clicking on the restart kernel icon <img alt="Studio - 36" src="../images/studio-36.png" />. This will ensure that the Spark session created from this notebook is killed and your EMR cluster's YARN resources will become free.</p>
 <h4 id="parameterized-notebooks">Parameterized notebooks<a class="headerlink" href="#parameterized-notebooks" title="Permanent link">&para;</a></h4>
 <p>Open the file find_best_sellers.ipynb. Go to View -&gt; Show Right Sidebar.</p>
 <p>Click on the first cell with comment "Default parameters". In the Right Sidebar, click on "Add tag" and  type "parameters" and click "+". Now check the "Advanced Tools" and make sure that the parameters tag is applied to that cell.</p>
 <p><img alt="Studio - 17" src="../images/studio-17.png" /></p>
-<p>Replace OUTPUT_LOCATION "s3://mrworkshop-<accountID>-dayone/studio/best_sellers_output/" with your event engine AWS account ID. Check the S3 Web Console for the bucket name if required. Do not create the S3 prefix "studio" before running the notebook cells.</p>
-<p>Run all the cells in the notebook and make sure the outputs for categories "Apparel" and "Baby" are created under the S3 output location using AWS CLI or S3 Web Console.</p>
+<p>Do not create any S3 prefix under the OUTPUT_LOCATION before running the notebook cells.</p>
+<p>Run all the cells in the notebook. Once all the blocks are executed in the notebook, make sure the outputs for categories "Apparel" and "Baby" are created under the S3 output location using AWS CLI or <a href="https://s3.console.aws.amazon.com/s3/home?region=us-east-1">S3 Web Console</a> (Right click -&gt; Open Link in New Tab).</p>
 <p><img alt="Studio - 18" src="../images/studio-18.png" /></p>
-<p>Save the notebook. When you are done, terminate the kernel by clicking on stop icon <img alt="Studio - 30" src="../images/studio-30.png" />.</p>
+<p>OR run the following commands in EC2 JumpHost session.</p>
+<div class="codehilite"><pre><span></span><code>accountID=$(aws sts get-caller-identity --query &quot;Account&quot; --output text)
+aws s3 ls s3://mrworkshop-$accountID-dayone/studio/best_sellers_output/
+</code></pre></div>
+
+<p>Save the notebook. When you are done, terminate the kernel by clicking on the stop icon <img alt="Studio - 30" src="../images/studio-30.png" /> and the restart kernel icon <img alt="Studio - 36" src="../images/studio-36.png" />. This will ensure that the Spark session created from this notebook is killed and your EMR cluster's YARN resources will become free.</p>
 <h4 id="notebooks-api">Notebooks API<a class="headerlink" href="#notebooks-api" title="Permanent link">&para;</a></h4>
 <p>Let us run the parameterized notebook "find_best_sellers.ipynb" using EMR Notebooks API.</p>
 <p>Run the below command with your JumpHost EC2 instance (connected with Session Manager).</p>
@@ -887,7 +1087,7 @@ sc.list_packages()
 
 <p><img alt="Studio - 19" src="../images/studio-19.png" /></p>
 <p>You can see the list of categories. From EMR Studio, we ran analysis for categories "Apparel" and "Baby". Now let us run this notebook from API for categories "Furniture" and "PC". You can select whichever categories you want.</p>
-<p>Run following commands in your EC2 JumpHost to upgrade your AWS CLI.</p>
+<p>Run following commands in your EC2 JumpHost to upgrade your AWS CLI (if not done already).</p>
 <div class="codehilite"><pre><span></span><code>sudo su ec2-user
 cd ~
 
@@ -897,33 +1097,35 @@ pip3 install awscli --upgrade
 /home/ec2-user/.local/bin/aws --version
 </code></pre></div>
 
-<p>Verify that the notebooks APIs are working</p>
+<p>Verify that the notebooks APIs are working (if not done already).</p>
 <div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="o">/</span><span class="p">.</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="n">list</span><span class="o">-</span><span class="n">studios</span><span class="w"></span>
 </code></pre></div>
 
-<p>Copy the editor-ID from notebook URL. For example: https://e-c9zy9cmd24ccf4f2b4uz7d7ma.emrnotebooks-prod.us-east-1.amazonaws.com/e-C9ZY9CMD24CCF4F2B4UZ7D7MA/lab/tree/workshop-repo/files/notebook/find_best_sellers.ipynb</p>
-<p>"e-C9ZY9CMD24CCF4F2B4UZ7D7MA" is the editor ID. In the following command, replace your editor-id with this value.
-Cluster ID in --execution-engine should be replaced with your EMR cluster "EMR-Spark-Hive-Presto" cluster ID (Obtained from AWS Management Console -&gt; Amazon EMR Console -&gt; Summary tab. Looks like j-XXXXXXXXX)
-Change "youraccountID" in the OUTPUT_LOCATION parameter with your account ID.</p>
-<div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="o">/</span><span class="p">.</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="n">start</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">editor</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">e</span><span class="o">-</span><span class="n">XXXXXXXXXXXXXXXXX</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">params</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;CATEGORIES&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;Furniture&quot;</span><span class="p">,</span><span class="s">&quot;PC&quot;</span><span class="p">],</span><span class="w"> </span><span class="s">&quot;FROM_DATE&quot;</span><span class="o">:</span><span class="s">&quot;2015-08-27&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TO_DATE&quot;</span><span class="o">:</span><span class="s">&quot;2015-08-31&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;OUTPUT_LOCATION&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output_fromapi/&quot;</span><span class="p">}&#39;</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">relative</span><span class="o">-</span><span class="n">path</span><span class="w"> </span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">find_best_sellers</span><span class="p">.</span><span class="n">ipynb</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">demo</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">execution</span><span class="o">-</span><span class="n">engine</span><span class="w"> </span><span class="p">&#39;{</span><span class="s">&quot;Id&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;j-XXXXXXXXXXXXX&quot;</span><span class="p">}&#39;</span><span class="w"> </span><span class="se">\</span><span class="w"></span>
-<span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="n">role</span><span class="w"> </span><span class="n">emrStudioRole</span><span class="w"></span>
+<p>Run the following commands to submit a job using EMR Notebooks API.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">accountID</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="k">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s2">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="k">user</span><span class="o">/</span><span class="p">.</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">studios</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="n">Studios</span><span class="err">[</span><span class="o">*</span><span class="err">]</span><span class="p">.</span><span class="err">{</span><span class="n">Studios</span><span class="o">:</span><span class="n">StudioId</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_s3_location</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="k">user</span><span class="o">/</span><span class="p">.</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">studio</span><span class="w"> </span><span class="o">--</span><span class="n">studio</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$studio_id</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Studio.DefaultS3Location&#39;</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">studio_notebook_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">ls</span><span class="w"> </span><span class="n">$studio_s3_location</span><span class="o">/</span><span class="n">e</span><span class="o">-</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w"> </span><span class="s1">&#39;s|.*PRE ||g&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w">  </span><span class="s1">&#39;s|/||g&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sed</span><span class="w">  </span><span class="s1">&#39;s| ||g&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="n">cluster_id</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="k">list</span><span class="o">-</span><span class="n">clusters</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">--</span><span class="k">query</span><span class="w"> </span><span class="s1">&#39;Clusters[?Name==`EMR-Spark-Hive-Presto` &amp;&amp; Status.State!=`TERMINATED`]&#39;</span><span class="p">.</span><span class="err">{</span><span class="n">Clusters</span><span class="o">:</span><span class="n">Id</span><span class="err">}</span><span class="w"> </span><span class="o">--</span><span class="n">output</span><span class="w"> </span><span class="kt">text</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">notebookExecID</span><span class="o">=</span><span class="n">$</span><span class="p">(</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ec2</span><span class="o">-</span><span class="k">user</span><span class="o">/</span><span class="p">.</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="err">\</span><span class="w"></span>
+<span class="k">start</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="err">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">editor</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$studio_notebook_id</span><span class="w"> </span><span class="err">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">params</span><span class="w"> </span><span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">CATEGORIES</span><span class="se">\&quot;</span><span class="s2">:[</span><span class="se">\&quot;</span><span class="s2">Furniture</span><span class="se">\&quot;</span><span class="s2">,</span><span class="se">\&quot;</span><span class="s2">PC</span><span class="se">\&quot;</span><span class="s2">], </span><span class="se">\&quot;</span><span class="s2">FROM_DATE</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">2015-08-27</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">TO_DATE</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">2015-08-31</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">OUTPUT_LOCATION</span><span class="se">\&quot;</span><span class="s2">: </span><span class="se">\&quot;</span><span class="s2">s3://mrworkshop-$accountID-dayone/studio/best_sellers_output_fromapi/</span><span class="se">\&quot;</span><span class="s2">}&quot;</span><span class="w"> </span><span class="err">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">relative</span><span class="o">-</span><span class="k">path</span><span class="w"> </span><span class="n">workshop</span><span class="o">-</span><span class="n">repo</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">notebook</span><span class="o">/</span><span class="n">find_best_sellers</span><span class="p">.</span><span class="n">ipynb</span><span class="w"> </span><span class="err">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="o">-</span><span class="k">name</span><span class="w"> </span><span class="n">demo</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="err">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">execution</span><span class="o">-</span><span class="k">engine</span><span class="w"> </span><span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">Id</span><span class="se">\&quot;</span><span class="s2"> : </span><span class="se">\&quot;</span><span class="s2">${cluster_id}</span><span class="se">\&quot;</span><span class="s2">}&quot;</span><span class="w"> </span><span class="err">\</span><span class="w"></span>
+<span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="k">role</span><span class="w"> </span><span class="n">emrStudioRole</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">jq</span><span class="w"> </span><span class="o">-</span><span class="n">r</span><span class="w"> </span><span class="p">.</span><span class="n">NotebookExecutionId</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">echo</span><span class="w"> </span><span class="n">$notebookExecID</span><span class="w"></span>
 </code></pre></div>
 
-<p>{
-    "NotebookExecutionId": "ex-J02QDLG4TWXSNWLO4OGZ9NNX609MV"
-}</p>
-<p>You will get a NotebookExecutionId in return. Use this NotebookExecutionId in the following command to check for status.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="n">describe</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">ex</span><span class="o">-</span><span class="n">J02QDLG4TWXSNWLO4OGZ9NNX609MV</span><span class="w"></span>
+<p>You will get a NotebookExecutionId in return. Run the following command to get the status of this notebook execution. No need to replace anything in the command.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="n">describe</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$notebookExecID</span><span class="w"></span>
 </code></pre></div>
 
 <p>After about 2-3 minutes, the Status will be FINISHED.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="n">describe</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">ex</span><span class="o">-</span><span class="n">J02QDLG4TWXSNWLO4OGZ9NNX609MV</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="n">us</span><span class="o">-</span><span class="n">east</span><span class="o">-</span><span class="mh">1</span><span class="w"> </span><span class="n">describe</span><span class="o">-</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="w"> </span><span class="o">--</span><span class="n">notebook</span><span class="o">-</span><span class="n">execution</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">$notebookExecID</span><span class="w"></span>
 <span class="p">{</span><span class="w"></span>
 <span class="w">   </span><span class="s">&quot;NotebookExecution&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">       </span><span class="s">&quot;Status&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;FINISHED&quot;</span><span class="p">,</span><span class="w"></span>
@@ -992,7 +1194,7 @@ Change "youraccountID" in the OUTPUT_LOCATION parameter with your account ID.</p
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../../spark/exercise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2 - Apache Spark on Amazon EMR" rel="prev">
+        <a href="../../step/exercise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3 - Orchestrate EMR Steps using AWS Step Functions" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1001,7 +1203,7 @@ Change "youraccountID" in the OUTPUT_LOCATION parameter with your account ID.</p
               <span class="md-footer__direction">
                 Previous
               </span>
-              2 - Apache Spark on Amazon EMR
+              3 - Orchestrate EMR Steps using AWS Step Functions
             </div>
           </div>
         </a>
