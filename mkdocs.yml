@@ -12,7 +12,7 @@ nav:
   - Part 1:
     - 1 - Launching EMR cluster with Instance Fleets: 'day1/fleet/exercise.md'
     - 2 - Apache Spark on Amazon EMR: 'day1/spark/exercise.md'
-    - 3 - Orchestrate EMR Steps using AWS Step Functions: 'day1/step/exercise.md'
+    # - 3 - Orchestrate EMR Steps using AWS Step Functions: 'day1/step/exercise.md'
   - Part 2:
     - 1 - Amazon EMR Studio: 'day1/studio/exercise.md'
     - 2 - Orchestration Notebook Pipelines using Amazon MWAA: 'day1/mwaa/exercise.md'
