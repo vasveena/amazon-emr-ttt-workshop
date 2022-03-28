@@ -335,13 +335,30 @@ spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer
 
 Once this job completes, check the Hudi table by logging into Spark SQL or Athena console.
 
+If using SparkSQL, run the following command on the same EMR leader node session.
+
 ```
 
 spark-sql --conf "spark.serializer=org.apache.spark.serializer.KryoSerializer" --conf "spark.sql.hive.convertMetastoreParquet=false" --jars hdfs:///user/hadoop/*.jar  
 
 ```
 
-Run the query:
+To set up Athena, go to the [Athena Web Console](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/landing-page) (Right click -> Open Link in New Tab) -> Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -> Manage and add your Query result location like -> s3://mrworkshop-youraccountID-dayone/athena/.
+
+![Hudi - 11](images/hudi-11.png)
+
+OR you can run the following command to set up Athena Query Output location using EC2 JumpHost Session Manager session.
+
+```
+sudo su ec2-user
+cd ~
+
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+aws athena update-work-group --work-group primary --configuration-updates "{\"ResultConfigurationUpdates\": { \"OutputLocation\": \"s3://mrworkshop-$accountID-dayone/athena/\"}}" --region us-east-1
+
+```
+
+Run the query in SparkSQL session or [Athena console](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor) (Right click -> Open Link in New Tab):
 
 ```
 
@@ -391,7 +408,7 @@ spark-submit --class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer
 
 ```
 
-Once finished, check the Hudi table by logging into Spark SQL or Athena console.
+Once finished, check the Hudi table by logging into Spark SQL or [Athena console](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor) (Right click -> Open Link in New Tab). If using SparkSQL, run the following command on the same EMR leader node session.
 
 ```
 spark-sql --conf "spark.serializer=org.apache.spark.serializer.KryoSerializer" --conf "spark.sql.hive.convertMetastoreParquet=false" --jars hdfs:///user/hadoop/*.jar  
@@ -532,22 +549,7 @@ Now, go to the EMR Studio's JupyterLab workspace and open workshop-repo/files/no
 
 Run all the cell blocks. Spark streaming job runs every 30 seconds. You can increase the duration if you want to. Based on the time of the day you run this code, the results may vary. After sometime, query this table using Hive or Athena.
 
-To set up Athena, go to the [Amazon Athena Web Console](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/landing-page) (Right click -> Open Link in New Tab) -> Explore the query editor. Since this would be your first time using Athena console, you need to go to the Settings -> Manage and add your Query result location like -> s3://mrworkshop-youraccountID-dayone/athena/.
-
-![Hudi - 11](images/hudi-11.png)
-
-OR you can run the following command to set up Athena Output location using EC2 JumpHost Session Manager session.
-
-```
-sudo su ec2-user
-cd ~
-
-accountID=$(aws sts get-caller-identity --query "Account" --output text)
-aws athena update-work-group --work-group primary --configuration-updates "{\"ResultConfigurationUpdates\": { \"OutputLocation\": \"s3://mrworkshop-$accountID-dayone/athena/\"}}" --region us-east-1
-
-```
-
-Now, you can run the following queries once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.
+You can run the following queries in [Athena Web Console](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#/query-editor) (Right click -> Open Link in New Tab) once in every 2 minutes or so to see the live changes. You can also build live dashboards using Amazon Quicksight.
 
 ```
 select count(*) from hudi_trips_streaming_table;

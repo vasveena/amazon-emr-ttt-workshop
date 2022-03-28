@@ -85,7 +85,7 @@ Go to workshop-repo -> files -> notebook to see the notebooks.
 
 If you are not able to link repository successfully, create 3 nested folders under your workspace root folder: workshop-repo/files/notebook. Create Folder Icon looks like ![Studio - 33](images/studio-33.png). Download all the .ipynb files from [here](https://github.com/vasveena/amazon-emr-ttt-workshop) to your local desktop. You can download the entire project [Zip File](https://github.com/vasveena/amazon-emr-ttt-workshop/archive/refs/heads/main.zip). Unzip the zip file and go to amazon-emr-ttt-workshop-main/files/notebook. Upload these .ipynb files from your local desktop to the Jupyter interface under the nested folders created (workshop-repo/files/notebook). Upload icon looks like ![Studio - 10](images/studio-10.png).
 
-**Alternate Option:** instead of uploading the files manually, you use the below commands on your JumpHost EC2 instance. Connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.
+**Alternate Option:** Instead of uploading the files manually, you use the below commands on your JumpHost EC2 instance. Connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.
 
 ```
 sudo su ec2-user

@@ -131,9 +131,7 @@ This DAG will execute once at the start of each hour (based on cron schedule: 0 
 
 ![mwaa - 9](images/mwaa-9.png)
 
-Trigger the DAG.
-
-![mwaa - 10](images/mwaa-10.png)
+Trigger the DAG by clicking on "Trigger".
 
 Your DAG will start to execute. Click on the DAG runs -> DAG ID -> test_dag. You will see the graph view of this execution. Analyze the steps in this DAG.
 

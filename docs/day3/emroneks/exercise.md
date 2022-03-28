@@ -575,7 +575,7 @@ You can test the same command by substituting us-east-1a with us-east-1b and see
 ```
 
 aws emr-containers start-job-run --virtual-cluster-id ${ec2_vc} \
---name spark-single-az-us-east-1a \
+--name spark-single-az-us-east-1b \
 --execution-role-arn ${emrOnEksExecRoleArn} \
 --release-label emr-5.34.0-latest \
 --job-driver '{

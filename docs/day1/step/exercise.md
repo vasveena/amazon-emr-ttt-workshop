@@ -338,7 +338,7 @@ Go to the EMR cluster "WorkflowCluster" from [EMR Web Console](https://us-east-1
 
 The EMR cluster will be automatically terminated once the State Machine completes its execution.
 
-You can also start State Machine execution by entering the below JSON in the "Input - optional" section (replace any existing string). i.e., you can specify an existing EMR cluster ID instead of having AWS Step Functions create a new EMR cluster. You will need to replace j-XXXXXXXXXX with an existing EMR cluster ID in your AWS event engine account.
+**Optional:** You can also start State Machine execution by entering the below JSON in the "Input - optional" section (replace any existing string). i.e., you can specify an existing EMR cluster ID instead of having AWS Step Functions create a new EMR cluster. You will need to replace j-XXXXXXXXXX in the below JSON with an existing EMR cluster ID in your AWS event engine account.
 
 ```
 {
@@ -346,11 +346,16 @@ You can also start State Machine execution by entering the below JSON in the "In
   "TerminateCluster": false,
   "ClusterId": "j-XXXXXXXXXX"
 }
+
 ```
+
+Once modified, you can enter the above JSON in the "Input - optional" section (replace any existing string). Click on "Start Execution".
+
+Please note that if you use an EMR cluster ID of recent release label (EMR 6.x), the EMR Step execution may fail due to syntax changes in Hive major and minor versions.
 
 ### Schedule AWS Step Functions with Amazon Event Bridge
 
-We triggered the execution on-demand. We can also leverage Event Bridge
+We triggered the AWS Step Functions execution on-demand. We can also leverage Amazon Event Bridge to schedule workloads.
 
 Go to [AWS Step Functions Console](https://us-east-1.console.aws.amazon.com/states/home?region=us-east-1#/statemachines) (Right click -> Open Link in New Tab). Click on the state machine we created "EMR-Steps-State-Machine".
 
