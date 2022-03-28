@@ -772,15 +772,25 @@
 <p>In the previous section, we saw how you can leverage EMR AddSteps API to submit a Spark work to the cluster. You can submit any type of work to the EMR cluster (Hive, Presto, Bash etc.).</p>
 <p>In this section, we will see how you can orchestrate EMR jobs using EMR Step API and AWS Steps Functions. For a variation, let's orchestrate Hive EMR Steps. But you can choose any EMR step of your choice.</p>
 <h3 id="create-state-machine">Create State Machine<a class="headerlink" href="#create-state-machine" title="Permanent link">&para;</a></h3>
-<p>Go to <a href="https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/roles/create?commonUseCase=EC2&amp;step=addPermission&amp;trustedEntityType=AWS_SERVICE">IAM Web Console</a> to create a role for executing AWS Step Functions.</p>
-<p>Under "Use cases for other AWS services", type and select "Step Functions". Click on the Step Functions and click Next.</p>
-<p><img alt="step - 11" src="../images/step-11.png" /></p>
-<p>In the next page "Add permissions", under the "Set permissions boundary - optional" -&gt; Use a permissions boundary to control the maximum role permissions -&gt; Permission policies -&gt; search and choose "AdministratorAccess". Please note we are doing this only for convenience. In production scenario, you should only allow necessary and restrictive permissions to this IAM role.</p>
-<p><img alt="step - 8" src="../images/step-8.png" /></p>
-<p>Click on Next.</p>
-<p>For role name, type "emr-stepfunc-role".</p>
-<p><img alt="step - 9" src="../images/step-9.png" /></p>
-<p>Create the IAM Role.</p>
+<!--
+Go to [IAM Web Console](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/roles/create?commonUseCase=EC2&step=addPermission&trustedEntityType=AWS_SERVICE) to create a role for executing AWS Step Functions.
+
+Under "Use cases for other AWS services", type and select "Step Functions". Click on the Step Functions and click Next.
+
+![step - 11](images/step-11.png)
+
+In the next page "Add permissions", under the "Set permissions boundary - optional" -> Use a permissions boundary to control the maximum role permissions -> Permission policies -> search and choose "AdministratorAccess". Please note we are doing this only for convenience. In production scenario, you should only allow necessary and restrictive permissions to this IAM role.
+
+![step - 8](images/step-8.png)
+
+Click on Next.
+
+For role name, type "emr-stepfunc-role".
+
+![step - 9](images/step-9.png)
+
+Create the IAM Role.
+-->
 <p>Go to <a href="https://us-east-1.console.aws.amazon.com/states/home?region=us-east-1#/statemachines?helloWorld">AWS Step Functions console</a> (Right click -&gt; Open Link in New Tab).</p>
 <p><img alt="step - 1" src="../images/step-1.png" /></p>
 <p>Click on "Create State Machine". In Step 1 (Define state machine), choose "Write your workflow in code". Let Type be "Standard".</p>
@@ -1040,7 +1050,7 @@ echo $instProfRole
 <p><img alt="step - 4" src="../images/step-4.png" /></p>
 <p>You will see the state machine DAG being generated automatically.  </p>
 <p><img alt="step - 5" src="../images/step-5.png" /></p>
-<p>Click on "Next". Name your State Machine as "EMR-Steps-State-Machine". Under "Permissions", select "Choose an existing role" and from the drop down, choose the IAM role we created "emr-stepfunc-role".</p>
+<p>Click on "Next". Name your State Machine as "EMR-Steps-State-Machine". Under "Permissions", select "Choose an existing role" and from the drop down, choose the IAM role "emr-stepfunc-role".</p>
 <p>Leave everything else as default. Click on "Create State Machine".</p>
 <p><img alt="step - 6" src="../images/step-6.png" /></p>
 <h3 id="execute-state-machine">Execute State Machine<a class="headerlink" href="#execute-state-machine" title="Permanent link">&para;</a></h3>
