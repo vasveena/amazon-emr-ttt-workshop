@@ -16,5 +16,5 @@ Perform the following steps to login to the event engine.
 ![Setup - 6](images/setup-6.png)
 7. Make a note of your account ID in the top right corner of the AWS Console and store it in a notepad.
 ![Setup - 7](images/setup-7.png)
-8. Go to CloudFormation and verify that the Cloudformation template "dayone" is created.
+8. Go to CloudFormation and verify that the Cloudformation templates "dayone", "emr-on-eks" and "smstudio" are created.
 ![Setup - 8](images/setup-8.png)

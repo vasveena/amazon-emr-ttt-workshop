@@ -73,13 +73,32 @@ export AWS_SESSION_TOKEN=<redacted>
 
 ```
 
-Run the below command. Replace target with your leader node instance ID
+You can run the below commands on the terminal of your local desktop to get the leader node instance ID.
 
 ```
 
-aws ssm start-session --target i-00785e8946b4ff636 --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["18080"], "localPortNumber":["8158"]}' --region us-east-1
+cluster_id=$(aws emr list-clusters --region us-east-1 --query 'Clusters[?Name==`EMR-Spark-Hive-Presto` && Status.State!=`TERMINATED`]'.{Clusters:Id} --output text)
+
+leader_dns=$(aws emr describe-cluster --region us-east-1 --cluster-id $cluster_id --query 'Cluster.MasterPublicDnsName' --output text)
+
+instance_id=$(aws ec2 describe-instances --region us-east-1 --filters "Name=dns-name,Values=$leader_dns" --query 'Reservations[*].Instances[*].InstanceId' --output text)
+
+echo $instance_id
 
 ```
+
+Now run the command to start the SSM session. The value of --target is replaced with the instance ID obtained using above commands.
+
+**Note:** If you are not able to run the above commands to obtain the instance ID, replace $instance_id in the below command with the leader node instance ID obtained from the EMR Web Console (EMR Web Console -> "EMR-Spark-Hive-Presto" -> Hardware tab -> click on Instance Fleet ID of the MASTER Node Type -> Copy the instance ID).
+
+![Spark - 20](images/spark-20.png)
+
+```
+
+aws ssm start-session --target $instance_id --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["18080"], "localPortNumber":["8158"]}' --region us-east-1
+
+```
+
 Following image shows the commands run in macOS terminal. *18080* is the Spark History Server Port and *8157* is the local port.
 
 ![Spark - 8](images/spark-8.png)
@@ -98,7 +117,22 @@ Click on "show" (Spark action) in the SQL tab to see the query plan.
 
 #### Alternative approach - Local SSH tunneling
 
-Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via [local port forwarding](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html) by running the following command in your local desktop's terminal or using Putty for Windows. Replace leaderNodePublicDNS with your leader node public DNS (obtained from EMR Web Console -> EMR-Spark-Hive-Presto -> Summary tab -> Master public DNS).
+Please note that with this approach, you cannot access YARN Resource Manager UI. You can access it via [local port forwarding](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-ssh-tunnel-local.html) by running the following command in your local desktop's terminal or using Putty for Windows.
+
+You can obtain the leader node public DNS by running the below commands on the EMR leader node Session Manager session.
+
+```
+cluster_id=$(aws emr list-clusters --region us-east-1 --query 'Clusters[?Name==`EMR-Spark-Hive-Presto` && Status.State!=`TERMINATED`]'.{Clusters:Id} --output text)
+
+leader_dns=$(aws emr describe-cluster --region us-east-1 --cluster-id $cluster_id --query 'Cluster.MasterPublicDnsName' --output text)
+
+echo $leader_dns
+
+```
+
+You can also obtain the value from EMR Web Console -> EMR-Spark-Hive-Presto -> Summary tab -> Master public DNS.
+
+Once you obtain leader node DNS using one of the two above methods, replace leaderNodePublicDNS in the below command with your leader node public DNS.
 
 ```
 
@@ -175,6 +209,7 @@ val result1 = lineitem.join(orders, lineitem("l_orderkey") === orders("o_orderke
 val result2 = lineitem.join(orders, lineitem("l_receiptdate") === orders("o_orderdate"))
 val broadcastDF = result1.union(result2)
 broadcastDF.show(5,truncate=false)
+
 ```
 
 Check the Spark UI now. You will be able to see that BroadcastHashJoin is being used instead which is the best join type if at least one of the two tables you are going to join is relatively small (<50MB). Default *spark.sql.autoBroadcastJoinThreshold* is 10 MB.
@@ -210,11 +245,11 @@ aws emr add-steps --cluster-id j-XXXXXXXXXX --steps Name="Spark Pi Job",Jar=comm
 
 ```
 
-If you cannot use AWS CLI for some reason, you will find an EC2 instance called "JumpHost" in the EC2 Web Console. In real life scenario, you can run this command from any machine as long as your IAM user or role has IAM access to invoke EMR AddSteps API.
+If you do not want to use AWS CLI in your local desktop, you can submit the below command directly on your Session Manager session created for EMR leader node. You will also find an EC2 instance called "JumpHost" in the EC2 Web Console.
 
 ![Spark - 14](images/spark-14.png)
 
-You can connect to that instance using Session Manager and submit step to EMR cluster from that session. Once connected, enter following commands to login as ec2-user (default OS user for EC2 instances).
+You can connect to that instance using Session Manager and submit step to EMR cluster from that session. You may find another jump instance starting with the name "emr-on-eks". Do not login to that. Once connected, enter following commands to login as ec2-user (default OS user for EC2 instances).
 
 ```
 sudo su ec2-user
@@ -222,10 +257,13 @@ cd ~
 
 ```
 
-Now, run the AddSteps CLI command below. Replace cluster-id value with your cluster ID. You do not need to export any credentials since the IAM role attached to this JumpHost has all accesses required.
+Now, run the commands below. You do not need to change anything and you do not need to export any credentials since the IAM role attached to this JumpHost has all accesses required.
 
 ```
-aws emr add-steps --cluster-id j-142PVKGDZTTXS --steps Name="Spark Pi Job",Jar=command-runner.jar,Args=[spark-submit,--master,yarn,--num-executors,2,--class,org.apache.spark.examples.SparkPi,/usr/lib/spark/examples/jars/spark-examples.jar,10,-v] --region us-east-1
+cluster_id=$(aws emr list-clusters --region us-east-1 --query 'Clusters[?Name==`EMR-Spark-Hive-Presto` && Status.State!=`TERMINATED`]'.{Clusters:Id} --output text)
+
+aws emr add-steps --cluster-id ${cluster_id} --steps Name="Spark Pi Job",Jar=command-runner.jar,Args=[spark-submit,--master,yarn,--num-executors,2,--class,org.apache.spark.examples.SparkPi,/usr/lib/spark/examples/jars/spark-examples.jar,10,-v] --region us-east-1
+
 ```
 
 ![Spark - 15](images/spark-15.png)
@@ -237,3 +275,5 @@ Now, check the EMR step that was submitted to the cluster.
 You can look into the stdout logs to see the output.
 
 ![Spark - 17](images/spark-17.png)
+
+Please note in real life scenario, you can submit EMR Steps from anywhere as long as your IAM user or role has IAM access to invoke EMR AddSteps API.

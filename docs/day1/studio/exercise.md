@@ -71,6 +71,7 @@ Git credentials: Use a public repository without credentials
 ![Studio - 12](images/studio-12.png)
 
 Once the repository is added, select it from the "Git repositories" drop down. You will see that the Git repository will be linked successfully.
+
 ![Studio - 13](images/studio-13.png)
 
 Once its linked, you can go back to the workspace folder. You will find a folder called "workshop-repo".
@@ -81,7 +82,97 @@ Go to workshop-repo -> files -> notebook to see the notebooks.
 
 ![Studio - 29](images/studio-29.png)
 
-If you are not able to link repository successfully, download [amazon_reviews.ipynb](https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/amazon_reviews.ipynb) and [find_best_sellers.ipynb](https://raw.githubusercontent.com/vasveena/amazon-emr-ttt-workshop/main/files/notebook/find_best_sellers.ipynb) files to your local desktop (Right click -> Save Link As). Upload these two files from your local desktop to the JupyterLab. Upload icon looks like ![Studio - 10](images/studio-10.png).
+If you are not able to link repository successfully, create 3 nested folders under your workspace root folder: workshop-repo/files/notebook. Create Folder Icon looks like ![Studio - 33](images/studio-33.png). Download all the .ipynb files from [here](https://github.com/vasveena/amazon-emr-ttt-workshop) to your local desktop. You can download the entire project [Zip File](https://github.com/vasveena/amazon-emr-ttt-workshop/archive/refs/heads/main.zip). Unzip the zip file and go to amazon-emr-ttt-workshop-main/files/notebook. Upload these .ipynb files from your local desktop to the Jupyter interface under the nested folders created (workshop-repo/files/notebook). Upload icon looks like ![Studio - 10](images/studio-10.png). Alternatively, you can run the below commands on EC2 JumpHost Session Manager.
+
+```
+sudo su ec2-user
+cd ~
+
+pip3 uninstall awscli -y
+pip3 install awscli --upgrade
+/home/ec2-user/.local/bin/aws --version
+sudo yum install upgrade -y jq
+
+studio_id=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 list-studios --region us-east-1 --query Studios[*].{Studios:StudioId} --output text)
+studio_s3_location=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 describe-studio --studio-id $studio_id --query 'Studio.DefaultS3Location' --output text)
+studio_notebook_id=$(aws s3 ls $studio_s3_location/e- | sed 's|.*PRE ||g' | sed  's|/||g' | sed  's| ||g')
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+clusterArn=`aws kafka list-clusters --region us-east-1 | jq '.ClusterInfoList[0].ClusterArn'`
+echo $clusterArn
+bs=$(echo "aws kafka get-bootstrap-brokers --cluster-arn ${clusterArn} --region us-east-1"  | bash | jq '.BootstrapBrokerString' | sed 's|"||g')
+
+mkdir -p upload
+cd upload
+
+wget https://github.com/vasveena/amazon-emr-ttt-workshop/archive/refs/heads/main.zip
+unzip main.zip
+
+aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/amazon-emr-spark-streaming-apache-hudi-demo.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/apache-hudi-on-amazon-emr-dml.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/apache-iceberg-on-amazon-emr.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp amazon-emr-ttt-workshop-main/files/notebook/find_best_sellers.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+
+```
+
+**Note:** If you ran the above commands, you can skip the below steps and go to [Notebook-scoped Libraries](#notebook-scoped-libraries) section. If you either uploaded the files manually or if your Git repository linking was successful, continue with the following instructions.
+
+Once you either link the repository or upload the files successfully, go to workshop-repo -> files -> notebook folder and open find_best_sellers.ipynb file. Notice the OUTPUT_LOCATION S3 path in the first cell: *s3://mrworkshop-youraccountID-dayone/studio/best_sellers_output/*.  
+
+![Studio - 34](images/studio-34.png)
+
+Before you start working with these notebooks, let's replace the string "youraccountID" in the S3 locations specified in all the notebooks to make it easy for you while executing the notebook instructions.
+
+For this purpose, close the Jupyter session in your browser. From your EMR Studio Console (logged in as studiouser), go to Workspaces. Click on your workspace and under Actions, click on "Stop".
+
+![Studio - 31](images/studio-31.png)
+
+Once the workspace status becomes "Idle" (it will take about 5 minutes), connect to your EC2 instance named "JumpHost" using Session Manager and run the below commands.
+
+```
+sudo su ec2-user
+cd ~
+
+pip3 uninstall awscli -y
+pip3 install awscli --upgrade
+/home/ec2-user/.local/bin/aws --version
+sudo yum install upgrade -y jq
+
+studio_id=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 list-studios --region us-east-1 --query Studios[*].{Studios:StudioId} --output text)
+studio_s3_location=$(/home/ec2-user/.local/bin/aws emr --region us-east-1 describe-studio --studio-id $studio_id --query 'Studio.DefaultS3Location' --output text)
+studio_notebook_id=$(aws s3 ls $studio_s3_location/e- | sed 's|.*PRE ||g' | sed  's|/||g' | sed  's| ||g')
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+clusterArn=`aws kafka list-clusters --region us-east-1 | jq '.ClusterInfoList[0].ClusterArn'`
+echo $clusterArn
+bs=$(echo "aws kafka get-bootstrap-brokers --cluster-arn ${clusterArn} --region us-east-1"  | bash | jq '.BootstrapBrokerString' | sed 's|"||g')
+
+mkdir -p studio
+cd studio
+
+aws s3 cp $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/ . --recursive
+
+sed -i "s|youraccountID|$accountID|g" amazon-emr-spark-streaming-apache-hudi-demo.ipynb
+sed -i "s|yourbootstrapbrokers|$bs|g" amazon-emr-spark-streaming-apache-hudi-demo.ipynb
+sed -i "s|youraccountID|$accountID|g" apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb
+sed -i "s|youraccountID|$accountID|g" apache-hudi-on-amazon-emr-dml.ipynb
+sed -i "s|youraccountID|$accountID|g" apache-iceberg-on-amazon-emr.ipynb
+sed -i "s|youraccountID|$accountID|g" find_best_sellers.ipynb
+
+aws s3 cp amazon-emr-spark-streaming-apache-hudi-demo.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp apache-hudi-on-amazon-emr-datasource-pyspark-demo.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp apache-hudi-on-amazon-emr-dml.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp apache-iceberg-on-amazon-emr.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+aws s3 cp find_best_sellers.ipynb $studio_s3_location/$studio_notebook_id/workshop-repo/files/notebook/
+
+```
+
+Once the files are uploaded successfully, go back to EMR Studio Console -> Workspaces -> Actions again and click on "Start". Wait for the status to go from "Starting" to "Attached".
+
+![Studio - 32](images/studio-32.png)
+
+Once the workspace is in "Attached" state, go back to your EMR Studio Workspace Jupyter interface. Open the find_best_sellers.ipynb notebook (from workshop-repo -> files -> notebooks) and verify that the the account ID in the OUTPUT_LOCATION of the first cell is changed properly.
+
+![Studio - 35](images/studio-35.png)
 
 #### Notebook-scoped libraries
 
@@ -117,7 +208,7 @@ Click on the first cell with comment "Default parameters". In the Right Sidebar,
 
 ![Studio - 17](images/studio-17.png)
 
-Replace OUTPUT_LOCATION "s3://mrworkshop-<accountID>-dayone/studio/best_sellers_output/" with your event engine AWS account ID. Check the S3 Web Console for the bucket name if required. Do not create the S3 prefix "studio" before running the notebook cells.
+Replace OUTPUT_LOCATION "s3://mrworkshop-<accountID>-dayone/studio/best_sellers_output/" with your event engine AWS account ID. Check the S3 Web Console for the bucket name if required. Do not create any S3 prefix under the OUTPUT_LOCATION before running the notebook cells.
 
 Run all the cells in the notebook and make sure the outputs for categories "Apparel" and "Baby" are created under the S3 output location using AWS CLI or S3 Web Console.
 
@@ -139,7 +230,7 @@ aws s3 ls s3://amazon-reviews-pds/parquet/product_category
 
 You can see the list of categories. From EMR Studio, we ran analysis for categories "Apparel" and "Baby". Now let us run this notebook from API for categories "Furniture" and "PC". You can select whichever categories you want.
 
-Run following commands in your EC2 JumpHost to upgrade your AWS CLI.
+Run following commands in your EC2 JumpHost to upgrade your AWS CLI (if not done already).
 
 ```
 sudo su ec2-user

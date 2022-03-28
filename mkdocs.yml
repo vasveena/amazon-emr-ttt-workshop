@@ -10,13 +10,15 @@ nav:
   - Introduction: 'index.md'
   - Setup: 'setup.md'
   - Part 1:
-    - 1 - Launching EMR cluster with Instance Fleets: 'day1/fleet/exercise.md'
-    - 2 - Apache Spark on Amazon EMR: 'day1/spark/exercise.md'
-    # - 3 - Orchestrate EMR Steps using AWS Step Functions: 'day1/step/exercise.md'
+    - Introduction to Amazon EMR and Spark on EMR:
+      - 1 - Launching EMR cluster with Instance Fleets: 'day1/fleet/exercise.md'
+      - 2 - Apache Spark on Amazon EMR: 'day1/spark/exercise.md'
+      - 3 - Orchestrate EMR Steps using AWS Step Functions: 'day1/step/exercise.md'
   - Part 2:
-    - 1 - Amazon EMR Studio: 'day1/studio/exercise.md'
-    - 2 - Orchestration Notebook Pipelines using Amazon MWAA: 'day1/mwaa/exercise.md'
-    - 3 - Sagemaker Studio Integration: 'day2/smstudio/exercise.md'
+    - Notebook Offerings:
+      - 1 - Amazon EMR Studio: 'day1/studio/exercise.md'
+      - 2 - Orchestration Notebook Pipelines using Amazon MWAA: 'day1/mwaa/exercise.md'
+      - 3 - Sagemaker Studio Integration: 'day2/smstudio/exercise.md'
   - Part 3:
     - Build Incremental Data Lakes:
       - 1 - Apache Hudi on Amazon EMR: 'day2/hudi/exercise.md'

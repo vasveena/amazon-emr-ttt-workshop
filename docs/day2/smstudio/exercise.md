@@ -20,21 +20,25 @@ Once you are in, carry on with rest of the steps.
 
 ![sm - 12](images/sm-12.png)
 
-### Explore EMR clusters in Sagemaker Studio
+### Create EMR Cluster from Sagemaker Studio
 
-Click on the ![sm - 1](images/sm-1.png) icon and choose Clusters from the Sagemaker resources drop down. You will be able to see the EMR clusters.
+Click on the ![sm - 1](images/sm-1.png) icon and choose Clusters from the Sagemaker resources drop down. You will be able to see the EMR clusters. You can filter the EMR clusters.
 
 ![sm - 2](images/sm-2.png)
 
-You can filter the EMR clusters and also create a new one with a cluster template created from AWS Service Catalog. Go to Clusters -> Create cluster. You will be able to see a template.
+Now, create a new EMR cluster with a cluster template created from AWS Service Catalog. Go to Clusters -> Create cluster. You will be able to see a template.
 
 ![sm - 9](images/sm-9.png)
 
-When you select the template, it will show you the blueprint for your EMR cluster creation.
+When you click on the template and click "Select Template", it will show you the blueprint for your EMR cluster creation.
 
 ![sm - 10](images/sm-10.png)
 
-For now, let's use our existing cluster.
+Enter a cluster name (for eg: "Sagemaker Studio Cluster"). You can keep everything else as default. Click on "Create Cluster".
+
+![sm - 15](images/sm-15.png)
+
+We are not using one of the existing EMR clusters since this Studio was created in a different VPC and we have not established peering between the two VPCs.
 
 ### Connect to EMR cluster from Sagemaker Studio and run data processing jobs
 
