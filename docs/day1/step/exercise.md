@@ -6,6 +6,7 @@ In this section, we will see how you can orchestrate EMR jobs using EMR Step API
 
 ### Create State Machine
 
+<!--
 Go to [IAM Web Console](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/roles/create?commonUseCase=EC2&step=addPermission&trustedEntityType=AWS_SERVICE) to create a role for executing AWS Step Functions.
 
 Under "Use cases for other AWS services", type and select "Step Functions". Click on the Step Functions and click Next.
@@ -23,7 +24,7 @@ For role name, type "emr-stepfunc-role".
 ![step - 9](images/step-9.png)
 
 Create the IAM Role.
-
+-->
 Go to [AWS Step Functions console](https://us-east-1.console.aws.amazon.com/states/home?region=us-east-1#/statemachines?helloWorld) (Right click -> Open Link in New Tab).
 
 ![step - 1](images/step-1.png)
@@ -300,7 +301,7 @@ You will see the state machine DAG being generated automatically.
 
 ![step - 5](images/step-5.png)
 
-Click on "Next". Name your State Machine as "EMR-Steps-State-Machine". Under "Permissions", select "Choose an existing role" and from the drop down, choose the IAM role we created "emr-stepfunc-role".
+Click on "Next". Name your State Machine as "EMR-Steps-State-Machine". Under "Permissions", select "Choose an existing role" and from the drop down, choose the IAM role "emr-stepfunc-role".
 
 Leave everything else as default. Click on "Create State Machine".
 
