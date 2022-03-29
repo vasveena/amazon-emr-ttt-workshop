@@ -1,0 +1,7 @@
+https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateUrl=https%3A%2F%2Fvasveena-test-demo.s3.amazonaws.com%2Ftemp%2Fdeploy22.yml&stackName=dayone&param_KeyName=ee-default-keypair&param_SSHLocation=0.0.0.0%2F0
+
+https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateUrl=https%3A%2F%2Fvasveena-test-demo.s3.amazonaws.com%2Ftemp%2Fmain.json&stackName=emr-on-eks&param_ClusterName=myEKS&param_EnvName=myMWAAEnv&param_FargateNameSpace=fargate-ns&param_NodeInstanceType=m4.2xlarge
+
+https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateUrl=https%3A%2F%2Fvasveena-test-demo.s3.amazonaws.com%2Ftemp%2Fsm-studio.yml&stackName=smstudio
+
+https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateUrl=https%3A%2F%2Fvasveena-test-demo.s3.amazonaws.com%2Ftemp%2Fmain.json&stackName=emr-on-eks&param_ClusterName=myEKS&param_EnvName=myMWAAEnv&param_FargateNameSpace=fargate-ns&param_NodeInstanceType=c4.2xlarge

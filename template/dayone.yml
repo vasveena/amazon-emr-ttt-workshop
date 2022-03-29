@@ -744,6 +744,21 @@ Resources:
       Path: /
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole'
+  emrStepFuncRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: emr-stepfunc-role
+      AssumeRolePolicyDocument:
+        Version: 2008-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: states.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
   emrEc2Role:
     Type: AWS::IAM::Role
     Properties:

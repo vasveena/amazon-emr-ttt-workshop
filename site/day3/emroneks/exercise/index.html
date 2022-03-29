@@ -1181,7 +1181,7 @@ sh /tmp/kubeconfig.sh
 </code></pre></div>
 
 <p>You will see the job being submitted to Fargate virtual cluster.</p>
-<p><img alt="ee - 31" src="images/ee-31.png" /></p>
+<p><img alt="ee - 31" src="../images/ee-31.png" /></p>
 <p>Now go to the <a href="https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters">EKS Web console</a> (Right click -&gt; Open Link in New Tab) -&gt; Overview. In about a minute, you will see that the fargate resource has come up to run this job. Fargate automatically scales up and down based on your processing requirements.</p>
 <p><img alt="ee - 32" src="../images/ee-32.png" /></p>
 <h3 id="deploy-kubernetes-dashboard">Deploy Kubernetes Dashboard<a class="headerlink" href="#deploy-kubernetes-dashboard" title="Permanent link">&para;</a></h3>
@@ -1279,7 +1279,7 @@ kubectl apply -f eks-admin-service-account.yaml
 <p><img alt="ee - 35" src="../images/ee-35.png" /></p>
 <p>You can test the same command by substituting us-east-1a with us-east-1b and see how the pods are getting placed in your Kubernetes dashboard.</p>
 <div class="codehilite"><pre><span></span><code>aws emr-containers start-job-run --virtual-cluster-id <span class="cp">${</span><span class="n">ec2_vc</span><span class="cp">}</span> \
---name spark-single-az-us-east-1a \
+--name spark-single-az-us-east-1b \
 --execution-role-arn <span class="cp">${</span><span class="n">emrOnEksExecRoleArn</span><span class="cp">}</span> \
 --release-label emr-5.34.0-latest \
 --job-driver &#39;{

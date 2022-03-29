@@ -1071,7 +1071,7 @@ echo $instProfRole
 <p>Go to the EMR cluster "WorkflowCluster" from <a href="https://us-east-1.console.aws.amazon.com/elasticmapreduce/home?region=us-east-1#">EMR Web Console</a> (Right click -&gt; Open Link in New Tab). Go to the "Steps" tab. You can see the three EMR Steps submitted and executed by the AWS Step Functions.</p>
 <p><img alt="step - 15" src="../images/step-15.png" /></p>
 <p>The EMR cluster will be automatically terminated once the State Machine completes its execution.</p>
-<p>You can also start State Machine execution by entering the below JSON in the "Input - optional" section (replace any existing string). i.e., you can specify an existing EMR cluster ID instead of having AWS Step Functions create a new EMR cluster. You will need to replace j-XXXXXXXXXX with an existing EMR cluster ID in your AWS event engine account.</p>
+<p><strong>Optional:</strong> You can also start State Machine execution by entering the below JSON in the "Input - optional" section (replace any existing string). i.e., you can specify an existing EMR cluster ID instead of having AWS Step Functions create a new EMR cluster. You will need to replace j-XXXXXXXXXX in the below JSON with an existing EMR cluster ID in your AWS event engine account.</p>
 <div class="codehilite"><pre><span></span><code>{
   &quot;CreateCluster&quot;: false,
   &quot;TerminateCluster&quot;: false,
@@ -1079,8 +1079,10 @@ echo $instProfRole
 }
 </code></pre></div>
 
+<p>Once modified, you can enter the above JSON in the "Input - optional" section (replace any existing string). Click on "Start Execution".</p>
+<p>Please note that if you use an EMR cluster ID of recent release label (EMR 6.x), the EMR Step execution may fail due to syntax changes in Hive major and minor versions.</p>
 <h3 id="schedule-aws-step-functions-with-amazon-event-bridge">Schedule AWS Step Functions with Amazon Event Bridge<a class="headerlink" href="#schedule-aws-step-functions-with-amazon-event-bridge" title="Permanent link">&para;</a></h3>
-<p>We triggered the execution on-demand. We can also leverage Event Bridge</p>
+<p>We triggered the AWS Step Functions execution on-demand. We can also leverage Amazon Event Bridge to schedule workloads.</p>
 <p>Go to <a href="https://us-east-1.console.aws.amazon.com/states/home?region=us-east-1#/statemachines">AWS Step Functions Console</a> (Right click -&gt; Open Link in New Tab). Click on the state machine we created "EMR-Steps-State-Machine".</p>
 <p>On the right hand side, from Actions drop down, choose "Create Event Bridge (CloudWatch Events) rule".</p>
 <p><img alt="step - 16" src="../images/step-16.png" /></p>

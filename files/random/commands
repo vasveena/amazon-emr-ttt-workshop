@@ -1,0 +1,60 @@
+stackstatus=$(aws cloudformation --region us-east-1 list-stacks | jq -r .'StackSummaries[] | select(.StackName == "dayone") | .StackStatus')
+
+echo $stackstatus
+
+accountID=`aws sts get-caller-identity --query "Account" --output text`
+
+aws s3 rm s3://mrworkshop-$accountID-dayone --recursive
+aws s3 rm s3://mrworkshop-dms-$accountID-dayone --recursive
+aws s3 rm s3://studio-$accountID-dayone --recursive
+
+aws s3 rb s3://mrworkshop-$accountID-dayone
+aws s3 rb s3://mrworkshop-dms-$accountID-dayone
+aws s3 rb s3://studio-$accountID-dayone
+python3 remove.py
+
+niid=$(aws ec2 describe-network-interfaces --region us-east-1 | jq -r .'NetworkInterfaces[] | select(.Description == "DMSNetworkInterface") | .NetworkInterfaceId')
+
+aws ec2 delete-network-interface --region us-east-1 --network-interface-id $niid
+
+aws sts get-caller-identity --query "Account" --output text
+
+vpc_id=$(aws ec2 describe-vpcs --region us-east-1 --filters Name=tag:Name,Values=MMVPC | jq -r .'Vpcs[].VpcId')
+
+region="us-east-1"
+for igw in `aws --region=$region ec2 describe-internet-gateways | jq -r ".InternetGateways[] | {id: .InternetGatewayId, vpc: .Attachments[0].VpcId} | select(.vpc == \"$vpc_id\") | .id"` ; do
+                echo "Killing igw $region $vpc_id $igw"
+                aws --region=$region ec2 detach-internet-gateway --internet-gateway-id=$igw --vpc-id=$vpc_id
+                aws --region=$region ec2 delete-internet-gateway --internet-gateway-id=$igw
+            done
+
+for sub in `aws --region=$region ec2 describe-subnets | jq -r ".Subnets[] | {id: .SubnetId, vpc: .VpcId} | select(.vpc == \"$vpc_id\") | .id"` ; do
+                echo "Killing subnet $region $vpc_id $sub"
+                aws --region=$region ec2 delete-subnet --subnet-id=$sub
+        done
+
+for sg in `aws --region=$region ec2 describe-security-groups | jq -r ".SecurityGroups[] | {id: .GroupId, vpc: .VpcId} | select(.vpc == \"$vpc_id\") | .id"` ; do
+                echo "Killing security group $region $vpc_id $sg"
+                aws ec2 revoke-security-group-ingress --group-id $sg \
+                  --ip-permissions \
+                  "`aws ec2 describe-security-groups --output json --group-ids $sg --query "SecurityGroups[0].IpPermissions"`"
+                aws --region=$region ec2 delete-security-group --group-id=$sg
+        done
+
+for sg in `aws --region=$region ec2 describe-security-groups | jq -r ".SecurityGroups[] | {id: .GroupId, vpc: .VpcId} | select(.vpc == \"$vpc_id\") | .id"` ; do
+                echo "Killing security group $region $vpc_id $sg"
+                aws ec2 revoke-security-group-ingress --group-id $sg \
+                          --ip-permissions \
+                          "`aws ec2 describe-security-groups --output json --group-ids $sg --query "SecurityGroups[0].IpPermissions"`"
+                aws --region=$region ec2 delete-security-group --group-id=$sg
+        done
+
+echo "Deleting VPC"
+aws ec2 --region us-east-1 delete-vpc --vpc-id  $vpc_id
+
+echo "Deleting Cloudformation stack dayone"
+aws cloudformation --region us-east-1 delete-stack --stack-name dayone
+
+stackstatus=$(aws cloudformation --region us-east-1 list-stacks | jq -r .'StackSummaries[] | select(.StackName == "dayone") | .StackStatus')
+
+echo $stackstatus
