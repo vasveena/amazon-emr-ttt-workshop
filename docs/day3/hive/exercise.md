@@ -508,4 +508,3 @@ s3-dist-cp --src  s3://redshift-downloads/TPC-H/3TB/lineitem/ --dest /user/hadoo
 s3-dist-cp --src  s3://redshift-downloads/TPC-H/3TB/orders/ --dest /user/hadoop/orders
 
 ```
-Now, lets

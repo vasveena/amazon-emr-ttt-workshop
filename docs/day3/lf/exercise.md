@@ -90,6 +90,18 @@ Click on Add Provider. -->
 
 ### Set up Lake Formation
 
+In your AWS Web Console (event engine), go to the [S3 Console](https://s3.console.aws.amazon.com/s3/bucket/create?region=us-east-1) and create a bucket with the name "s3://mrworkshop-youraccountID-lf" in us-east-1 region. You can leave all other S3 settings defaulted.
+
+![lf - 22](images/lf-22.png)
+
+OR if you are logged in to the [EC2 instance](https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost) "JumpHost" via Session Manager, you can run the following commands to create a new bucket in us-east-1 region.
+
+```
+accountID=$(aws sts get-caller-identity --query "Account" --output text)
+aws s3 mb s3://mrworkshop-$accountID-lf --region us-east-1
+
+```
+
 In your AWS Web Console (event engine), go to the AWS Lake Formation Console. Once you go to the console, the screen will look like below.
 
 ![lf - 11](images/lf-11.png)
