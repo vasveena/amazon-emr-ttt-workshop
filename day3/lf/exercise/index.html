@@ -13,7 +13,7 @@
     
     
       
-        <title>**Fine-grained Authorization with LakeFormation Integration** - Amazon EMR Train-The-Trainer Workshop</title>
+        <title>LakeFormation Integration - Amazon EMR Train-The-Trainer Workshop</title>
       
     
     
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              **Fine-grained Authorization with LakeFormation Integration**
+              LakeFormation Integration
             
           </span>
         </div>
@@ -645,6 +645,166 @@
   
 
     
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Part 5
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Part 5" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Part 5
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          LakeFormation Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        LakeFormation Integration
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-okta-idp" class="md-nav__link">
+    Setup Okta IdP
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-lake-formation" class="md-nav__link">
+    Set up Lake Formation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#launch-cloudformation-stack" class="md-nav__link">
+    Launch Cloudformation Stack
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-the-solution" class="md-nav__link">
+    Validate the solution
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Part 6
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Part 6" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Part 6
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/exercise/" class="md-nav__link">
+        Hive and Presto on Amazon EMR
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -806,6 +966,13 @@ Choose SAML. Provider name is oktaSAMLProvider. In the Metadata document, upload
 Click on Add Provider. -->
 
 <h3 id="set-up-lake-formation">Set up Lake Formation<a class="headerlink" href="#set-up-lake-formation" title="Permanent link">&para;</a></h3>
+<p>In your AWS Web Console (event engine), go to the <a href="https://s3.console.aws.amazon.com/s3/bucket/create?region=us-east-1">S3 Console</a> and create a bucket with the name "s3://mrworkshop-youraccountID-lf" in us-east-1 region. You can leave all other S3 settings defaulted.</p>
+<p><img alt="lf - 22" src="../images/lf-22.png" /></p>
+<p>OR if you are logged in to the <a href="https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:v=3;search=:jumphost">EC2 instance</a> "JumpHost" via Session Manager, you can run the following commands to create a new bucket in us-east-1 region.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">accountID</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">aws</span><span class="w"> </span><span class="n">sts</span><span class="w"> </span><span class="n">get</span><span class="o">-</span><span class="n">caller</span><span class="o">-</span><span class="n">identity</span><span class="w"> </span><span class="o">--</span><span class="n">query</span><span class="w"> </span><span class="s">&quot;Account&quot;</span><span class="w"> </span><span class="o">--</span><span class="k">output</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"></span>
+<span class="n">aws</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="n">mb</span><span class="w"> </span><span class="nl">s3:</span><span class="c1">//mrworkshop-$accountID-lf --region us-east-1</span>
+</code></pre></div>
+
 <p>In your AWS Web Console (event engine), go to the AWS Lake Formation Console. Once you go to the console, the screen will look like below.</p>
 <p><img alt="lf - 11" src="../images/lf-11.png" /></p>
 <p>Click Get Started.</p>
@@ -914,6 +1081,41 @@ Click on Add Provider. -->
       </main>
       
         <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../serverless/exercise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2 - Amazon EMR Serverless" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              2 - Amazon EMR Serverless
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../hive/exercise/" class="md-footer__link md-footer__link--next" aria-label="Next: Hive and Presto on Amazon EMR" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Hive and Presto on Amazon EMR
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
