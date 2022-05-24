@@ -28,11 +28,11 @@ nav:
       - Introduction: 'day3/index.md'
       - 1 - Amazon EMR on EKS: 'day3/emroneks/exercise.md'
       - 2 - Amazon EMR Serverless: 'day3/serverless/exercise.md'
-  - Part 5:
-      - LakeFormation Integration: 'day3/lf/exercise.md'
-  - Part 6:
-      - Hive and Presto on Amazon EMR: 'day3/hive/exercise.md'
-      #- 2 - HBase on S3: 'day3/hbase/exercise.md'
+  #- Part 5:
+  #    - LakeFormation Integration: 'day3/lf/exercise.md'
+  #- Part 6:
+  #    - Hive and Presto on Amazon EMR: 'day3/hive/exercise.md'
+  #    #- 2 - HBase on S3: 'day3/hbase/exercise.md'
 markdown_extensions:
     - toc:
         permalink: true
