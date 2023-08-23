@@ -338,7 +338,7 @@ Resources:
       AllocatedStorage: 100
       AllowMajorVersionUpgrade: true
       AutoMinorVersionUpgrade: true
-      EngineVersion: 3.3.4
+      EngineVersion: 3.4.7
       MultiAZ: false
       PubliclyAccessible: true
       ReplicationInstanceClass: dms.t2.large
@@ -1146,7 +1146,7 @@ Resources:
       - DefaultPrivateRoute1
     Properties:
       AvailabilityZone: !Select
-        - 3
+        - 2
         - !GetAZs
           Ref: 'AWS::Region'
       VpcId: !Ref VPC
@@ -1165,7 +1165,7 @@ Resources:
       - DefaultPrivateRoute2
     Properties:
       AvailabilityZone: !Select
-        - 4
+        - 3
         - !GetAZs
           Ref: 'AWS::Region'
       VpcId: !Ref VPC

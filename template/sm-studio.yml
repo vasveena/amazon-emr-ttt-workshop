@@ -10,12 +10,12 @@ Mappings:
       Vpc: 10.0.0.0/16
       PublicSubnet1: 10.0.10.0/24
       PrivateSubnet1: 10.0.20.0/24
- 
+
 Resources:
   VPC:
     Type: 'AWS::EC2::VPC'
     Properties:
-      CidrBlock: !FindInMap 
+      CidrBlock: !FindInMap
         - VpcConfigurations
         - cidr
         - Vpc
@@ -24,28 +24,28 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName}-VPC'
- 
+
   InternetGateway:
     Type: 'AWS::EC2::InternetGateway'
     Properties:
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName}-IGW'
- 
+
   InternetGatewayAttachment:
     Type: 'AWS::EC2::VPCGatewayAttachment'
     Properties:
       InternetGatewayId: !Ref InternetGateway
       VpcId: !Ref VPC
- 
+
   PublicSubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select 
+      AvailabilityZone: !Select
         - 0
         - !GetAZs ''
-      CidrBlock: !FindInMap 
+      CidrBlock: !FindInMap
         - VpcConfigurations
         - cidr
         - PublicSubnet1
@@ -53,15 +53,15 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName} Public Subnet (AZ1)'
- 
+
   PrivateSubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select 
+      AvailabilityZone: !Select
         - 0
         - !GetAZs ''
-      CidrBlock: !FindInMap 
+      CidrBlock: !FindInMap
         - VpcConfigurations
         - cidr
         - PrivateSubnet1
@@ -69,21 +69,21 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName} Private Subnet (AZ1)'
- 
+
   NatGateway1EIP:
     Type: 'AWS::EC2::EIP'
     DependsOn: InternetGatewayAttachment
     Properties:
       Domain: vpc
- 
+
   NatGateway1:
     Type: 'AWS::EC2::NatGateway'
     Properties:
-      AllocationId: !GetAtt 
+      AllocationId: !GetAtt
         - NatGateway1EIP
         - AllocationId
       SubnetId: !Ref PublicSubnet1
- 
+
   PublicRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -91,7 +91,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName} Public Routes'
- 
+
   DefaultPublicRoute:
     Type: 'AWS::EC2::Route'
     DependsOn: InternetGatewayAttachment
@@ -99,13 +99,13 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
- 
+
   PublicSubnet1RouteTableAssociation:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet1
- 
+
   PrivateRouteTable1:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -113,20 +113,20 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName} Private Routes (AZ1)'
- 
+
   PrivateSubnet1RouteTableAssociation:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PrivateRouteTable1
       SubnetId: !Ref PrivateSubnet1
- 
+
   PrivateSubnet1InternetRoute:
     Type: 'AWS::EC2::Route'
     Properties:
       RouteTableId: !Ref PrivateRouteTable1
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref NatGateway1
-  
+
   S3Endpoint:
     Type: 'AWS::EC2::VPCEndpoint'
     Properties:
@@ -144,7 +144,7 @@ Resources:
       VpcId: !Ref VPC
       RouteTableIds:
         - !Ref PrivateRouteTable1
- 
+
   SageMakerInstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -232,7 +232,7 @@ Resources:
       ManagedPolicyArns:
         - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonSageMakerFullAccess"
         - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonS3ReadOnlyAccess"
-  
+
   VPCEndpointSagemakerAPI:
     Type: AWS::EC2::VPCEndpoint
     Properties:
@@ -359,8 +359,8 @@ Resources:
         - !Ref VPCEndpointSecurityGroup
       ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecr.api'
       VpcId: !Ref VPC
-  
-  
+
+
   StudioDomain:
     Type: AWS::SageMaker::Domain
     Properties:
@@ -368,24 +368,24 @@ Resources:
       AuthMode: IAM
       DomainName: StudioDomain
       VpcId: !Ref VPC
-      SubnetIds: 
+      SubnetIds:
         - !Ref PrivateSubnet1
       DefaultUserSettings:
         ExecutionRole: !GetAtt SageMakerExecutionRole.Arn
         SecurityGroups:
            - !Ref SageMakerInstanceSecurityGroup
- 
+
   StudioUserProfile:
     Type: AWS::SageMaker::UserProfile
     Properties:
       DomainId: !Ref StudioDomain
       UserProfileName: studio-user
-      UserSettings: 
+      UserSettings:
         ExecutionRole: !GetAtt SageMakerExecutionRole.Arn
-  
+
   # Products populated to Service Catalog
-  ###################################################  
-  
+  ###################################################
+
   SageMakerStudioEMRNoAuthProduct:
     Type: AWS::ServiceCatalog::CloudFormationProduct
     Properties:
@@ -399,19 +399,19 @@ Resources:
       Tags:
         - Key: "sagemaker:studio-visibility:emr"
           Value: "true"
- 
+
   SageMakerStudioEMRNoAuthProductPortfolio:
     Type: AWS::ServiceCatalog::Portfolio
     Properties:
       ProviderName: AWS
       DisplayName: SageMaker Product Portfolio
- 
+
   SageMakerStudioEMRNoAuthProductPortfolioAssociation:
     Type: AWS::ServiceCatalog::PortfolioProductAssociation
     Properties:
       PortfolioId: !Ref SageMakerStudioEMRNoAuthProductPortfolio
       ProductId: !Ref SageMakerStudioEMRNoAuthProduct
-  
+
   EMRNoAuthLaunchConstraint:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -461,6 +461,9 @@ Resources:
                   - "lambda:InvokeFunction"
                   - "lambda:DeleteFunction"
                   - "lambda:GetFunction"
+                  - "lambda:ListTags"
+                  - "lambda:TagResource"
+                  - "lambda:UntagResource"
                 Effect: Allow
                 Resource: !Sub "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:SC-*"
             Version: "2012-10-17"
@@ -497,27 +500,27 @@ Resources:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
-          - 
+          -
             Effect: "Allow"
             Principal:
-              Service: 
+              Service:
                 - "servicecatalog.amazonaws.com"
             Action:
               - "sts:AssumeRole"
       ManagedPolicyArns:
         - "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AWSServiceCatalogAdminFullAccess"
         - "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AmazonEMRFullAccessPolicy_v2"
- 
+
 # Sets the principal who can initate provisioning from Service Studio
 #######################################################################
-  
+
   SageMakerStudioEMRNoAuthProductPortfolioPrincipalAssociation:
     Type: AWS::ServiceCatalog::PortfolioPrincipalAssociation
     Properties:
       PrincipalARN: !GetAtt SageMakerExecutionRole.Arn
       PortfolioId: !Ref SageMakerStudioEMRNoAuthProductPortfolio
       PrincipalType: IAM
- 
+
   SageMakerStudioPortfolioLaunchRoleConstraint:
     Type: AWS::ServiceCatalog::LaunchRoleConstraint
     Properties:
@@ -525,39 +528,39 @@ Resources:
       ProductId: !Ref SageMakerStudioEMRNoAuthProduct
       RoleArn: !GetAtt EMRNoAuthLaunchConstraint.Arn
       Description: Role used for provisioning
- 
+
 Outputs:
   VPCandCIDR:
     Description: VPC ID and CIDR block
-    Value: !Join 
+    Value: !Join
       - ' - '
       - - !Ref VPC
-        - !GetAtt 
+        - !GetAtt
           - VPC
           - CidrBlock
   PublicSubnets:
     Description: All public subnet created
-    Value: !Join 
+    Value: !Join
       - ''
       - - !Ref PublicSubnet1
   PrivateSubnets:
     Description: All private subnet created
-    Value: !Join 
+    Value: !Join
       - ', '
       - - !Ref PrivateSubnet1
-  
+
   SagemakerStudioVPCId:
     Description: The ID of the Sagemaker Studio VPC
     Value: !Ref VPC
     Export:
       Name: !Sub "${AWS::StackName}-SagemakerStudioVPCId"
- 
+
   SagemakerStudioSubnetId:
     Description: The Subnet Id of Sagemaker Studio
     Value: !Ref PrivateSubnet1
     Export:
       Name: !Sub "${AWS::StackName}-SagemakerStudioSubnetId"
- 
+
   SagemakerStudioSecurityGroup:
     Description: The Security group of Sagemaker Studio instance
     Value: !Ref SageMakerInstanceSecurityGroup

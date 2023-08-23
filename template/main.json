@@ -435,7 +435,7 @@
     "EKSStack" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://aws-bigdata-blog.s3.amazonaws.com/artifacts/managing-bigdata-workflows-mwaa-emr-on-eks/cft/vpc-eks.json",
+        "TemplateURL" : "https://vasveena-test-demo.s3.amazonaws.com/temp/vpc-eks.json",
         "TimeoutInMinutes" : "30",
         "Parameters": {
             "ClusterName": { "Ref": "ClusterName" },
